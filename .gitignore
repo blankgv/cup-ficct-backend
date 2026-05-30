@@ -1,0 +1,19 @@
+# Dependencias (las genera composer) / Dependencies (composer-generated)
+/vendor
+
+# Entorno y secretos / Environment & secrets
+.env
+.env.backup
+.env.production
+
+# Tests
+/.phpunit.cache
+.phpunit.result.cache
+
+# IDE / editores
+/.idea
+/.vscode
+
+# Sistema operativo / OS
+.DS_Store
+Thumbs.db

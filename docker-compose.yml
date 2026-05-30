@@ -1,0 +1,20 @@
+# Solo el backend Laravel. PostgreSQL es externo.
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cup-ficct-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      # Código montado para desarrollo.
+      - .:/var/www/html
+      # Conserva el vendor del build.
+      - /var/www/html/vendor
+    env_file:
+      - .env
+    extra_hosts:
+      # Alcanza servicios del host (ej. PostgreSQL local).
+      - "host.docker.internal:host-gateway"
