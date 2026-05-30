@@ -3,6 +3,7 @@
 namespace App\Modules\Authentication\Repositories;
 
 use App\Models\User;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 // Acceso a datos de usuarios.
 class UserRepository
@@ -15,5 +16,27 @@ class UserRepository
     public function findById(int|string $id): ?User
     {
         return User::query()->find($id);
+    }
+
+    /**
+     * Lista paginada con búsqueda por nombre/email y filtro por rol.
+     */
+    public function paginate(?string $search, ?string $role, int $perPage): LengthAwarePaginator
+    {
+        return User::query()
+            ->when($search, function ($q) use ($search) {
+                $q->where(function ($w) use ($search) {
+                    $w->where('name', 'ilike', "%{$search}%")
+                        ->orWhere('email', 'ilike', "%{$search}%");
+                });
+            })
+            ->when($role, fn ($q) => $q->role($role))
+            ->orderBy('name')
+            ->paginate($perPage);
+    }
+
+    public function create(array $attributes): User
+    {
+        return User::create($attributes);
     }
 }
