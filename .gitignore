@@ -17,3 +17,7 @@
 # Sistema operativo / OS
 .DS_Store
 Thumbs.db
+
+# Contexto para el desarrollo
+ROADMAP.md
+USE_CASES.md
