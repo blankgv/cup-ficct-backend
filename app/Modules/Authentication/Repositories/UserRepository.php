@@ -26,8 +26,8 @@ class UserRepository
         return User::query()
             ->when($search, function ($q) use ($search) {
                 $q->where(function ($w) use ($search) {
-                    $w->where('name', 'ilike', "%{$search}%")
-                        ->orWhere('email', 'ilike', "%{$search}%");
+                    $w->whereLike('name', "%{$search}%")
+                        ->orWhereLike('email', "%{$search}%");
                 });
             })
             ->when($role, fn ($q) => $q->role($role))
