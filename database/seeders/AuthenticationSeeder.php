@@ -49,7 +49,7 @@ class AuthenticationSeeder extends Seeder
             $password = Hash::make('password');
 
             $users = [
-                ['name' => 'Administrador CUP FICCT', 'email' => 'admin@cup-ficct.local',       'role' => RoleName::ADMINISTRADOR],
+                ['name' => 'Administrador CUP FICCT', 'email' => 'gutierrez.vasquez.emanuel@gmail.com', 'role' => RoleName::ADMINISTRADOR],
                 ['name' => 'Coordinador Académico',   'email' => 'coordinador@cup-ficct.local', 'role' => RoleName::COORDINADOR],
                 ['name' => 'Docente Demo',             'email' => 'docente@cup-ficct.local',     'role' => RoleName::DOCENTE],
                 ['name' => 'Postulante Demo',          'email' => 'postulante@cup-ficct.local',  'role' => RoleName::POSTULANTE],

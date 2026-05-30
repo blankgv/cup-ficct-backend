@@ -7,6 +7,8 @@ use App\Modules\Authentication\DTOs\LoginData;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 // Lógica de autenticación JWT.
@@ -69,6 +71,30 @@ class AuthService
             'password' => Hash::make($new),
             'must_change_password' => false,
         ])->save();
+    }
+
+    /**
+     * Envía el enlace de recuperación al correo. Devuelve el status del broker.
+     */
+    public function sendResetLink(string $email): string
+    {
+        return Password::broker()->sendResetLink(['email' => $email]);
+    }
+
+    /**
+     * Resetea la contraseña usando el token. Devuelve el status del broker.
+     *
+     * @param array{token:string,email:string,password:string,password_confirmation:string} $data
+     */
+    public function resetPassword(array $data): string
+    {
+        return Password::broker()->reset($data, function (User $user, string $password) {
+            $user->forceFill([
+                'password' => Hash::make($password),
+                'must_change_password' => false,
+                'remember_token' => Str::random(60),
+            ])->save();
+        });
     }
 
     /**

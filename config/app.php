@@ -54,6 +54,9 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    // URL del frontend (para enlaces de reseteo de contraseña, etc.).
+    'frontend_url' => env('FRONTEND_URL'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
