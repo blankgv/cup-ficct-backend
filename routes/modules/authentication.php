@@ -2,6 +2,8 @@
 
 use App\Modules\Authentication\Controllers\AuthController;
 use App\Modules\Authentication\Controllers\PasswordResetController;
+use App\Modules\Authentication\Controllers\PermissionController;
+use App\Modules\Authentication\Controllers\RoleController;
 use App\Modules\Authentication\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,4 +26,11 @@ Route::middleware('auth:api')->group(function () {
     // CRUD de usuarios (requiere permiso y haber cambiado la contraseña inicial).
     Route::middleware(['password.changed', 'permission:user.manage'])
         ->apiResource('users', UserController::class);
+
+    // Gestión de roles y permisos (requiere permiso role.manage).
+    Route::middleware(['password.changed', 'permission:role.manage'])->group(function () {
+        Route::put('roles/{role}/permissions', [RoleController::class, 'syncPermissions'])->name('roles.permissions');
+        Route::apiResource('roles', RoleController::class);
+        Route::get('permissions', [PermissionController::class, 'index'])->name('permissions.index');
+    });
 });
