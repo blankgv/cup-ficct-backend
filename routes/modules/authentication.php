@@ -15,7 +15,10 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
     Route::post('/refresh', [AuthController::class, 'refresh'])->name('auth.refresh');
 
-    // CRUD de usuarios (requiere permiso user.manage).
-    Route::middleware('permission:user.manage')
+    // Cambio de contraseña (disponible aunque deba cambiarla).
+    Route::post('/change-password', [AuthController::class, 'changePassword'])->name('auth.change-password');
+
+    // CRUD de usuarios (requiere permiso y haber cambiado la contraseña inicial).
+    Route::middleware(['password.changed', 'permission:user.manage'])
         ->apiResource('users', UserController::class);
 });

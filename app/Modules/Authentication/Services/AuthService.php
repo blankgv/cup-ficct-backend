@@ -2,9 +2,12 @@
 
 namespace App\Modules\Authentication\Services;
 
+use App\Models\User;
 use App\Modules\Authentication\DTOs\LoginData;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 // Lógica de autenticación JWT.
 class AuthService
@@ -47,6 +50,25 @@ class AuthService
     public function currentUser(): mixed
     {
         return Auth::guard('api')->user();
+    }
+
+    /**
+     * Cambia la contraseña del usuario y limpia la bandera de primer ingreso.
+     *
+     * @throws ValidationException si la contraseña actual no coincide
+     */
+    public function changePassword(User $user, string $current, string $new): void
+    {
+        if (! Hash::check($current, $user->password)) {
+            throw ValidationException::withMessages([
+                'current_password' => 'La contraseña actual no es correcta.',
+            ]);
+        }
+
+        $user->forceFill([
+            'password' => Hash::make($new),
+            'must_change_password' => false,
+        ])->save();
     }
 
     /**

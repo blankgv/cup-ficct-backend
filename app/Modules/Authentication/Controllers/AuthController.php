@@ -4,6 +4,7 @@ namespace App\Modules\Authentication\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Authentication\DTOs\LoginData;
+use App\Modules\Authentication\Requests\ChangePasswordRequest;
 use App\Modules\Authentication\Requests\LoginRequest;
 use App\Modules\Authentication\Resources\UserResource;
 use App\Modules\Authentication\Services\AuthService;
@@ -47,5 +48,17 @@ class AuthController extends Controller
     public function refresh(): JsonResponse
     {
         return response()->json($this->authService->refresh());
+    }
+
+    // POST /api/auth/change-password
+    public function changePassword(ChangePasswordRequest $request): JsonResponse
+    {
+        $this->authService->changePassword(
+            $this->authService->currentUser(),
+            $request->validated('current_password'),
+            $request->validated('new_password'),
+        );
+
+        return response()->json(['message' => 'Contraseña actualizada.']);
     }
 }
