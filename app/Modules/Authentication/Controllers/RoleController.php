@@ -13,19 +13,39 @@ use App\Modules\Authentication\Resources\RoleResource;
 use App\Modules\Authentication\Services\RoleService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use OpenApi\Attributes as OA;
 
 // CRUD de roles + asignación de permisos.
 class RoleController extends Controller
 {
     public function __construct(private readonly RoleService $roles) {}
 
-    // GET /api/auth/roles
+    #[OA\Get(
+        path: '/api/auth/roles',
+        tags: ['Roles'],
+        summary: 'Listar roles',
+        security: [['bearerAuth' => []]],
+        responses: [new OA\Response(response: 200, description: 'Lista de roles')]
+    )]
     public function index(): AnonymousResourceCollection
     {
         return RoleResource::collection($this->roles->list());
     }
 
-    // POST /api/auth/roles
+    #[OA\Post(
+        path: '/api/auth/roles',
+        tags: ['Roles'],
+        summary: 'Crear rol',
+        security: [['bearerAuth' => []]],
+        requestBody: new OA\RequestBody(required: true, content: new OA\JsonContent(
+            required: ['name'],
+            properties: [
+                new OA\Property(property: 'name', type: 'string', example: 'AUXILIAR'),
+                new OA\Property(property: 'permissions', type: 'array', items: new OA\Items(type: 'string')),
+            ]
+        )),
+        responses: [new OA\Response(response: 201, description: 'Rol creado', content: new OA\JsonContent(ref: '#/components/schemas/Role'))]
+    )]
     public function store(StoreRoleRequest $request): JsonResponse
     {
         $role = $this->roles->create(CreateRoleDTO::fromArray($request->validated()));
@@ -33,19 +53,46 @@ class RoleController extends Controller
         return (new RoleResource($role))->response()->setStatusCode(201);
     }
 
-    // GET /api/auth/roles/{role}
+    #[OA\Get(
+        path: '/api/auth/roles/{role}',
+        tags: ['Roles'],
+        summary: 'Ver rol',
+        security: [['bearerAuth' => []]],
+        parameters: [new OA\Parameter(name: 'role', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))],
+        responses: [new OA\Response(response: 200, description: 'Rol', content: new OA\JsonContent(ref: '#/components/schemas/Role'))]
+    )]
     public function show(Role $role): RoleResource
     {
         return new RoleResource($role->load('permissions'));
     }
 
-    // PUT /api/auth/roles/{role}
+    #[OA\Put(
+        path: '/api/auth/roles/{role}',
+        tags: ['Roles'],
+        summary: 'Editar rol',
+        security: [['bearerAuth' => []]],
+        parameters: [new OA\Parameter(name: 'role', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))],
+        requestBody: new OA\RequestBody(content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'name', type: 'string'),
+                new OA\Property(property: 'permissions', type: 'array', items: new OA\Items(type: 'string')),
+            ]
+        )),
+        responses: [new OA\Response(response: 200, description: 'Rol actualizado', content: new OA\JsonContent(ref: '#/components/schemas/Role'))]
+    )]
     public function update(UpdateRoleRequest $request, Role $role): RoleResource
     {
         return new RoleResource($this->roles->update($role, CreateRoleDTO::fromArray($request->validated())));
     }
 
-    // DELETE /api/auth/roles/{role}
+    #[OA\Delete(
+        path: '/api/auth/roles/{role}',
+        tags: ['Roles'],
+        summary: 'Eliminar rol',
+        security: [['bearerAuth' => []]],
+        parameters: [new OA\Parameter(name: 'role', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))],
+        responses: [new OA\Response(response: 200, description: 'Rol eliminado')]
+    )]
     public function destroy(Role $role): JsonResponse
     {
         $this->roles->delete($role);
@@ -53,7 +100,18 @@ class RoleController extends Controller
         return response()->json(['message' => 'Rol eliminado.']);
     }
 
-    // PUT /api/auth/roles/{role}/permissions
+    #[OA\Put(
+        path: '/api/auth/roles/{role}/permissions',
+        tags: ['Roles'],
+        summary: 'Sincronizar permisos de un rol',
+        security: [['bearerAuth' => []]],
+        parameters: [new OA\Parameter(name: 'role', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))],
+        requestBody: new OA\RequestBody(required: true, content: new OA\JsonContent(
+            required: ['permissions'],
+            properties: [new OA\Property(property: 'permissions', type: 'array', items: new OA\Items(type: 'string'))]
+        )),
+        responses: [new OA\Response(response: 200, description: 'Permisos actualizados', content: new OA\JsonContent(ref: '#/components/schemas/Role'))]
+    )]
     public function syncPermissions(AssignPermissionsRequest $request, Role $role): RoleResource
     {
         return new RoleResource($this->roles->syncPermissions($role, AssignPermissionsDTO::fromArray($request->validated())));

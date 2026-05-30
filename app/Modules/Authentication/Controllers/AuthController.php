@@ -9,13 +9,29 @@ use App\Modules\Authentication\Resources\AuthTokenResource;
 use App\Modules\Authentication\Resources\UserResource;
 use App\Modules\Authentication\Services\AuthService;
 use Illuminate\Http\JsonResponse;
+use OpenApi\Attributes as OA;
 
 // Endpoints de sesión. Valida y delega en AuthService.
 class AuthController extends Controller
 {
     public function __construct(private readonly AuthService $authService) {}
 
-    // POST /api/auth/login
+    #[OA\Post(
+        path: '/api/auth/login',
+        tags: ['Auth'],
+        summary: 'Iniciar sesión',
+        requestBody: new OA\RequestBody(required: true, content: new OA\JsonContent(
+            required: ['email', 'password'],
+            properties: [
+                new OA\Property(property: 'email', type: 'string', example: 'admin@cup-ficct.local'),
+                new OA\Property(property: 'password', type: 'string', example: 'password'),
+            ]
+        )),
+        responses: [
+            new OA\Response(response: 200, description: 'Token emitido', content: new OA\JsonContent(ref: '#/components/schemas/AuthToken')),
+            new OA\Response(response: 401, description: 'Credenciales inválidas'),
+        ]
+    )]
     public function login(LoginRequest $request): AuthTokenResource
     {
         $token = $this->authService->login(
@@ -28,7 +44,16 @@ class AuthController extends Controller
         ]);
     }
 
-    // GET /api/auth/me
+    #[OA\Get(
+        path: '/api/auth/me',
+        tags: ['Auth'],
+        summary: 'Usuario autenticado',
+        security: [['bearerAuth' => []]],
+        responses: [
+            new OA\Response(response: 200, description: 'Usuario actual'),
+            new OA\Response(response: 401, description: 'No autenticado'),
+        ]
+    )]
     public function me(): JsonResponse
     {
         return response()->json([
@@ -36,7 +61,13 @@ class AuthController extends Controller
         ]);
     }
 
-    // POST /api/auth/logout
+    #[OA\Post(
+        path: '/api/auth/logout',
+        tags: ['Auth'],
+        summary: 'Cerrar sesión (invalida el token)',
+        security: [['bearerAuth' => []]],
+        responses: [new OA\Response(response: 200, description: 'Sesión cerrada')]
+    )]
     public function logout(): JsonResponse
     {
         $this->authService->logout();
@@ -44,7 +75,13 @@ class AuthController extends Controller
         return response()->json(['message' => 'Sesión cerrada.']);
     }
 
-    // POST /api/auth/refresh
+    #[OA\Post(
+        path: '/api/auth/refresh',
+        tags: ['Auth'],
+        summary: 'Renovar el token',
+        security: [['bearerAuth' => []]],
+        responses: [new OA\Response(response: 200, description: 'Nuevo token', content: new OA\JsonContent(ref: '#/components/schemas/AuthToken'))]
+    )]
     public function refresh(): JsonResponse
     {
         return response()->json($this->authService->refresh());
