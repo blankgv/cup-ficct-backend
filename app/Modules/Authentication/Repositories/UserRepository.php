@@ -2,7 +2,7 @@
 
 namespace App\Modules\Authentication\Repositories;
 
-use App\Models\User;
+use App\Modules\Authentication\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 // Acceso a datos de usuarios.

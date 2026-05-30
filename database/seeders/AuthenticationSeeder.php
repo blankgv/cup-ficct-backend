@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+use App\Modules\Authentication\Models\User;
 use App\Modules\Authentication\Authorization\Permission as Perm;
 use App\Modules\Authentication\Authorization\Role as RoleName;
 use Illuminate\Database\Seeder;

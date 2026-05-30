@@ -8,7 +8,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 /**
  * Formatea el usuario para la respuesta API.
  *
- * @mixin \App\Models\User
+ * @mixin \App\Modules\Authentication\Models\User
  */
 class UserResource extends JsonResource
 {

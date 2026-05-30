@@ -3,7 +3,7 @@
 namespace App\Modules\Authentication\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Modules\Authentication\Models\User;
 use App\Modules\Authentication\Requests\StoreUserRequest;
 use App\Modules\Authentication\Requests\UpdateUserRequest;
 use App\Modules\Authentication\Resources\UserResource;

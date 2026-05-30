@@ -2,7 +2,7 @@
 
 namespace App\Modules\Authentication\Services;
 
-use App\Models\User;
+use App\Modules\Authentication\Models\User;
 use App\Modules\Authentication\Repositories\UserRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Hash;

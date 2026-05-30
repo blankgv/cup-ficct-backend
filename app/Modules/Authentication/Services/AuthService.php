@@ -2,7 +2,7 @@
 
 namespace App\Modules\Authentication\Services;
 
-use App\Models\User;
+use App\Modules\Authentication\Models\User;
 use App\Modules\Authentication\DTOs\LoginData;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Auth;

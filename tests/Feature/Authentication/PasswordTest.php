@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Authentication;
 
-use App\Models\User;
+use App\Modules\Authentication\Models\User;
 use App\Modules\Authentication\Authorization\Role as RoleName;
 use Database\Seeders\AuthenticationSeeder;
 use Illuminate\Auth\Notifications\ResetPassword;
