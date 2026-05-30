@@ -2,7 +2,7 @@
 
 namespace App\Modules\Authentication\Services;
 
-use App\Modules\Authentication\DTOs\LoginData;
+use App\Modules\Authentication\DTOs\LoginDTO;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,7 +16,7 @@ class AuthService
      *
      * @throws AuthenticationException
      */
-    public function login(LoginData $data): array
+    public function login(LoginDTO $data): array
     {
         $token = Auth::guard('api')->attempt($data->toCredentials());
 

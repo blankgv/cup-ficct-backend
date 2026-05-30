@@ -3,6 +3,8 @@
 namespace App\Modules\Authentication\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Authentication\DTOs\CreateUserDTO;
+use App\Modules\Authentication\DTOs\UpdateUserDTO;
 use App\Modules\Authentication\Models\User;
 use App\Modules\Authentication\Requests\ChangePasswordRequest;
 use App\Modules\Authentication\Requests\StoreUserRequest;
@@ -49,7 +51,7 @@ class UserController extends Controller
     // POST /api/auth/users
     public function store(StoreUserRequest $request): JsonResponse
     {
-        $user = $this->users->create($request->validated());
+        $user = $this->users->create(CreateUserDTO::fromArray($request->validated()));
 
         return (new UserResource($user))->response()->setStatusCode(201);
     }
@@ -63,7 +65,7 @@ class UserController extends Controller
     // PUT /api/auth/users/{user}
     public function update(UpdateUserRequest $request, User $user): UserResource
     {
-        return new UserResource($this->users->update($user, $request->validated()));
+        return new UserResource($this->users->update($user, UpdateUserDTO::fromArray($request->validated())));
     }
 
     // DELETE /api/auth/users/{user}

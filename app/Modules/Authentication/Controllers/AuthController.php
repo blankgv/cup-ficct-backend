@@ -3,8 +3,9 @@
 namespace App\Modules\Authentication\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Authentication\DTOs\LoginData;
+use App\Modules\Authentication\DTOs\LoginDTO;
 use App\Modules\Authentication\Requests\LoginRequest;
+use App\Modules\Authentication\Resources\AuthTokenResource;
 use App\Modules\Authentication\Resources\UserResource;
 use App\Modules\Authentication\Services\AuthService;
 use Illuminate\Http\JsonResponse;
@@ -15,15 +16,15 @@ class AuthController extends Controller
     public function __construct(private readonly AuthService $authService) {}
 
     // POST /api/auth/login
-    public function login(LoginRequest $request): JsonResponse
+    public function login(LoginRequest $request): AuthTokenResource
     {
         $token = $this->authService->login(
-            LoginData::fromArray($request->validated())
+            LoginDTO::fromArray($request->validated())
         );
 
-        return response()->json([
+        return new AuthTokenResource([
             ...$token,
-            'user' => new UserResource($this->authService->currentUser()),
+            'user' => $this->authService->currentUser(),
         ]);
     }
 

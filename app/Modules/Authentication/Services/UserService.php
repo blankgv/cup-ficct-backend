@@ -2,6 +2,8 @@
 
 namespace App\Modules\Authentication\Services;
 
+use App\Modules\Authentication\DTOs\CreateUserDTO;
+use App\Modules\Authentication\DTOs\UpdateUserDTO;
 use App\Modules\Authentication\Models\User;
 use App\Modules\Authentication\Repositories\UserRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -17,39 +19,31 @@ class UserService
         return $this->users->paginate($search, $role, $perPage);
     }
 
-    /**
-     * Crea un usuario, le asigna el rol y lo marca para cambiar contraseña.
-     *
-     * @param array{name:string,email:string,password:string,role:string} $data
-     */
-    public function create(array $data): User
+    // Crea un usuario, le asigna el rol y lo marca para cambiar contraseña.
+    public function create(CreateUserDTO $data): User
     {
         $user = $this->users->create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'name' => $data->name,
+            'email' => $data->email,
+            'password' => Hash::make($data->password),
             'must_change_password' => true,
         ]);
 
-        $user->assignRole($data['role']);
+        $user->assignRole($data->role);
 
         return $user;
     }
 
-    /**
-     * Actualiza datos del usuario y sincroniza su rol si viene.
-     *
-     * @param array<string, mixed> $data
-     */
-    public function update(User $user, array $data): User
+    // Actualiza datos del usuario y sincroniza su rol si viene.
+    public function update(User $user, UpdateUserDTO $data): User
     {
         $user->fill(array_filter(
-            ['name' => $data['name'] ?? null, 'email' => $data['email'] ?? null],
+            ['name' => $data->name, 'email' => $data->email],
             fn ($v) => $v !== null,
         ))->save();
 
-        if (! empty($data['role'])) {
-            $user->syncRoles([$data['role']]);
+        if ($data->role !== null) {
+            $user->syncRoles([$data->role]);
         }
 
         return $user;

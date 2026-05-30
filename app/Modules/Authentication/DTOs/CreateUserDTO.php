@@ -2,12 +2,14 @@
 
 namespace App\Modules\Authentication\DTOs;
 
-// Lleva las credenciales del Request al Service.
-final readonly class LoginData
+// Datos para crear un usuario.
+final readonly class CreateUserDTO
 {
     public function __construct(
+        public string $name,
         public string $email,
         public string $password,
+        public string $role,
     ) {}
 
     /**
@@ -16,16 +18,10 @@ final readonly class LoginData
     public static function fromArray(array $data): self
     {
         return new self(
+            name: (string) $data['name'],
             email: (string) $data['email'],
             password: (string) $data['password'],
+            role: (string) $data['role'],
         );
-    }
-
-    /**
-     * @return array{email: string, password: string}
-     */
-    public function toCredentials(): array
-    {
-        return ['email' => $this->email, 'password' => $this->password];
     }
 }
