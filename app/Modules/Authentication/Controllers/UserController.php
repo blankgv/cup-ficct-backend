@@ -4,18 +4,35 @@ namespace App\Modules\Authentication\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Authentication\Models\User;
+use App\Modules\Authentication\Requests\ChangePasswordRequest;
 use App\Modules\Authentication\Requests\StoreUserRequest;
 use App\Modules\Authentication\Requests\UpdateUserRequest;
 use App\Modules\Authentication\Resources\UserResource;
+use App\Modules\Authentication\Services\PasswordResetService;
 use App\Modules\Authentication\Services\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-// CRUD de usuarios. Valida y delega en UserService.
+// CRUD de usuarios + cambio de contraseña en primer ingreso.
 class UserController extends Controller
 {
-    public function __construct(private readonly UserService $users) {}
+    public function __construct(
+        private readonly UserService $users,
+        private readonly PasswordResetService $passwords,
+    ) {}
+
+    // POST /api/auth/change-password (usuario autenticado)
+    public function changePassword(ChangePasswordRequest $request): JsonResponse
+    {
+        $this->passwords->changePassword(
+            $request->user(),
+            $request->validated('current_password'),
+            $request->validated('new_password'),
+        );
+
+        return response()->json(['message' => 'Contraseña actualizada.']);
+    }
 
     // GET /api/auth/users
     public function index(Request $request): AnonymousResourceCollection

@@ -1,6 +1,7 @@
 <?php
 
 use App\Modules\Authentication\Controllers\AuthController;
+use App\Modules\Authentication\Controllers\PasswordResetController;
 use App\Modules\Authentication\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -8,8 +9,8 @@ use Illuminate\Support\Facades\Route;
 
 // Públicas.
 Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
-Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('auth.forgot-password');
-Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('auth.reset-password');
+Route::post('/forgot-password', [PasswordResetController::class, 'forgot'])->name('auth.forgot-password');
+Route::post('/reset-password', [PasswordResetController::class, 'reset'])->name('auth.reset-password');
 
 // Protegidas (requieren token).
 Route::middleware('auth:api')->group(function () {
@@ -18,7 +19,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/refresh', [AuthController::class, 'refresh'])->name('auth.refresh');
 
     // Cambio de contraseña (disponible aunque deba cambiarla).
-    Route::post('/change-password', [AuthController::class, 'changePassword'])->name('auth.change-password');
+    Route::post('/change-password', [UserController::class, 'changePassword'])->name('auth.change-password');
 
     // CRUD de usuarios (requiere permiso y haber cambiado la contraseña inicial).
     Route::middleware(['password.changed', 'permission:user.manage'])
