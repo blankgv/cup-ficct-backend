@@ -2545,6 +2545,180 @@
                 ]
             }
         },
+        "/api/applicant-admission/postulantes/{postulante}/postulaciones": {
+            "get": {
+                "tags": [
+                    "Postulaciones"
+                ],
+                "summary": "Listar postulaciones del postulante",
+                "operationId": "2df52a8643b73adacdc6cf301503ace3",
+                "parameters": [
+                    {
+                        "name": "postulante",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Postulaciones"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Postulaciones"
+                ],
+                "summary": "Registrar postulación (1ra y 2da opción)",
+                "operationId": "f7fe77ff8036ff70949c509f21f6e932",
+                "parameters": [
+                    {
+                        "name": "postulante",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "convocatoria_id",
+                                    "carrera_primera_codigo",
+                                    "carrera_segunda_codigo"
+                                ],
+                                "properties": {
+                                    "convocatoria_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "carrera_primera_codigo": {
+                                        "type": "string",
+                                        "example": "187-09"
+                                    },
+                                    "carrera_segunda_codigo": {
+                                        "type": "string",
+                                        "example": "187-10"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Postulación creada (PENDIENTE)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Postulacion"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Convocatoria cerrada, duplicada o carrera no ofertada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/applicant-admission/postulantes/{postulante}/postulaciones/{convocatoria}": {
+            "get": {
+                "tags": [
+                    "Postulaciones"
+                ],
+                "summary": "Ver postulación",
+                "operationId": "e9bff3b2471c3a9def576dfcf0a87b8c",
+                "parameters": [
+                    {
+                        "name": "postulante",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Postulación",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Postulacion"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Postulaciones"
+                ],
+                "summary": "Cancelar postulación",
+                "operationId": "f7056cb6142f477e5056355ecfac30cb",
+                "parameters": [
+                    {
+                        "name": "postulante",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Postulación cancelada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/applicant-admission/postulantes": {
             "get": {
                 "tags": [
@@ -3503,6 +3677,36 @@
     },
     "components": {
         "schemas": {
+            "Postulacion": {
+                "properties": {
+                    "postulante_documento": {
+                        "type": "string",
+                        "example": "9876543"
+                    },
+                    "convocatoria_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "carrera_primera_codigo": {
+                        "type": "string",
+                        "example": "187-09"
+                    },
+                    "carrera_segunda_codigo": {
+                        "type": "string",
+                        "example": "187-10"
+                    },
+                    "estado": {
+                        "type": "string",
+                        "example": "PENDIENTE",
+                        "enum": [
+                            "PENDIENTE",
+                            "VERIFICADO",
+                            "RECHAZADO"
+                        ]
+                    }
+                },
+                "type": "object"
+            },
             "Convocatoria": {
                 "properties": {
                     "id": {
@@ -3881,6 +4085,10 @@
         {
             "name": "Roles",
             "description": "Gestión de roles y permisos"
+        },
+        {
+            "name": "Postulaciones",
+            "description": "Postulaciones (1ra/2da opción, estado)"
         },
         {
             "name": "Convocatorias",

@@ -11,6 +11,17 @@ use OpenApi\Attributes as OA;
 #[OA\Tag(name: 'Password', description: 'Recuperación y cambio de contraseña')]
 #[OA\Tag(name: 'Users', description: 'Gestión de usuarios')]
 #[OA\Tag(name: 'Roles', description: 'Gestión de roles y permisos')]
+#[OA\Tag(name: 'Postulaciones', description: 'Postulaciones (1ra/2da opción, estado)')]
+#[OA\Schema(
+    schema: 'Postulacion',
+    properties: [
+        new OA\Property(property: 'postulante_documento', type: 'string', example: '9876543'),
+        new OA\Property(property: 'convocatoria_id', type: 'integer', example: 1),
+        new OA\Property(property: 'carrera_primera_codigo', type: 'string', example: '187-09'),
+        new OA\Property(property: 'carrera_segunda_codigo', type: 'string', example: '187-10'),
+        new OA\Property(property: 'estado', type: 'string', enum: ['PENDIENTE', 'VERIFICADO', 'RECHAZADO'], example: 'PENDIENTE'),
+    ]
+)]
 #[OA\Tag(name: 'Convocatorias', description: 'Convocatorias y cupos por carrera')]
 #[OA\Schema(
     schema: 'Convocatoria',
