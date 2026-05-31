@@ -9,6 +9,7 @@ final readonly class CreateUserDTO
         public string $email,
         public string $password,
         public string $role,
+        public ?string $username = null,
     ) {}
 
     /**
@@ -20,6 +21,7 @@ final readonly class CreateUserDTO
             email: (string) $data['email'],
             password: (string) $data['password'],
             role: (string) $data['role'],
+            username: $data['username'] ?? null,
         );
     }
 }

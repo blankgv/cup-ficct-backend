@@ -24,6 +24,7 @@ class UserService
     {
         $user = $this->users->create([
             'email' => $data->email,
+            'username' => $data->username,
             'password' => Hash::make($data->password),
             'must_change_password' => true,
         ]);
@@ -37,7 +38,7 @@ class UserService
     public function update(User $user, UpdateUserDTO $data): User
     {
         $user->fill(array_filter(
-            ['email' => $data->email],
+            ['email' => $data->email, 'username' => $data->username],
             fn ($v) => $v !== null,
         ))->save();
 
