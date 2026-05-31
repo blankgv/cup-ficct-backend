@@ -5,7 +5,7 @@ namespace App\OpenApi;
 use OpenApi\Attributes as OA;
 
 #[OA\Info(version: '1.0.0', title: 'CUP FICCT Backend API', description: 'API REST del sistema de admisión al CUP FICCT.')]
-#[OA\Server(url: 'http://localhost:8000', description: 'Servidor del backend')]
+#[OA\Server(url: L5_SWAGGER_CONST_HOST, description: 'Servidor del backend')]
 #[OA\SecurityScheme(securityScheme: 'bearerAuth', type: 'http', scheme: 'bearer', bearerFormat: 'JWT')]
 #[OA\Tag(name: 'Auth', description: 'Sesión: login, logout, token')]
 #[OA\Tag(name: 'Password', description: 'Recuperación y cambio de contraseña')]

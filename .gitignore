@@ -3,7 +3,6 @@
 
 # Entorno y secretos / Environment & secrets
 .env
-.env.backup
 .env.production
 
 # Tests
