@@ -1,6 +1,7 @@
 <?php
 
 use App\Modules\AcademicManagement\Controllers\AulaController;
+use App\Modules\AcademicManagement\Controllers\DocenteController;
 use App\Modules\AcademicManagement\Controllers\GrupoController;
 use App\Modules\AcademicManagement\Controllers\GrupoMateriaController;
 use App\Modules\AcademicManagement\Controllers\HorarioController;
@@ -13,6 +14,7 @@ Route::middleware(['auth:api', 'password.changed', 'permission:academic.manage']
     Route::apiResource('materias', MateriaController::class);
     Route::apiResource('modulos', ModuloController::class);
     Route::apiResource('grupos', GrupoController::class);
+    Route::apiResource('docentes', DocenteController::class);
 
     // Materias de un grupo (muchos a muchos).
     Route::prefix('grupos/{grupo}/materias')->group(function () {

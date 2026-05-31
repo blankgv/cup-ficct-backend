@@ -271,6 +271,233 @@
                 ]
             }
         },
+        "/api/academic-management/docentes": {
+            "get": {
+                "tags": [
+                    "Docentes"
+                ],
+                "summary": "Listar docentes",
+                "operationId": "067de63d955e0a4e778f7dec6e0e3fca",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de docentes"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Docentes"
+                ],
+                "summary": "Crear docente",
+                "operationId": "0064af64ab360507bc63e1647078ae0f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "ci",
+                                    "nombres",
+                                    "apellidos",
+                                    "email"
+                                ],
+                                "properties": {
+                                    "ci": {
+                                        "type": "string",
+                                        "example": "1234567"
+                                    },
+                                    "nombres": {
+                                        "type": "string",
+                                        "example": "Juan Carlos"
+                                    },
+                                    "apellidos": {
+                                        "type": "string",
+                                        "example": "Pérez López"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "jperez@cup-ficct.local"
+                                    },
+                                    "telefono": {
+                                        "type": "string",
+                                        "example": "70000000"
+                                    },
+                                    "profesion": {
+                                        "type": "string",
+                                        "example": "Ing. Matemático"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Docente creado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Docente"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/docentes/{docente}": {
+            "get": {
+                "tags": [
+                    "Docentes"
+                ],
+                "summary": "Ver docente",
+                "operationId": "a3921735fa4b33348a9c2f7208405932",
+                "parameters": [
+                    {
+                        "name": "docente",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Docente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Docente"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Docentes"
+                ],
+                "summary": "Editar docente",
+                "operationId": "345044a9e206949a024a99debd27bc46",
+                "parameters": [
+                    {
+                        "name": "docente",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "ci": {
+                                        "type": "string"
+                                    },
+                                    "nombres": {
+                                        "type": "string"
+                                    },
+                                    "apellidos": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "telefono": {
+                                        "type": "string"
+                                    },
+                                    "profesion": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Docente actualizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Docente"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Docentes"
+                ],
+                "summary": "Eliminar docente",
+                "operationId": "68002bae0bb797215b8540bcb018003a",
+                "parameters": [
+                    {
+                        "name": "docente",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Docente eliminado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/academic-management/grupos": {
             "get": {
                 "tags": [
@@ -2151,6 +2378,35 @@
                 },
                 "type": "object"
             },
+            "Docente": {
+                "properties": {
+                    "ci": {
+                        "type": "string",
+                        "example": "1234567"
+                    },
+                    "nombres": {
+                        "type": "string",
+                        "example": "Juan Carlos"
+                    },
+                    "apellidos": {
+                        "type": "string",
+                        "example": "Pérez López"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "jperez@cup-ficct.local"
+                    },
+                    "telefono": {
+                        "type": "string",
+                        "example": "70000000"
+                    },
+                    "profesion": {
+                        "type": "string",
+                        "example": "Ing. Matemático"
+                    }
+                },
+                "type": "object"
+            },
             "Grupo": {
                 "properties": {
                     "id": {
@@ -2370,6 +2626,10 @@
         {
             "name": "Modulos",
             "description": "Gestión de módulos (edificios)"
+        },
+        {
+            "name": "Docentes",
+            "description": "Gestión de docentes"
         },
         {
             "name": "Grupos",

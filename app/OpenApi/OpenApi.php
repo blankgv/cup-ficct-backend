@@ -29,6 +29,18 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'ubicacion', type: 'string', example: 'Campus central'),
     ]
 )]
+#[OA\Tag(name: 'Docentes', description: 'Gestión de docentes')]
+#[OA\Schema(
+    schema: 'Docente',
+    properties: [
+        new OA\Property(property: 'ci', type: 'string', example: '1234567'),
+        new OA\Property(property: 'nombres', type: 'string', example: 'Juan Carlos'),
+        new OA\Property(property: 'apellidos', type: 'string', example: 'Pérez López'),
+        new OA\Property(property: 'email', type: 'string', example: 'jperez@cup-ficct.local'),
+        new OA\Property(property: 'telefono', type: 'string', example: '70000000'),
+        new OA\Property(property: 'profesion', type: 'string', example: 'Ing. Matemático'),
+    ]
+)]
 #[OA\Tag(name: 'Grupos', description: 'Gestión de grupos (paralelos)')]
 #[OA\Schema(
     schema: 'Grupo',
