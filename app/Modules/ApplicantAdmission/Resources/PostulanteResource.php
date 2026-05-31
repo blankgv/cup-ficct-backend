@@ -25,6 +25,8 @@ class PostulanteResource extends JsonResource
             'telefono' => $this->telefono,
             'fecha_nacimiento' => $this->fecha_nacimiento?->format('Y-m-d'),
             'colegio' => $this->colegio,
+            'ciudad' => $this->ciudad,
+            'titulo_bachiller_path' => $this->titulo_bachiller_path,
             'created_at' => $this->created_at,
         ];
     }

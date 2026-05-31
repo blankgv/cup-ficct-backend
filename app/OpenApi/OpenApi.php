@@ -64,6 +64,8 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'telefono', type: 'string', example: '70000000'),
         new OA\Property(property: 'fecha_nacimiento', type: 'string', format: 'date', example: '2007-03-15'),
         new OA\Property(property: 'colegio', type: 'string', example: 'Colegio Nacional'),
+        new OA\Property(property: 'ciudad', type: 'string', example: 'Santa Cruz'),
+        new OA\Property(property: 'titulo_bachiller_path', type: 'string', nullable: true, example: 'titulos_bachiller/9876543.pdf'),
     ]
 )]
 #[OA\Tag(name: 'Materias', description: 'Gestión de materias del curso')]

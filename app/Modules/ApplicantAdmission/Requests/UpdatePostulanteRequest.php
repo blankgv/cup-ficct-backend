@@ -28,6 +28,7 @@ class UpdatePostulanteRequest extends FormRequest
             'telefono' => ['nullable', 'string', 'max:50'],
             'fecha_nacimiento' => ['sometimes', 'date'],
             'colegio' => ['sometimes', 'string', 'max:255'],
+            'ciudad' => ['sometimes', 'string', 'max:255'],
         ];
     }
 }

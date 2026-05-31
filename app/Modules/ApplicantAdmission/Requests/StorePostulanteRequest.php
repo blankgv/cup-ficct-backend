@@ -26,6 +26,7 @@ class StorePostulanteRequest extends FormRequest
             'telefono' => ['nullable', 'string', 'max:50'],
             'fecha_nacimiento' => ['required', 'date'],
             'colegio' => ['required', 'string', 'max:255'],
+            'ciudad' => ['required', 'string', 'max:255'],
         ];
     }
 }

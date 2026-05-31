@@ -8,17 +8,23 @@ use App\Modules\ApplicantAdmission\DTOs\UpdatePostulanteDTO;
 use App\Modules\ApplicantAdmission\Models\Postulante;
 use App\Modules\ApplicantAdmission\Requests\StorePostulanteRequest;
 use App\Modules\ApplicantAdmission\Requests\UpdatePostulanteRequest;
+use App\Modules\ApplicantAdmission\Requests\UploadTituloRequest;
 use App\Modules\ApplicantAdmission\Resources\PostulanteResource;
 use App\Modules\ApplicantAdmission\Services\PostulanteService;
+use App\Modules\ApplicantAdmission\Services\TituloService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use OpenApi\Attributes as OA;
 
-// CRUD de postulantes.
+// CRUD de postulantes + título de bachiller.
 class PostulanteController extends Controller
 {
-    public function __construct(private readonly PostulanteService $postulantes) {}
+    public function __construct(
+        private readonly PostulanteService $postulantes,
+        private readonly TituloService $titulos,
+    ) {}
 
     #[OA\Get(
         path: '/api/applicant-admission/postulantes',
@@ -114,5 +120,45 @@ class PostulanteController extends Controller
         $this->postulantes->delete($postulante);
 
         return response()->json(['message' => 'Postulante eliminado.']);
+    }
+
+    #[OA\Post(
+        path: '/api/applicant-admission/postulantes/{postulante}/titulo',
+        tags: ['Postulantes'],
+        summary: 'Subir título de bachiller (PDF/imagen)',
+        security: [['bearerAuth' => []]],
+        parameters: [new OA\Parameter(name: 'postulante', in: 'path', required: true, schema: new OA\Schema(type: 'string'))],
+        requestBody: new OA\RequestBody(required: true, content: new OA\MediaType(
+            mediaType: 'multipart/form-data',
+            schema: new OA\Schema(
+                required: ['titulo'],
+                properties: [new OA\Property(property: 'titulo', type: 'string', format: 'binary')]
+            )
+        )),
+        responses: [new OA\Response(response: 200, description: 'Título subido', content: new OA\JsonContent(ref: '#/components/schemas/Postulante'))]
+    )]
+    public function uploadTitulo(UploadTituloRequest $request, Postulante $postulante): PostulanteResource
+    {
+        return new PostulanteResource($this->titulos->upload($postulante, $request->file('titulo')));
+    }
+
+    #[OA\Get(
+        path: '/api/applicant-admission/postulantes/{postulante}/titulo',
+        tags: ['Postulantes'],
+        summary: 'Descargar título (redirige a URL firmada)',
+        security: [['bearerAuth' => []]],
+        parameters: [new OA\Parameter(name: 'postulante', in: 'path', required: true, schema: new OA\Schema(type: 'string'))],
+        responses: [
+            new OA\Response(response: 302, description: 'Redirige al archivo'),
+            new OA\Response(response: 404, description: 'Sin título'),
+        ]
+    )]
+    public function downloadTitulo(Postulante $postulante): RedirectResponse
+    {
+        $url = $this->titulos->downloadUrl($postulante);
+
+        abort_if($url === null, 404, 'El postulante no tiene título cargado.');
+
+        return redirect()->away($url);
     }
 }

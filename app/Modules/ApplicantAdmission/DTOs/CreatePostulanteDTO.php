@@ -12,6 +12,7 @@ final readonly class CreatePostulanteDTO
         public string $email,
         public string $fechaNacimiento,
         public string $colegio,
+        public string $ciudad,
         public ?string $telefono = null,
     ) {}
 
@@ -27,6 +28,7 @@ final readonly class CreatePostulanteDTO
             email: (string) $data['email'],
             fechaNacimiento: (string) $data['fecha_nacimiento'],
             colegio: (string) $data['colegio'],
+            ciudad: (string) $data['ciudad'],
             telefono: $data['telefono'] ?? null,
         );
     }
@@ -44,6 +46,7 @@ final readonly class CreatePostulanteDTO
             'telefono' => $this->telefono,
             'fecha_nacimiento' => $this->fechaNacimiento,
             'colegio' => $this->colegio,
+            'ciudad' => $this->ciudad,
         ];
     }
 }

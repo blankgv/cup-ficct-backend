@@ -13,6 +13,7 @@ final readonly class UpdatePostulanteDTO
         public ?string $telefono = null,
         public ?string $fechaNacimiento = null,
         public ?string $colegio = null,
+        public ?string $ciudad = null,
     ) {}
 
     /**
@@ -28,6 +29,7 @@ final readonly class UpdatePostulanteDTO
             telefono: $data['telefono'] ?? null,
             fechaNacimiento: $data['fecha_nacimiento'] ?? null,
             colegio: $data['colegio'] ?? null,
+            ciudad: $data['ciudad'] ?? null,
         );
     }
 
@@ -46,6 +48,7 @@ final readonly class UpdatePostulanteDTO
             'telefono' => $this->telefono,
             'fecha_nacimiento' => $this->fechaNacimiento,
             'colegio' => $this->colegio,
+            'ciudad' => $this->ciudad,
         ], fn ($v) => $v !== null);
     }
 }

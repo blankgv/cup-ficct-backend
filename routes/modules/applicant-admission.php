@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth:api', 'password.changed', 'permission:applicant.manage'])->group(function () {
     Route::apiResource('postulantes', PostulanteController::class);
 
+    // Título de bachiller (R2).
+    Route::post('postulantes/{postulante}/titulo', [PostulanteController::class, 'uploadTitulo']);
+    Route::get('postulantes/{postulante}/titulo', [PostulanteController::class, 'downloadTitulo']);
+
     // Postulaciones de un postulante (PK compuesta → resolución manual).
     Route::prefix('postulantes/{postulante}/postulaciones')->group(function () {
         Route::get('/', [PostulacionController::class, 'index']);

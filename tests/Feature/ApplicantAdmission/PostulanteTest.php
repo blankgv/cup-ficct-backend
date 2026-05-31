@@ -37,6 +37,7 @@ class PostulanteTest extends TestCase
             'telefono' => '70000000',
             'fecha_nacimiento' => '2007-03-15',
             'colegio' => 'Colegio Nacional',
+            'ciudad' => 'Santa Cruz',
         ], $o);
     }
 

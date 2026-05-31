@@ -15,7 +15,7 @@ class Postulante extends Model
 
     public $incrementing = false;
 
-    protected $fillable = ['documento', 'nombres', 'apellidos', 'email', 'telefono', 'fecha_nacimiento', 'colegio'];
+    protected $fillable = ['documento', 'nombres', 'apellidos', 'email', 'telefono', 'fecha_nacimiento', 'colegio', 'ciudad', 'titulo_bachiller_path'];
 
     /**
      * @return array<string, string>

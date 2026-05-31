@@ -2957,6 +2957,91 @@
                 ]
             }
         },
+        "/api/applicant-admission/postulantes/{postulante}/titulo": {
+            "get": {
+                "tags": [
+                    "Postulantes"
+                ],
+                "summary": "Descargar título (redirige a URL firmada)",
+                "operationId": "097ae079eacccbb3967721ef7d7478c3",
+                "parameters": [
+                    {
+                        "name": "postulante",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "302": {
+                        "description": "Redirige al archivo"
+                    },
+                    "404": {
+                        "description": "Sin título"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Postulantes"
+                ],
+                "summary": "Subir título de bachiller (PDF/imagen)",
+                "operationId": "2faaabab3478299d6247a811368e4f2a",
+                "parameters": [
+                    {
+                        "name": "postulante",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "titulo"
+                                ],
+                                "properties": {
+                                    "titulo": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Título subido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Postulante"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/applicant-admission/postulantes/{postulante}/postulaciones/{convocatoria}/verificar": {
             "put": {
                 "tags": [
@@ -3918,6 +4003,15 @@
                     "colegio": {
                         "type": "string",
                         "example": "Colegio Nacional"
+                    },
+                    "ciudad": {
+                        "type": "string",
+                        "example": "Santa Cruz"
+                    },
+                    "titulo_bachiller_path": {
+                        "type": "string",
+                        "example": "titulos_bachiller/9876543.pdf",
+                        "nullable": true
                     }
                 },
                 "type": "object"
