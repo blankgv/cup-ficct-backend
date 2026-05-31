@@ -4,8 +4,10 @@ namespace App\Modules\AcademicManagement\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\AcademicManagement\Models\Grupo;
+use App\Modules\AcademicManagement\Requests\AssignDocenteRequest;
 use App\Modules\AcademicManagement\Requests\AttachMateriaRequest;
 use App\Modules\AcademicManagement\Requests\SyncMateriasRequest;
+use App\Modules\AcademicManagement\Resources\GrupoMateriaResource;
 use App\Modules\AcademicManagement\Resources\MateriaResource;
 use App\Modules\AcademicManagement\Services\GrupoMateriaService;
 use Illuminate\Http\JsonResponse;
@@ -80,5 +82,44 @@ class GrupoMateriaController extends Controller
         $this->service->detach($grupo, $sigla);
 
         return response()->json(['message' => 'Materia quitada del grupo.']);
+    }
+
+    #[OA\Put(
+        path: '/api/academic-management/grupos/{grupo}/materias/{sigla}/docente',
+        tags: ['Grupos'],
+        summary: 'Asignar docente al grupo-materia',
+        security: [['bearerAuth' => []]],
+        parameters: [
+            new OA\Parameter(name: 'grupo', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'sigla', in: 'path', required: true, schema: new OA\Schema(type: 'string')),
+        ],
+        requestBody: new OA\RequestBody(required: true, content: new OA\JsonContent(
+            required: ['ci'],
+            properties: [new OA\Property(property: 'ci', type: 'string', example: '1234567')]
+        )),
+        responses: [
+            new OA\Response(response: 200, description: 'Docente asignado'),
+            new OA\Response(response: 404, description: 'El grupo no cursa esa materia'),
+        ]
+    )]
+    public function assignDocente(AssignDocenteRequest $request, Grupo $grupo, string $sigla): GrupoMateriaResource
+    {
+        return new GrupoMateriaResource($this->service->assignDocente($grupo, $sigla, $request->validated('ci')));
+    }
+
+    #[OA\Delete(
+        path: '/api/academic-management/grupos/{grupo}/materias/{sigla}/docente',
+        tags: ['Grupos'],
+        summary: 'Quitar el docente del grupo-materia',
+        security: [['bearerAuth' => []]],
+        parameters: [
+            new OA\Parameter(name: 'grupo', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'sigla', in: 'path', required: true, schema: new OA\Schema(type: 'string')),
+        ],
+        responses: [new OA\Response(response: 200, description: 'Docente quitado')]
+    )]
+    public function removeDocente(Grupo $grupo, string $sigla): GrupoMateriaResource
+    {
+        return new GrupoMateriaResource($this->service->removeDocente($grupo, $sigla));
     }
 }

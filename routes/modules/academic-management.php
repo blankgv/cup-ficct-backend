@@ -22,6 +22,10 @@ Route::middleware(['auth:api', 'password.changed', 'permission:academic.manage']
         Route::put('/', [GrupoMateriaController::class, 'sync']);
         Route::post('/', [GrupoMateriaController::class, 'attach']);
         Route::delete('/{sigla}', [GrupoMateriaController::class, 'detach']);
+
+        // Docente del grupo-materia.
+        Route::put('/{sigla}/docente', [GrupoMateriaController::class, 'assignDocente']);
+        Route::delete('/{sigla}/docente', [GrupoMateriaController::class, 'removeDocente']);
     });
 
     // Horarios del grupo en una materia (PK compuesta de 3 → resolución manual).

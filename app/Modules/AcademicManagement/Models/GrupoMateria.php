@@ -19,7 +19,7 @@ class GrupoMateria extends Model
 
     public $incrementing = false;
 
-    protected $fillable = ['grupo_id', 'materia_sigla'];
+    protected $fillable = ['grupo_id', 'materia_sigla', 'docente_ci'];
 
     public function grupo(): BelongsTo
     {
@@ -29,5 +29,10 @@ class GrupoMateria extends Model
     public function materia(): BelongsTo
     {
         return $this->belongsTo(Materia::class, 'materia_sigla', 'sigla');
+    }
+
+    public function docente(): BelongsTo
+    {
+        return $this->belongsTo(Docente::class, 'docente_ci', 'ci');
     }
 }

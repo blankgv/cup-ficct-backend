@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\AcademicManagement;
 
+use App\Modules\AcademicManagement\Models\Docente;
 use App\Modules\AcademicManagement\Models\Grupo;
 use App\Modules\AcademicManagement\Models\Materia;
 use App\Modules\Authentication\Authorization\Role as RoleName;
@@ -80,5 +81,67 @@ class GrupoMateriaTest extends TestCase
         $this->actingAs($this->coordinador(), 'api')
             ->postJson("/api/academic-management/grupos/{$this->grupo->id}/materias", ['sigla' => 'XXX'])
             ->assertStatus(422);
+    }
+
+    private function docente(): Docente
+    {
+        return Docente::create([
+            'ci' => '1234567', 'nombres' => 'Juan', 'apellidos' => 'Pérez',
+            'email' => 'jperez@cup-ficct.local',
+        ]);
+    }
+
+    public function test_asigna_docente_al_grupo_materia(): void
+    {
+        $this->grupo->materias()->sync(['FIS']);
+        $this->docente();
+
+        $this->actingAs($this->coordinador(), 'api')
+            ->putJson("/api/academic-management/grupos/{$this->grupo->id}/materias/FIS/docente", ['ci' => '1234567'])
+            ->assertOk()
+            ->assertJsonPath('data.docente.ci', '1234567');
+
+        $this->assertDatabaseHas('grupo_materia', [
+            'grupo_id' => $this->grupo->id, 'materia_sigla' => 'FIS', 'docente_ci' => '1234567',
+        ]);
+    }
+
+    public function test_quita_docente_del_grupo_materia(): void
+    {
+        $this->grupo->materias()->sync(['FIS']);
+        $this->docente();
+        $coord = $this->coordinador();
+
+        $this->actingAs($coord, 'api')
+            ->putJson("/api/academic-management/grupos/{$this->grupo->id}/materias/FIS/docente", ['ci' => '1234567'])
+            ->assertOk();
+
+        $this->actingAs($coord, 'api')
+            ->deleteJson("/api/academic-management/grupos/{$this->grupo->id}/materias/FIS/docente")
+            ->assertOk()
+            ->assertJsonPath('data.docente', null);
+    }
+
+    public function test_borrar_docente_deja_grupo_materia_sin_docente(): void
+    {
+        $this->grupo->materias()->sync(['FIS']);
+        $docente = $this->docente();
+
+        $this->grupo->materias()->updateExistingPivot('FIS', ['docente_ci' => '1234567']);
+
+        $docente->delete();
+
+        $this->assertDatabaseHas('grupo_materia', [
+            'grupo_id' => $this->grupo->id, 'materia_sigla' => 'FIS', 'docente_ci' => null,
+        ]);
+    }
+
+    public function test_asignar_a_materia_no_cursada_da_404(): void
+    {
+        $this->docente();
+
+        $this->actingAs($this->coordinador(), 'api')
+            ->putJson("/api/academic-management/grupos/{$this->grupo->id}/materias/FIS/docente", ['ci' => '1234567'])
+            ->assertNotFound();
     }
 }

@@ -896,6 +896,100 @@
                 ]
             }
         },
+        "/api/academic-management/grupos/{grupo}/materias/{sigla}/docente": {
+            "put": {
+                "tags": [
+                    "Grupos"
+                ],
+                "summary": "Asignar docente al grupo-materia",
+                "operationId": "00057aebc00634c84cfe53ca15116ebe",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sigla",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "ci"
+                                ],
+                                "properties": {
+                                    "ci": {
+                                        "type": "string",
+                                        "example": "1234567"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Docente asignado"
+                    },
+                    "404": {
+                        "description": "El grupo no cursa esa materia"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Grupos"
+                ],
+                "summary": "Quitar el docente del grupo-materia",
+                "operationId": "b0b3e370ac0444097a7aba5bd8ffadad",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sigla",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Docente quitado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/academic-management/grupos/{grupo}/materias/{sigla}/horarios": {
             "get": {
                 "tags": [
