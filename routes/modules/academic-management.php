@@ -1,6 +1,7 @@
 <?php
 
 use App\Modules\AcademicManagement\Controllers\AulaController;
+use App\Modules\AcademicManagement\Controllers\GrupoController;
 use App\Modules\AcademicManagement\Controllers\MateriaController;
 use App\Modules\AcademicManagement\Controllers\ModuloController;
 use Illuminate\Support\Facades\Route;
@@ -9,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth:api', 'password.changed', 'permission:academic.manage'])->group(function () {
     Route::apiResource('materias', MateriaController::class);
     Route::apiResource('modulos', ModuloController::class);
+    Route::apiResource('grupos', GrupoController::class);
 
     // Aulas anidadas en el módulo (PK compuesta → resolución manual).
     Route::prefix('modulos/{modulo}/aulas')->group(function () {

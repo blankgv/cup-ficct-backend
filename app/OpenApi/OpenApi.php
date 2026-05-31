@@ -29,6 +29,17 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'ubicacion', type: 'string', example: 'Campus central'),
     ]
 )]
+#[OA\Tag(name: 'Grupos', description: 'Gestión de grupos (paralelos)')]
+#[OA\Schema(
+    schema: 'Grupo',
+    properties: [
+        new OA\Property(property: 'id', type: 'integer', example: 1),
+        new OA\Property(property: 'codigo', type: 'string', example: 'A'),
+        new OA\Property(property: 'turno', type: 'string', enum: ['MANANA', 'TARDE', 'NOCHE'], example: 'MANANA'),
+        new OA\Property(property: 'capacidad', type: 'integer', example: 70),
+        new OA\Property(property: 'gestion', type: 'string', example: '2026'),
+    ]
+)]
 #[OA\Tag(name: 'Aulas', description: 'Gestión de aulas por módulo')]
 #[OA\Schema(
     schema: 'Aula',

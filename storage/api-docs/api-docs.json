@@ -271,6 +271,238 @@
                 ]
             }
         },
+        "/api/academic-management/grupos": {
+            "get": {
+                "tags": [
+                    "Grupos"
+                ],
+                "summary": "Listar grupos",
+                "operationId": "facf90bd89a718a73595feeb3ed88016",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "gestion",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de grupos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Grupos"
+                ],
+                "summary": "Crear grupo",
+                "operationId": "e765c9d9e94241d38f3e1f5223492445",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "codigo",
+                                    "turno",
+                                    "capacidad",
+                                    "gestion"
+                                ],
+                                "properties": {
+                                    "codigo": {
+                                        "type": "string",
+                                        "example": "A"
+                                    },
+                                    "turno": {
+                                        "type": "string",
+                                        "example": "MANANA",
+                                        "enum": [
+                                            "MANANA",
+                                            "TARDE",
+                                            "NOCHE"
+                                        ]
+                                    },
+                                    "capacidad": {
+                                        "type": "integer",
+                                        "example": 70,
+                                        "maximum": 70
+                                    },
+                                    "gestion": {
+                                        "type": "string",
+                                        "example": "2026"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Grupo creado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Grupo"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/grupos/{grupo}": {
+            "get": {
+                "tags": [
+                    "Grupos"
+                ],
+                "summary": "Ver grupo",
+                "operationId": "08ea01b2647c324a0b2ae9704d70caed",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Grupo",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Grupo"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Grupos"
+                ],
+                "summary": "Editar grupo",
+                "operationId": "1359d198c2a2b776473fd68d8ecc6223",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "codigo": {
+                                        "type": "string"
+                                    },
+                                    "turno": {
+                                        "type": "string",
+                                        "enum": [
+                                            "MANANA",
+                                            "TARDE",
+                                            "NOCHE"
+                                        ]
+                                    },
+                                    "capacidad": {
+                                        "type": "integer",
+                                        "maximum": 70
+                                    },
+                                    "gestion": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Grupo actualizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Grupo"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Grupos"
+                ],
+                "summary": "Eliminar grupo",
+                "operationId": "34d03ca26af810df387f17beb9be23b1",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Grupo eliminado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/academic-management/materias": {
             "get": {
                 "tags": [
@@ -1443,6 +1675,36 @@
                 },
                 "type": "object"
             },
+            "Grupo": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "codigo": {
+                        "type": "string",
+                        "example": "A"
+                    },
+                    "turno": {
+                        "type": "string",
+                        "example": "MANANA",
+                        "enum": [
+                            "MANANA",
+                            "TARDE",
+                            "NOCHE"
+                        ]
+                    },
+                    "capacidad": {
+                        "type": "integer",
+                        "example": 70
+                    },
+                    "gestion": {
+                        "type": "string",
+                        "example": "2026"
+                    }
+                },
+                "type": "object"
+            },
             "Aula": {
                 "properties": {
                     "modulo_numero": {
@@ -1592,6 +1854,10 @@
         {
             "name": "Modulos",
             "description": "Gestión de módulos (edificios)"
+        },
+        {
+            "name": "Grupos",
+            "description": "Gestión de grupos (paralelos)"
         },
         {
             "name": "Aulas",
