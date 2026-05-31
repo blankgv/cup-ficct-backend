@@ -2,12 +2,11 @@
 
 namespace App\Modules\AcademicManagement\DTOs;
 
-// Datos para editar una materia (campos opcionales).
+// Datos para editar una materia (la sigla/PK no cambia).
 final readonly class UpdateMateriaDTO
 {
     public function __construct(
         public ?string $nombre = null,
-        public ?string $sigla = null,
         public ?float $peso = null,
     ) {}
 
@@ -18,7 +17,6 @@ final readonly class UpdateMateriaDTO
     {
         return new self(
             nombre: $data['nombre'] ?? null,
-            sigla: $data['sigla'] ?? null,
             peso: isset($data['peso']) ? (float) $data['peso'] : null,
         );
     }
@@ -31,7 +29,7 @@ final readonly class UpdateMateriaDTO
     public function toArray(): array
     {
         return array_filter(
-            ['nombre' => $this->nombre, 'sigla' => $this->sigla, 'peso' => $this->peso],
+            ['nombre' => $this->nombre, 'peso' => $this->peso],
             fn ($v) => $v !== null,
         );
     }

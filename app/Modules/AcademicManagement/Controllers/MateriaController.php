@@ -68,7 +68,7 @@ class MateriaController extends Controller
         tags: ['Materias'],
         summary: 'Ver materia',
         security: [['bearerAuth' => []]],
-        parameters: [new OA\Parameter(name: 'materia', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))],
+        parameters: [new OA\Parameter(name: 'materia', in: 'path', required: true, schema: new OA\Schema(type: 'string'))],
         responses: [new OA\Response(response: 200, description: 'Materia', content: new OA\JsonContent(ref: '#/components/schemas/Materia'))]
     )]
     public function show(Materia $materia): MateriaResource
@@ -81,11 +81,10 @@ class MateriaController extends Controller
         tags: ['Materias'],
         summary: 'Editar materia',
         security: [['bearerAuth' => []]],
-        parameters: [new OA\Parameter(name: 'materia', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))],
+        parameters: [new OA\Parameter(name: 'materia', in: 'path', required: true, schema: new OA\Schema(type: 'string'))],
         requestBody: new OA\RequestBody(content: new OA\JsonContent(
             properties: [
                 new OA\Property(property: 'nombre', type: 'string'),
-                new OA\Property(property: 'sigla', type: 'string'),
                 new OA\Property(property: 'peso', type: 'number', format: 'float'),
             ]
         )),
@@ -101,7 +100,7 @@ class MateriaController extends Controller
         tags: ['Materias'],
         summary: 'Eliminar materia',
         security: [['bearerAuth' => []]],
-        parameters: [new OA\Parameter(name: 'materia', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))],
+        parameters: [new OA\Parameter(name: 'materia', in: 'path', required: true, schema: new OA\Schema(type: 'string'))],
         responses: [new OA\Response(response: 200, description: 'Materia eliminada')]
     )]
     public function destroy(Materia $materia): JsonResponse

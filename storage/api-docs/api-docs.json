@@ -117,7 +117,7 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         }
                     }
                 ],
@@ -151,7 +151,7 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         }
                     }
                 ],
@@ -161,9 +161,6 @@
                             "schema": {
                                 "properties": {
                                     "nombre": {
-                                        "type": "string"
-                                    },
-                                    "sigla": {
                                         "type": "string"
                                     },
                                     "peso": {
@@ -206,7 +203,7 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         }
                     }
                 ],
@@ -944,17 +941,13 @@
         "schemas": {
             "Materia": {
                 "properties": {
-                    "id": {
-                        "type": "integer",
-                        "example": 1
-                    },
-                    "nombre": {
-                        "type": "string",
-                        "example": "Matemática"
-                    },
                     "sigla": {
                         "type": "string",
                         "example": "MAT"
+                    },
+                    "nombre": {
+                        "type": "string",
+                        "example": "Matemáticas"
                     },
                     "peso": {
                         "type": "number",

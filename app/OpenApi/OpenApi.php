@@ -15,9 +15,8 @@ use OpenApi\Attributes as OA;
 #[OA\Schema(
     schema: 'Materia',
     properties: [
-        new OA\Property(property: 'id', type: 'integer', example: 1),
-        new OA\Property(property: 'nombre', type: 'string', example: 'Matemática'),
         new OA\Property(property: 'sigla', type: 'string', example: 'MAT'),
+        new OA\Property(property: 'nombre', type: 'string', example: 'Matemáticas'),
         new OA\Property(property: 'peso', type: 'number', format: 'float', example: 0.25),
     ]
 )]

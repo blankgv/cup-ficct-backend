@@ -10,9 +10,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('materias', function (Blueprint $table) {
-            $table->id();
+            // La sigla es la clave primaria (no incremental).
+            $table->string('sigla')->primary();
             $table->string('nombre');
-            $table->string('sigla')->unique();
             // Ponderación de importancia (0.0000 a 1.0000).
             $table->decimal('peso', 5, 4);
             $table->timestamps();

@@ -18,9 +18,8 @@ class MateriaResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'nombre' => $this->nombre,
             'sigla' => $this->sigla,
+            'nombre' => $this->nombre,
             'peso' => (float) $this->peso,
             'created_at' => $this->created_at,
         ];
