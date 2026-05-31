@@ -12,6 +12,216 @@
         }
     ],
     "paths": {
+        "/api/academic-management/materias": {
+            "get": {
+                "tags": [
+                    "Materias"
+                ],
+                "summary": "Listar materias",
+                "operationId": "4938296e24c01668127c3e0de3458d64",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de materias"
+                    },
+                    "403": {
+                        "description": "Sin permiso"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Materias"
+                ],
+                "summary": "Crear materia",
+                "operationId": "463806dffffb4cc7a365f1e7848ccf78",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nombre",
+                                    "sigla",
+                                    "peso"
+                                ],
+                                "properties": {
+                                    "nombre": {
+                                        "type": "string",
+                                        "example": "Matemática"
+                                    },
+                                    "sigla": {
+                                        "type": "string",
+                                        "example": "MAT"
+                                    },
+                                    "peso": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 0.25
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Materia creada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Materia"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/materias/{materia}": {
+            "get": {
+                "tags": [
+                    "Materias"
+                ],
+                "summary": "Ver materia",
+                "operationId": "184833b6e372c6bac3b61305d2c8a860",
+                "parameters": [
+                    {
+                        "name": "materia",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Materia",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Materia"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Materias"
+                ],
+                "summary": "Editar materia",
+                "operationId": "7a47bb07c1d64966c8cf95616a43a438",
+                "parameters": [
+                    {
+                        "name": "materia",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nombre": {
+                                        "type": "string"
+                                    },
+                                    "sigla": {
+                                        "type": "string"
+                                    },
+                                    "peso": {
+                                        "type": "number",
+                                        "format": "float"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Materia actualizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Materia"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Materias"
+                ],
+                "summary": "Eliminar materia",
+                "operationId": "442167040ecfb9aae877747d44347760",
+                "parameters": [
+                    {
+                        "name": "materia",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Materia eliminada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/auth/login": {
             "post": {
                 "tags": [
@@ -732,6 +942,28 @@
     },
     "components": {
         "schemas": {
+            "Materia": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "nombre": {
+                        "type": "string",
+                        "example": "Matemática"
+                    },
+                    "sigla": {
+                        "type": "string",
+                        "example": "MAT"
+                    },
+                    "peso": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 0.25
+                    }
+                },
+                "type": "object"
+            },
             "User": {
                 "properties": {
                     "id": {
@@ -839,6 +1071,10 @@
         {
             "name": "Roles",
             "description": "Gestión de roles y permisos"
+        },
+        {
+            "name": "Materias",
+            "description": "Gestión de materias del curso"
         }
     ]
 }
