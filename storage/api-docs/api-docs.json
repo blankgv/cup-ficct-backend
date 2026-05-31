@@ -669,6 +669,316 @@
                 ]
             }
         },
+        "/api/academic-management/grupos/{grupo}/materias/{sigla}/horarios": {
+            "get": {
+                "tags": [
+                    "Horarios"
+                ],
+                "summary": "Listar horarios del grupo en una materia",
+                "operationId": "9e921f355c9573ed158c6735bb8a4b34",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sigla",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Horarios"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Horarios"
+                ],
+                "summary": "Crear horario",
+                "operationId": "c730672f1b6c939e0e74c9d85225843f",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sigla",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "dia",
+                                    "hora_inicio",
+                                    "hora_fin",
+                                    "aula_modulo_numero",
+                                    "aula_numero"
+                                ],
+                                "properties": {
+                                    "dia": {
+                                        "type": "string",
+                                        "example": "LUNES",
+                                        "enum": [
+                                            "LUNES",
+                                            "MARTES",
+                                            "MIERCOLES",
+                                            "JUEVES",
+                                            "VIERNES",
+                                            "SABADO"
+                                        ]
+                                    },
+                                    "hora_inicio": {
+                                        "type": "string",
+                                        "example": "07:00"
+                                    },
+                                    "hora_fin": {
+                                        "type": "string",
+                                        "example": "09:00"
+                                    },
+                                    "aula_modulo_numero": {
+                                        "type": "string",
+                                        "example": "236"
+                                    },
+                                    "aula_numero": {
+                                        "type": "integer",
+                                        "example": 14
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Horario creado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Horario"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Solapamiento o datos inválidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/grupos/{grupo}/materias/{sigla}/horarios/{numero}": {
+            "get": {
+                "tags": [
+                    "Horarios"
+                ],
+                "summary": "Ver horario",
+                "operationId": "d283d2d774dadf31157c89fae18e37b2",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sigla",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "numero",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Horario",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Horario"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Horarios"
+                ],
+                "summary": "Editar horario",
+                "operationId": "c9f0e1d0538f1fdf72172dc24fd3631f",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sigla",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "numero",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "dia": {
+                                        "type": "string",
+                                        "enum": [
+                                            "LUNES",
+                                            "MARTES",
+                                            "MIERCOLES",
+                                            "JUEVES",
+                                            "VIERNES",
+                                            "SABADO"
+                                        ]
+                                    },
+                                    "hora_inicio": {
+                                        "type": "string",
+                                        "example": "07:00"
+                                    },
+                                    "hora_fin": {
+                                        "type": "string",
+                                        "example": "09:00"
+                                    },
+                                    "aula_modulo_numero": {
+                                        "type": "string"
+                                    },
+                                    "aula_numero": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Horario actualizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Horario"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Horarios"
+                ],
+                "summary": "Eliminar horario",
+                "operationId": "b7de331a055e5fe12663aed4995f774c",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sigla",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "numero",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Horario eliminado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/academic-management/materias": {
             "get": {
                 "tags": [
@@ -1871,6 +2181,46 @@
                 },
                 "type": "object"
             },
+            "Horario": {
+                "properties": {
+                    "grupo_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "materia_sigla": {
+                        "type": "string",
+                        "example": "FIS"
+                    },
+                    "numero": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "dia": {
+                        "type": "string",
+                        "example": "LUNES",
+                        "enum": [
+                            "LUNES",
+                            "MARTES",
+                            "MIERCOLES",
+                            "JUEVES",
+                            "VIERNES",
+                            "SABADO"
+                        ]
+                    },
+                    "hora_inicio": {
+                        "type": "string",
+                        "example": "07:00"
+                    },
+                    "hora_fin": {
+                        "type": "string",
+                        "example": "09:00"
+                    },
+                    "aula": {
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
             "Aula": {
                 "properties": {
                     "modulo_numero": {
@@ -2024,6 +2374,10 @@
         {
             "name": "Grupos",
             "description": "Gestión de grupos (paralelos)"
+        },
+        {
+            "name": "Horarios",
+            "description": "Horarios de grupo-materia (día, hora, aula)"
         },
         {
             "name": "Aulas",

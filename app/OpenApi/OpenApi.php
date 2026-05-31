@@ -40,6 +40,19 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'gestion', type: 'string', example: '2026'),
     ]
 )]
+#[OA\Tag(name: 'Horarios', description: 'Horarios de grupo-materia (día, hora, aula)')]
+#[OA\Schema(
+    schema: 'Horario',
+    properties: [
+        new OA\Property(property: 'grupo_id', type: 'integer', example: 1),
+        new OA\Property(property: 'materia_sigla', type: 'string', example: 'FIS'),
+        new OA\Property(property: 'numero', type: 'integer', example: 1),
+        new OA\Property(property: 'dia', type: 'string', enum: ['LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO'], example: 'LUNES'),
+        new OA\Property(property: 'hora_inicio', type: 'string', example: '07:00'),
+        new OA\Property(property: 'hora_fin', type: 'string', example: '09:00'),
+        new OA\Property(property: 'aula', type: 'object'),
+    ]
+)]
 #[OA\Tag(name: 'Aulas', description: 'Gestión de aulas por módulo')]
 #[OA\Schema(
     schema: 'Aula',
