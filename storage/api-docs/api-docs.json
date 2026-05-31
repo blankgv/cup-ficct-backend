@@ -498,6 +498,65 @@
                 ]
             }
         },
+        "/api/academic-management/docentes/{docente}/usuario": {
+            "post": {
+                "tags": [
+                    "Docentes"
+                ],
+                "summary": "Crear y vincular la cuenta del docente",
+                "operationId": "834c339671a0f24b2cf0734b1e2be67b",
+                "parameters": [
+                    {
+                        "name": "docente",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Cuenta creada (devuelve contraseña temporal)"
+                    },
+                    "422": {
+                        "description": "Ya tiene cuenta o correo en uso"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Docentes"
+                ],
+                "summary": "Eliminar la cuenta del docente",
+                "operationId": "4723f461f27329d274cdd0f9d98e4357",
+                "parameters": [
+                    {
+                        "name": "docente",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cuenta eliminada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/academic-management/grupos": {
             "get": {
                 "tags": [

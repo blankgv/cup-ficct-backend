@@ -88,4 +88,43 @@ class DocenteTest extends TestCase
             ->getJson('/api/academic-management/docentes')
             ->assertForbidden();
     }
+
+    public function test_crea_cuenta_del_docente(): void
+    {
+        Docente::create($this->payload());
+
+        $res = $this->actingAs($this->coordinador(), 'api')
+            ->postJson('/api/academic-management/docentes/1234567/usuario')
+            ->assertCreated()
+            ->assertJsonPath('user.role', RoleName::DOCENTE)
+            ->assertJsonPath('user.must_change_password', true);
+
+        $this->assertNotEmpty($res->json('temporary_password'));
+        $this->assertDatabaseHas('users', ['email' => 'jperez@cup-ficct.local']);
+        $this->assertNotNull(Docente::find('1234567')->user_id);
+    }
+
+    public function test_no_crea_cuenta_si_ya_tiene(): void
+    {
+        Docente::create($this->payload());
+        $coord = $this->coordinador();
+
+        $this->actingAs($coord, 'api')->postJson('/api/academic-management/docentes/1234567/usuario')->assertCreated();
+        $this->actingAs($coord, 'api')->postJson('/api/academic-management/docentes/1234567/usuario')->assertStatus(422);
+    }
+
+    public function test_elimina_cuenta_del_docente(): void
+    {
+        Docente::create($this->payload());
+        $coord = $this->coordinador();
+
+        $this->actingAs($coord, 'api')->postJson('/api/academic-management/docentes/1234567/usuario')->assertCreated();
+
+        $this->actingAs($coord, 'api')
+            ->deleteJson('/api/academic-management/docentes/1234567/usuario')
+            ->assertOk();
+
+        $this->assertNull(Docente::find('1234567')->user_id);
+        $this->assertDatabaseMissing('users', ['email' => 'jperez@cup-ficct.local']);
+    }
 }

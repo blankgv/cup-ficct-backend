@@ -15,6 +15,8 @@ Route::middleware(['auth:api', 'password.changed', 'permission:academic.manage']
     Route::apiResource('modulos', ModuloController::class);
     Route::apiResource('grupos', GrupoController::class);
     Route::apiResource('docentes', DocenteController::class);
+    Route::post('docentes/{docente}/usuario', [DocenteController::class, 'createAccount']);
+    Route::delete('docentes/{docente}/usuario', [DocenteController::class, 'deleteAccount']);
 
     // Materias de un grupo (muchos a muchos).
     Route::prefix('grupos/{grupo}/materias')->group(function () {
