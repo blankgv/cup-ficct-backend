@@ -1776,6 +1776,244 @@
                 ]
             }
         },
+        "/api/applicant-admission/postulantes": {
+            "get": {
+                "tags": [
+                    "Postulantes"
+                ],
+                "summary": "Listar postulantes",
+                "operationId": "54f8a438dd36576f80e42a51e987c202",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de postulantes"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Postulantes"
+                ],
+                "summary": "Registrar postulante",
+                "operationId": "b658e8a5b32ea447eb1d98e1e9c7c13f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "documento",
+                                    "nombres",
+                                    "apellidos",
+                                    "email",
+                                    "fecha_nacimiento",
+                                    "colegio"
+                                ],
+                                "properties": {
+                                    "documento": {
+                                        "type": "string",
+                                        "example": "9876543"
+                                    },
+                                    "nombres": {
+                                        "type": "string",
+                                        "example": "María José"
+                                    },
+                                    "apellidos": {
+                                        "type": "string",
+                                        "example": "Quispe Vargas"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "mquispe@example.com"
+                                    },
+                                    "telefono": {
+                                        "type": "string",
+                                        "example": "70000000"
+                                    },
+                                    "fecha_nacimiento": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2007-03-15"
+                                    },
+                                    "colegio": {
+                                        "type": "string",
+                                        "example": "Colegio Nacional"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Postulante creado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Postulante"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/applicant-admission/postulantes/{postulante}": {
+            "get": {
+                "tags": [
+                    "Postulantes"
+                ],
+                "summary": "Ver postulante",
+                "operationId": "4b6fd998ff0780a4e70afa717076d57a",
+                "parameters": [
+                    {
+                        "name": "postulante",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Postulante",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Postulante"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Postulantes"
+                ],
+                "summary": "Editar postulante",
+                "operationId": "0142d8f6b208eab7e94c4fbf5310ce5d",
+                "parameters": [
+                    {
+                        "name": "postulante",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "documento": {
+                                        "type": "string"
+                                    },
+                                    "nombres": {
+                                        "type": "string"
+                                    },
+                                    "apellidos": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "telefono": {
+                                        "type": "string"
+                                    },
+                                    "fecha_nacimiento": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "colegio": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Postulante actualizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Postulante"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Postulantes"
+                ],
+                "summary": "Eliminar postulante",
+                "operationId": "987fc6e99603209254748b8c19211dc2",
+                "parameters": [
+                    {
+                        "name": "postulante",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Postulante eliminado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/auth/login": {
             "post": {
                 "tags": [
@@ -2496,6 +2734,40 @@
     },
     "components": {
         "schemas": {
+            "Postulante": {
+                "properties": {
+                    "documento": {
+                        "type": "string",
+                        "example": "9876543"
+                    },
+                    "nombres": {
+                        "type": "string",
+                        "example": "María José"
+                    },
+                    "apellidos": {
+                        "type": "string",
+                        "example": "Quispe Vargas"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "mquispe@example.com"
+                    },
+                    "telefono": {
+                        "type": "string",
+                        "example": "70000000"
+                    },
+                    "fecha_nacimiento": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2007-03-15"
+                    },
+                    "colegio": {
+                        "type": "string",
+                        "example": "Colegio Nacional"
+                    }
+                },
+                "type": "object"
+            },
             "Materia": {
                 "properties": {
                     "sigla": {
@@ -2771,6 +3043,10 @@
         {
             "name": "Roles",
             "description": "Gestión de roles y permisos"
+        },
+        {
+            "name": "Postulantes",
+            "description": "Gestión de postulantes"
         },
         {
             "name": "Materias",
