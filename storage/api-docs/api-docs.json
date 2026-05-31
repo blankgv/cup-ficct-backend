@@ -2196,6 +2196,355 @@
                 ]
             }
         },
+        "/api/applicant-admission/convocatorias": {
+            "get": {
+                "tags": [
+                    "Convocatorias"
+                ],
+                "summary": "Listar convocatorias",
+                "operationId": "052c003367ed0ab47d8cc474b2f53ab9",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de convocatorias"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Convocatorias"
+                ],
+                "summary": "Crear convocatoria",
+                "operationId": "dcbcee312992478a1b7eb8c657d87a4a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nombre",
+                                    "gestion",
+                                    "fecha_inicio",
+                                    "fecha_fin"
+                                ],
+                                "properties": {
+                                    "nombre": {
+                                        "type": "string",
+                                        "example": "Admisión CUP 2026-I"
+                                    },
+                                    "gestion": {
+                                        "type": "string",
+                                        "example": "2026"
+                                    },
+                                    "fecha_inicio": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-01-10"
+                                    },
+                                    "fecha_fin": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-02-10"
+                                    },
+                                    "estado": {
+                                        "type": "string",
+                                        "example": "ABIERTA",
+                                        "enum": [
+                                            "ABIERTA",
+                                            "CERRADA"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Convocatoria creada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Convocatoria"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/applicant-admission/convocatorias/{convocatoria}": {
+            "get": {
+                "tags": [
+                    "Convocatorias"
+                ],
+                "summary": "Ver convocatoria",
+                "operationId": "13a9669fa3b2141297b9c06225dcc9dd",
+                "parameters": [
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Convocatoria",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Convocatoria"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Convocatorias"
+                ],
+                "summary": "Editar convocatoria",
+                "operationId": "57caa457faa64c01c9f62b804acc5e3c",
+                "parameters": [
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nombre": {
+                                        "type": "string"
+                                    },
+                                    "gestion": {
+                                        "type": "string"
+                                    },
+                                    "fecha_inicio": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "fecha_fin": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "estado": {
+                                        "type": "string",
+                                        "enum": [
+                                            "ABIERTA",
+                                            "CERRADA"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Convocatoria actualizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Convocatoria"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Convocatorias"
+                ],
+                "summary": "Eliminar convocatoria",
+                "operationId": "509f1d23ad33b93c3db28bbf23433e0b",
+                "parameters": [
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Convocatoria eliminada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/applicant-admission/convocatorias/{convocatoria}/cupos": {
+            "get": {
+                "tags": [
+                    "Convocatorias"
+                ],
+                "summary": "Listar cupos por carrera",
+                "operationId": "8c3902f957f2ce14dbff31b893dee197",
+                "parameters": [
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cupos por carrera"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Convocatorias"
+                ],
+                "summary": "Fijar cupos de una carrera",
+                "operationId": "874af0b516dc2a22ac1426a719635e2f",
+                "parameters": [
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "carrera_codigo",
+                                    "cupos"
+                                ],
+                                "properties": {
+                                    "carrera_codigo": {
+                                        "type": "string",
+                                        "example": "187-09"
+                                    },
+                                    "cupos": {
+                                        "type": "integer",
+                                        "example": 80
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cupos actualizados"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/applicant-admission/convocatorias/{convocatoria}/cupos/{carrera}": {
+            "delete": {
+                "tags": [
+                    "Convocatorias"
+                ],
+                "summary": "Quitar una carrera de la convocatoria",
+                "operationId": "3b6043e9e68710ea1759be41e3d6bfa6",
+                "parameters": [
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "carrera",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Carrera quitada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/applicant-admission/postulantes": {
             "get": {
                 "tags": [
@@ -3154,6 +3503,41 @@
     },
     "components": {
         "schemas": {
+            "Convocatoria": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "nombre": {
+                        "type": "string",
+                        "example": "Admisión CUP 2026-I"
+                    },
+                    "gestion": {
+                        "type": "string",
+                        "example": "2026"
+                    },
+                    "fecha_inicio": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2026-01-10"
+                    },
+                    "fecha_fin": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2026-02-10"
+                    },
+                    "estado": {
+                        "type": "string",
+                        "example": "ABIERTA",
+                        "enum": [
+                            "ABIERTA",
+                            "CERRADA"
+                        ]
+                    }
+                },
+                "type": "object"
+            },
             "Facultad": {
                 "properties": {
                     "codigo": {
@@ -3497,6 +3881,10 @@
         {
             "name": "Roles",
             "description": "Gestión de roles y permisos"
+        },
+        {
+            "name": "Convocatorias",
+            "description": "Convocatorias y cupos por carrera"
         },
         {
             "name": "Facultades",

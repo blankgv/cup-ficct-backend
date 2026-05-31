@@ -11,6 +11,18 @@ use OpenApi\Attributes as OA;
 #[OA\Tag(name: 'Password', description: 'Recuperación y cambio de contraseña')]
 #[OA\Tag(name: 'Users', description: 'Gestión de usuarios')]
 #[OA\Tag(name: 'Roles', description: 'Gestión de roles y permisos')]
+#[OA\Tag(name: 'Convocatorias', description: 'Convocatorias y cupos por carrera')]
+#[OA\Schema(
+    schema: 'Convocatoria',
+    properties: [
+        new OA\Property(property: 'id', type: 'integer', example: 1),
+        new OA\Property(property: 'nombre', type: 'string', example: 'Admisión CUP 2026-I'),
+        new OA\Property(property: 'gestion', type: 'string', example: '2026'),
+        new OA\Property(property: 'fecha_inicio', type: 'string', format: 'date', example: '2026-01-10'),
+        new OA\Property(property: 'fecha_fin', type: 'string', format: 'date', example: '2026-02-10'),
+        new OA\Property(property: 'estado', type: 'string', enum: ['ABIERTA', 'CERRADA'], example: 'ABIERTA'),
+    ]
+)]
 #[OA\Tag(name: 'Facultades', description: 'Gestión de facultades')]
 #[OA\Schema(
     schema: 'Facultad',
