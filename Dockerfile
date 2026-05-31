@@ -40,5 +40,6 @@ EXPOSE 8000
 # Arranque: migra, siembra datos base (idempotente), genera docs y sirve en $PORT.
 CMD php artisan migrate --force \
     && php artisan db:seed --class=AuthenticationSeeder --force \
+    && php artisan db:seed --class=AcademicManagementSeeder --force \
     && php artisan l5-swagger:generate \
     && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}

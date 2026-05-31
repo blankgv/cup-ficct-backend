@@ -12,6 +12,1770 @@
         }
     ],
     "paths": {
+        "/api/academic-management/modulos/{modulo}/aulas": {
+            "get": {
+                "tags": [
+                    "Aulas"
+                ],
+                "summary": "Listar aulas de un módulo",
+                "operationId": "9b7d81b830df1b3d46f950881a9ea7a0",
+                "parameters": [
+                    {
+                        "name": "modulo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de aulas"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Aulas"
+                ],
+                "summary": "Crear aula en un módulo",
+                "operationId": "bfe5857c7ce73a6eaf08389efaf63a83",
+                "parameters": [
+                    {
+                        "name": "modulo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "numero",
+                                    "nombre",
+                                    "capacidad",
+                                    "piso",
+                                    "tipo"
+                                ],
+                                "properties": {
+                                    "numero": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "nombre": {
+                                        "type": "string",
+                                        "example": "Laboratorio A"
+                                    },
+                                    "capacidad": {
+                                        "type": "integer",
+                                        "example": 40
+                                    },
+                                    "piso": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "tipo": {
+                                        "type": "string",
+                                        "example": "LABORATORIO",
+                                        "enum": [
+                                            "COMUN",
+                                            "LABORATORIO",
+                                            "AUDITORIO"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Aula creada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Aula"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/modulos/{modulo}/aulas/{numero}": {
+            "get": {
+                "tags": [
+                    "Aulas"
+                ],
+                "summary": "Ver aula",
+                "operationId": "5488877410d870f6274c0eddf0523c82",
+                "parameters": [
+                    {
+                        "name": "modulo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "numero",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Aula",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Aula"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Aulas"
+                ],
+                "summary": "Editar aula",
+                "operationId": "d7c6a8c39511173367dee38b187d1aef",
+                "parameters": [
+                    {
+                        "name": "modulo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "numero",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nombre": {
+                                        "type": "string"
+                                    },
+                                    "capacidad": {
+                                        "type": "integer"
+                                    },
+                                    "piso": {
+                                        "type": "integer"
+                                    },
+                                    "tipo": {
+                                        "type": "string",
+                                        "enum": [
+                                            "COMUN",
+                                            "LABORATORIO",
+                                            "AUDITORIO"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Aula actualizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Aula"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Aulas"
+                ],
+                "summary": "Eliminar aula",
+                "operationId": "e1bf8ae2d4bed629de2baa8c01fe7511",
+                "parameters": [
+                    {
+                        "name": "modulo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "numero",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Aula eliminada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/docentes": {
+            "get": {
+                "tags": [
+                    "Docentes"
+                ],
+                "summary": "Listar docentes",
+                "operationId": "067de63d955e0a4e778f7dec6e0e3fca",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de docentes"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Docentes"
+                ],
+                "summary": "Crear docente",
+                "operationId": "0064af64ab360507bc63e1647078ae0f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "ci",
+                                    "nombres",
+                                    "apellidos",
+                                    "email"
+                                ],
+                                "properties": {
+                                    "ci": {
+                                        "type": "string",
+                                        "example": "1234567"
+                                    },
+                                    "nombres": {
+                                        "type": "string",
+                                        "example": "Juan Carlos"
+                                    },
+                                    "apellidos": {
+                                        "type": "string",
+                                        "example": "Pérez López"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "jperez@cup-ficct.local"
+                                    },
+                                    "telefono": {
+                                        "type": "string",
+                                        "example": "70000000"
+                                    },
+                                    "profesion": {
+                                        "type": "string",
+                                        "example": "Ing. Matemático"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Docente creado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Docente"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/docentes/{docente}": {
+            "get": {
+                "tags": [
+                    "Docentes"
+                ],
+                "summary": "Ver docente",
+                "operationId": "a3921735fa4b33348a9c2f7208405932",
+                "parameters": [
+                    {
+                        "name": "docente",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Docente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Docente"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Docentes"
+                ],
+                "summary": "Editar docente",
+                "operationId": "345044a9e206949a024a99debd27bc46",
+                "parameters": [
+                    {
+                        "name": "docente",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "ci": {
+                                        "type": "string"
+                                    },
+                                    "nombres": {
+                                        "type": "string"
+                                    },
+                                    "apellidos": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "telefono": {
+                                        "type": "string"
+                                    },
+                                    "profesion": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Docente actualizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Docente"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Docentes"
+                ],
+                "summary": "Eliminar docente",
+                "operationId": "68002bae0bb797215b8540bcb018003a",
+                "parameters": [
+                    {
+                        "name": "docente",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Docente eliminado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/docentes/{docente}/usuario": {
+            "post": {
+                "tags": [
+                    "Docentes"
+                ],
+                "summary": "Crear y vincular la cuenta del docente",
+                "operationId": "834c339671a0f24b2cf0734b1e2be67b",
+                "parameters": [
+                    {
+                        "name": "docente",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Cuenta creada (devuelve contraseña temporal)"
+                    },
+                    "422": {
+                        "description": "Ya tiene cuenta o correo en uso"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Docentes"
+                ],
+                "summary": "Eliminar la cuenta del docente",
+                "operationId": "4723f461f27329d274cdd0f9d98e4357",
+                "parameters": [
+                    {
+                        "name": "docente",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cuenta eliminada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/grupos": {
+            "get": {
+                "tags": [
+                    "Grupos"
+                ],
+                "summary": "Listar grupos",
+                "operationId": "facf90bd89a718a73595feeb3ed88016",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "gestion",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de grupos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Grupos"
+                ],
+                "summary": "Crear grupo",
+                "operationId": "e765c9d9e94241d38f3e1f5223492445",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "codigo",
+                                    "turno",
+                                    "capacidad",
+                                    "gestion"
+                                ],
+                                "properties": {
+                                    "codigo": {
+                                        "type": "string",
+                                        "example": "A"
+                                    },
+                                    "turno": {
+                                        "type": "string",
+                                        "example": "MANANA",
+                                        "enum": [
+                                            "MANANA",
+                                            "TARDE",
+                                            "NOCHE"
+                                        ]
+                                    },
+                                    "capacidad": {
+                                        "type": "integer",
+                                        "example": 70,
+                                        "maximum": 70
+                                    },
+                                    "gestion": {
+                                        "type": "string",
+                                        "example": "2026"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Grupo creado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Grupo"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/grupos/{grupo}": {
+            "get": {
+                "tags": [
+                    "Grupos"
+                ],
+                "summary": "Ver grupo",
+                "operationId": "08ea01b2647c324a0b2ae9704d70caed",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Grupo",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Grupo"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Grupos"
+                ],
+                "summary": "Editar grupo",
+                "operationId": "1359d198c2a2b776473fd68d8ecc6223",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "codigo": {
+                                        "type": "string"
+                                    },
+                                    "turno": {
+                                        "type": "string",
+                                        "enum": [
+                                            "MANANA",
+                                            "TARDE",
+                                            "NOCHE"
+                                        ]
+                                    },
+                                    "capacidad": {
+                                        "type": "integer",
+                                        "maximum": 70
+                                    },
+                                    "gestion": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Grupo actualizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Grupo"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Grupos"
+                ],
+                "summary": "Eliminar grupo",
+                "operationId": "34d03ca26af810df387f17beb9be23b1",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Grupo eliminado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/grupos/{grupo}/materias": {
+            "get": {
+                "tags": [
+                    "Grupos"
+                ],
+                "summary": "Listar materias del grupo",
+                "operationId": "6ef980f6801f51c01408163ef6434548",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Materias del grupo"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Grupos"
+                ],
+                "summary": "Reemplazar materias del grupo",
+                "operationId": "610bb739e85df3173a3165f1445da9fb",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "siglas"
+                                ],
+                                "properties": {
+                                    "siglas": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "MAT",
+                                            "FIS",
+                                            "ING",
+                                            "COM"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Materias sincronizadas"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Grupos"
+                ],
+                "summary": "Agregar una materia al grupo",
+                "operationId": "d2d67820064bf4ab449241599e3201a7",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "sigla"
+                                ],
+                                "properties": {
+                                    "sigla": {
+                                        "type": "string",
+                                        "example": "MAT"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Materia agregada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/grupos/{grupo}/materias/{sigla}": {
+            "delete": {
+                "tags": [
+                    "Grupos"
+                ],
+                "summary": "Quitar una materia del grupo",
+                "operationId": "d2285b8f63fbd8e0d8d5260551d74a5a",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sigla",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Materia quitada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/grupos/{grupo}/materias/{sigla}/docente": {
+            "put": {
+                "tags": [
+                    "Grupos"
+                ],
+                "summary": "Asignar docente al grupo-materia",
+                "operationId": "00057aebc00634c84cfe53ca15116ebe",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sigla",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "ci"
+                                ],
+                                "properties": {
+                                    "ci": {
+                                        "type": "string",
+                                        "example": "1234567"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Docente asignado"
+                    },
+                    "404": {
+                        "description": "El grupo no cursa esa materia"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Grupos"
+                ],
+                "summary": "Quitar el docente del grupo-materia",
+                "operationId": "b0b3e370ac0444097a7aba5bd8ffadad",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sigla",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Docente quitado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/grupos/{grupo}/materias/{sigla}/horarios": {
+            "get": {
+                "tags": [
+                    "Horarios"
+                ],
+                "summary": "Listar horarios del grupo en una materia",
+                "operationId": "9e921f355c9573ed158c6735bb8a4b34",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sigla",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Horarios"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Horarios"
+                ],
+                "summary": "Crear horario",
+                "operationId": "c730672f1b6c939e0e74c9d85225843f",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sigla",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "dia",
+                                    "hora_inicio",
+                                    "hora_fin",
+                                    "aula_modulo_numero",
+                                    "aula_numero"
+                                ],
+                                "properties": {
+                                    "dia": {
+                                        "type": "string",
+                                        "example": "LUNES",
+                                        "enum": [
+                                            "LUNES",
+                                            "MARTES",
+                                            "MIERCOLES",
+                                            "JUEVES",
+                                            "VIERNES",
+                                            "SABADO"
+                                        ]
+                                    },
+                                    "hora_inicio": {
+                                        "type": "string",
+                                        "example": "07:00"
+                                    },
+                                    "hora_fin": {
+                                        "type": "string",
+                                        "example": "09:00"
+                                    },
+                                    "aula_modulo_numero": {
+                                        "type": "string",
+                                        "example": "236"
+                                    },
+                                    "aula_numero": {
+                                        "type": "integer",
+                                        "example": 14
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Horario creado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Horario"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Solapamiento o datos inválidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/grupos/{grupo}/materias/{sigla}/horarios/{numero}": {
+            "get": {
+                "tags": [
+                    "Horarios"
+                ],
+                "summary": "Ver horario",
+                "operationId": "d283d2d774dadf31157c89fae18e37b2",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sigla",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "numero",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Horario",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Horario"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Horarios"
+                ],
+                "summary": "Editar horario",
+                "operationId": "c9f0e1d0538f1fdf72172dc24fd3631f",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sigla",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "numero",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "dia": {
+                                        "type": "string",
+                                        "enum": [
+                                            "LUNES",
+                                            "MARTES",
+                                            "MIERCOLES",
+                                            "JUEVES",
+                                            "VIERNES",
+                                            "SABADO"
+                                        ]
+                                    },
+                                    "hora_inicio": {
+                                        "type": "string",
+                                        "example": "07:00"
+                                    },
+                                    "hora_fin": {
+                                        "type": "string",
+                                        "example": "09:00"
+                                    },
+                                    "aula_modulo_numero": {
+                                        "type": "string"
+                                    },
+                                    "aula_numero": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Horario actualizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Horario"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Horarios"
+                ],
+                "summary": "Eliminar horario",
+                "operationId": "b7de331a055e5fe12663aed4995f774c",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sigla",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "numero",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Horario eliminado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/materias": {
+            "get": {
+                "tags": [
+                    "Materias"
+                ],
+                "summary": "Listar materias",
+                "operationId": "4938296e24c01668127c3e0de3458d64",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de materias"
+                    },
+                    "403": {
+                        "description": "Sin permiso"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Materias"
+                ],
+                "summary": "Crear materia",
+                "operationId": "463806dffffb4cc7a365f1e7848ccf78",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nombre",
+                                    "sigla",
+                                    "peso"
+                                ],
+                                "properties": {
+                                    "nombre": {
+                                        "type": "string",
+                                        "example": "Matemática"
+                                    },
+                                    "sigla": {
+                                        "type": "string",
+                                        "example": "MAT"
+                                    },
+                                    "peso": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 0.25
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Materia creada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Materia"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/materias/{materia}": {
+            "get": {
+                "tags": [
+                    "Materias"
+                ],
+                "summary": "Ver materia",
+                "operationId": "184833b6e372c6bac3b61305d2c8a860",
+                "parameters": [
+                    {
+                        "name": "materia",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Materia",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Materia"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Materias"
+                ],
+                "summary": "Editar materia",
+                "operationId": "7a47bb07c1d64966c8cf95616a43a438",
+                "parameters": [
+                    {
+                        "name": "materia",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nombre": {
+                                        "type": "string"
+                                    },
+                                    "sigla": {
+                                        "type": "string"
+                                    },
+                                    "peso": {
+                                        "type": "number",
+                                        "format": "float"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Materia actualizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Materia"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Materias"
+                ],
+                "summary": "Eliminar materia",
+                "operationId": "442167040ecfb9aae877747d44347760",
+                "parameters": [
+                    {
+                        "name": "materia",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Materia eliminada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/modulos": {
+            "get": {
+                "tags": [
+                    "Modulos"
+                ],
+                "summary": "Listar módulos",
+                "operationId": "3c41a116313f5dcd4f14e6dbd5bac46f",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de módulos"
+                    },
+                    "403": {
+                        "description": "Sin permiso"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Modulos"
+                ],
+                "summary": "Crear módulo",
+                "operationId": "412fb1b3e90df4d36a390a515637ccad",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "numero",
+                                    "nombre"
+                                ],
+                                "properties": {
+                                    "numero": {
+                                        "type": "string",
+                                        "example": "236"
+                                    },
+                                    "nombre": {
+                                        "type": "string",
+                                        "example": "Módulo 236"
+                                    },
+                                    "ubicacion": {
+                                        "type": "string",
+                                        "example": "Campus central"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Módulo creado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Modulo"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/modulos/{modulo}": {
+            "get": {
+                "tags": [
+                    "Modulos"
+                ],
+                "summary": "Ver módulo",
+                "operationId": "ba6119e8773b264e71e2c121c8a31271",
+                "parameters": [
+                    {
+                        "name": "modulo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Módulo",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Modulo"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Modulos"
+                ],
+                "summary": "Editar módulo",
+                "operationId": "2db82fe4edb63588ef241a5ec5041ead",
+                "parameters": [
+                    {
+                        "name": "modulo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "numero": {
+                                        "type": "string"
+                                    },
+                                    "nombre": {
+                                        "type": "string"
+                                    },
+                                    "ubicacion": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Módulo actualizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Modulo"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Modulos"
+                ],
+                "summary": "Eliminar módulo",
+                "operationId": "8db35e73a81cc88224f356521de5e2ea",
+                "parameters": [
+                    {
+                        "name": "modulo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Módulo eliminado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/auth/login": {
             "post": {
                 "tags": [
@@ -732,6 +2496,174 @@
     },
     "components": {
         "schemas": {
+            "Materia": {
+                "properties": {
+                    "sigla": {
+                        "type": "string",
+                        "example": "MAT"
+                    },
+                    "nombre": {
+                        "type": "string",
+                        "example": "Matemáticas"
+                    },
+                    "peso": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 0.25
+                    }
+                },
+                "type": "object"
+            },
+            "Modulo": {
+                "properties": {
+                    "numero": {
+                        "type": "string",
+                        "example": "236"
+                    },
+                    "nombre": {
+                        "type": "string",
+                        "example": "Módulo 236"
+                    },
+                    "ubicacion": {
+                        "type": "string",
+                        "example": "Campus central"
+                    }
+                },
+                "type": "object"
+            },
+            "Docente": {
+                "properties": {
+                    "ci": {
+                        "type": "string",
+                        "example": "1234567"
+                    },
+                    "nombres": {
+                        "type": "string",
+                        "example": "Juan Carlos"
+                    },
+                    "apellidos": {
+                        "type": "string",
+                        "example": "Pérez López"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "jperez@cup-ficct.local"
+                    },
+                    "telefono": {
+                        "type": "string",
+                        "example": "70000000"
+                    },
+                    "profesion": {
+                        "type": "string",
+                        "example": "Ing. Matemático"
+                    }
+                },
+                "type": "object"
+            },
+            "Grupo": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "codigo": {
+                        "type": "string",
+                        "example": "A"
+                    },
+                    "turno": {
+                        "type": "string",
+                        "example": "MANANA",
+                        "enum": [
+                            "MANANA",
+                            "TARDE",
+                            "NOCHE"
+                        ]
+                    },
+                    "capacidad": {
+                        "type": "integer",
+                        "example": 70
+                    },
+                    "gestion": {
+                        "type": "string",
+                        "example": "2026"
+                    }
+                },
+                "type": "object"
+            },
+            "Horario": {
+                "properties": {
+                    "grupo_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "materia_sigla": {
+                        "type": "string",
+                        "example": "FIS"
+                    },
+                    "numero": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "dia": {
+                        "type": "string",
+                        "example": "LUNES",
+                        "enum": [
+                            "LUNES",
+                            "MARTES",
+                            "MIERCOLES",
+                            "JUEVES",
+                            "VIERNES",
+                            "SABADO"
+                        ]
+                    },
+                    "hora_inicio": {
+                        "type": "string",
+                        "example": "07:00"
+                    },
+                    "hora_fin": {
+                        "type": "string",
+                        "example": "09:00"
+                    },
+                    "aula": {
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "Aula": {
+                "properties": {
+                    "modulo_numero": {
+                        "type": "string",
+                        "example": "236"
+                    },
+                    "numero": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "nombre": {
+                        "type": "string",
+                        "example": "Laboratorio A"
+                    },
+                    "capacidad": {
+                        "type": "integer",
+                        "example": 40
+                    },
+                    "piso": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "tipo": {
+                        "type": "string",
+                        "example": "LABORATORIO",
+                        "enum": [
+                            "COMUN",
+                            "LABORATORIO",
+                            "AUDITORIO"
+                        ]
+                    }
+                },
+                "type": "object"
+            },
             "User": {
                 "properties": {
                     "id": {
@@ -839,6 +2771,30 @@
         {
             "name": "Roles",
             "description": "Gestión de roles y permisos"
+        },
+        {
+            "name": "Materias",
+            "description": "Gestión de materias del curso"
+        },
+        {
+            "name": "Modulos",
+            "description": "Gestión de módulos (edificios)"
+        },
+        {
+            "name": "Docentes",
+            "description": "Gestión de docentes"
+        },
+        {
+            "name": "Grupos",
+            "description": "Gestión de grupos (paralelos)"
+        },
+        {
+            "name": "Horarios",
+            "description": "Horarios de grupo-materia (día, hora, aula)"
+        },
+        {
+            "name": "Aulas",
+            "description": "Gestión de aulas por módulo"
         }
     ]
 }

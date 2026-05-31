@@ -1,0 +1,27 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+// Docentes. PK = ci.
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('docentes', function (Blueprint $table) {
+            $table->string('ci')->primary();
+            $table->string('nombres');
+            $table->string('apellidos');
+            $table->string('email')->unique();
+            $table->string('telefono')->nullable();
+            $table->string('profesion')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('docentes');
+    }
+};

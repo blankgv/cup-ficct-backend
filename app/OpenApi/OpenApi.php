@@ -11,6 +11,72 @@ use OpenApi\Attributes as OA;
 #[OA\Tag(name: 'Password', description: 'Recuperación y cambio de contraseña')]
 #[OA\Tag(name: 'Users', description: 'Gestión de usuarios')]
 #[OA\Tag(name: 'Roles', description: 'Gestión de roles y permisos')]
+#[OA\Tag(name: 'Materias', description: 'Gestión de materias del curso')]
+#[OA\Tag(name: 'Modulos', description: 'Gestión de módulos (edificios)')]
+#[OA\Schema(
+    schema: 'Materia',
+    properties: [
+        new OA\Property(property: 'sigla', type: 'string', example: 'MAT'),
+        new OA\Property(property: 'nombre', type: 'string', example: 'Matemáticas'),
+        new OA\Property(property: 'peso', type: 'number', format: 'float', example: 0.25),
+    ]
+)]
+#[OA\Schema(
+    schema: 'Modulo',
+    properties: [
+        new OA\Property(property: 'numero', type: 'string', example: '236'),
+        new OA\Property(property: 'nombre', type: 'string', example: 'Módulo 236'),
+        new OA\Property(property: 'ubicacion', type: 'string', example: 'Campus central'),
+    ]
+)]
+#[OA\Tag(name: 'Docentes', description: 'Gestión de docentes')]
+#[OA\Schema(
+    schema: 'Docente',
+    properties: [
+        new OA\Property(property: 'ci', type: 'string', example: '1234567'),
+        new OA\Property(property: 'nombres', type: 'string', example: 'Juan Carlos'),
+        new OA\Property(property: 'apellidos', type: 'string', example: 'Pérez López'),
+        new OA\Property(property: 'email', type: 'string', example: 'jperez@cup-ficct.local'),
+        new OA\Property(property: 'telefono', type: 'string', example: '70000000'),
+        new OA\Property(property: 'profesion', type: 'string', example: 'Ing. Matemático'),
+    ]
+)]
+#[OA\Tag(name: 'Grupos', description: 'Gestión de grupos (paralelos)')]
+#[OA\Schema(
+    schema: 'Grupo',
+    properties: [
+        new OA\Property(property: 'id', type: 'integer', example: 1),
+        new OA\Property(property: 'codigo', type: 'string', example: 'A'),
+        new OA\Property(property: 'turno', type: 'string', enum: ['MANANA', 'TARDE', 'NOCHE'], example: 'MANANA'),
+        new OA\Property(property: 'capacidad', type: 'integer', example: 70),
+        new OA\Property(property: 'gestion', type: 'string', example: '2026'),
+    ]
+)]
+#[OA\Tag(name: 'Horarios', description: 'Horarios de grupo-materia (día, hora, aula)')]
+#[OA\Schema(
+    schema: 'Horario',
+    properties: [
+        new OA\Property(property: 'grupo_id', type: 'integer', example: 1),
+        new OA\Property(property: 'materia_sigla', type: 'string', example: 'FIS'),
+        new OA\Property(property: 'numero', type: 'integer', example: 1),
+        new OA\Property(property: 'dia', type: 'string', enum: ['LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO'], example: 'LUNES'),
+        new OA\Property(property: 'hora_inicio', type: 'string', example: '07:00'),
+        new OA\Property(property: 'hora_fin', type: 'string', example: '09:00'),
+        new OA\Property(property: 'aula', type: 'object'),
+    ]
+)]
+#[OA\Tag(name: 'Aulas', description: 'Gestión de aulas por módulo')]
+#[OA\Schema(
+    schema: 'Aula',
+    properties: [
+        new OA\Property(property: 'modulo_numero', type: 'string', example: '236'),
+        new OA\Property(property: 'numero', type: 'integer', example: 1),
+        new OA\Property(property: 'nombre', type: 'string', example: 'Laboratorio A'),
+        new OA\Property(property: 'capacidad', type: 'integer', example: 40),
+        new OA\Property(property: 'piso', type: 'integer', example: 2),
+        new OA\Property(property: 'tipo', type: 'string', enum: ['COMUN', 'LABORATORIO', 'AUDITORIO'], example: 'LABORATORIO'),
+    ]
+)]
 #[OA\Schema(
     schema: 'User',
     properties: [
