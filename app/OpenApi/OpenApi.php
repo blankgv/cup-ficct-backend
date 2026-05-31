@@ -12,12 +12,21 @@ use OpenApi\Attributes as OA;
 #[OA\Tag(name: 'Users', description: 'Gestión de usuarios')]
 #[OA\Tag(name: 'Roles', description: 'Gestión de roles y permisos')]
 #[OA\Tag(name: 'Materias', description: 'Gestión de materias del curso')]
+#[OA\Tag(name: 'Modulos', description: 'Gestión de módulos (edificios)')]
 #[OA\Schema(
     schema: 'Materia',
     properties: [
         new OA\Property(property: 'sigla', type: 'string', example: 'MAT'),
         new OA\Property(property: 'nombre', type: 'string', example: 'Matemáticas'),
         new OA\Property(property: 'peso', type: 'number', format: 'float', example: 0.25),
+    ]
+)]
+#[OA\Schema(
+    schema: 'Modulo',
+    properties: [
+        new OA\Property(property: 'numero', type: 'string', example: '236'),
+        new OA\Property(property: 'nombre', type: 'string', example: 'Módulo 236'),
+        new OA\Property(property: 'ubicacion', type: 'string', example: 'Campus central'),
     ]
 )]
 #[OA\Schema(

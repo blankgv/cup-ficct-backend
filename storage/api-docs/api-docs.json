@@ -222,6 +222,213 @@
                 ]
             }
         },
+        "/api/academic-management/modulos": {
+            "get": {
+                "tags": [
+                    "Modulos"
+                ],
+                "summary": "Listar módulos",
+                "operationId": "3c41a116313f5dcd4f14e6dbd5bac46f",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de módulos"
+                    },
+                    "403": {
+                        "description": "Sin permiso"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Modulos"
+                ],
+                "summary": "Crear módulo",
+                "operationId": "412fb1b3e90df4d36a390a515637ccad",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "numero",
+                                    "nombre"
+                                ],
+                                "properties": {
+                                    "numero": {
+                                        "type": "string",
+                                        "example": "236"
+                                    },
+                                    "nombre": {
+                                        "type": "string",
+                                        "example": "Módulo 236"
+                                    },
+                                    "ubicacion": {
+                                        "type": "string",
+                                        "example": "Campus central"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Módulo creado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Modulo"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/modulos/{modulo}": {
+            "get": {
+                "tags": [
+                    "Modulos"
+                ],
+                "summary": "Ver módulo",
+                "operationId": "ba6119e8773b264e71e2c121c8a31271",
+                "parameters": [
+                    {
+                        "name": "modulo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Módulo",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Modulo"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Modulos"
+                ],
+                "summary": "Editar módulo",
+                "operationId": "2db82fe4edb63588ef241a5ec5041ead",
+                "parameters": [
+                    {
+                        "name": "modulo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "numero": {
+                                        "type": "string"
+                                    },
+                                    "nombre": {
+                                        "type": "string"
+                                    },
+                                    "ubicacion": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Módulo actualizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Modulo"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Modulos"
+                ],
+                "summary": "Eliminar módulo",
+                "operationId": "8db35e73a81cc88224f356521de5e2ea",
+                "parameters": [
+                    {
+                        "name": "modulo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Módulo eliminado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/auth/login": {
             "post": {
                 "tags": [
@@ -960,6 +1167,23 @@
                 },
                 "type": "object"
             },
+            "Modulo": {
+                "properties": {
+                    "numero": {
+                        "type": "string",
+                        "example": "236"
+                    },
+                    "nombre": {
+                        "type": "string",
+                        "example": "Módulo 236"
+                    },
+                    "ubicacion": {
+                        "type": "string",
+                        "example": "Campus central"
+                    }
+                },
+                "type": "object"
+            },
             "User": {
                 "properties": {
                     "id": {
@@ -1071,6 +1295,10 @@
         {
             "name": "Materias",
             "description": "Gestión de materias del curso"
+        },
+        {
+            "name": "Modulos",
+            "description": "Gestión de módulos (edificios)"
         }
     ]
 }
