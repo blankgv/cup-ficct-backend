@@ -271,6 +271,221 @@
                 ]
             }
         },
+        "/api/academic-management/carreras": {
+            "get": {
+                "tags": [
+                    "Carreras"
+                ],
+                "summary": "Listar carreras",
+                "operationId": "d4a0f35c37e7aa07fbf44e8f194d3571",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "facultad",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de carreras"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Carreras"
+                ],
+                "summary": "Crear carrera",
+                "operationId": "b1932b35c527e22e32dc8ecb6e1c60fe",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "codigo",
+                                    "nombre",
+                                    "facultad_codigo"
+                                ],
+                                "properties": {
+                                    "codigo": {
+                                        "type": "string",
+                                        "example": "187-09"
+                                    },
+                                    "nombre": {
+                                        "type": "string",
+                                        "example": "Ingeniería de Sistemas"
+                                    },
+                                    "facultad_codigo": {
+                                        "type": "string",
+                                        "example": "187"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Carrera creada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Carrera"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Código no coincide con la facultad"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/carreras/{carrera}": {
+            "get": {
+                "tags": [
+                    "Carreras"
+                ],
+                "summary": "Ver carrera",
+                "operationId": "46dcf98b62075afe4b75c196d78d3ee0",
+                "parameters": [
+                    {
+                        "name": "carrera",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Carrera",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Carrera"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Carreras"
+                ],
+                "summary": "Editar carrera",
+                "operationId": "3b1af4f410992b47268a347e966de965",
+                "parameters": [
+                    {
+                        "name": "carrera",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "codigo": {
+                                        "type": "string"
+                                    },
+                                    "nombre": {
+                                        "type": "string"
+                                    },
+                                    "facultad_codigo": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Carrera actualizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Carrera"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Carreras"
+                ],
+                "summary": "Eliminar carrera",
+                "operationId": "4f2cf275fe1836dadc863e877f4d47ec",
+                "parameters": [
+                    {
+                        "name": "carrera",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Carrera eliminada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/academic-management/docentes": {
             "get": {
                 "tags": [
@@ -548,6 +763,211 @@
                 "responses": {
                     "200": {
                         "description": "Cuenta eliminada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/facultades": {
+            "get": {
+                "tags": [
+                    "Facultades"
+                ],
+                "summary": "Listar facultades",
+                "operationId": "fed7df6412a72a1b72f2ffd8e6aa45c2",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de facultades"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Facultades"
+                ],
+                "summary": "Crear facultad",
+                "operationId": "33eaac6bcae15316bacafb351cfdc332",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "codigo",
+                                    "nombre",
+                                    "abreviatura"
+                                ],
+                                "properties": {
+                                    "codigo": {
+                                        "type": "string",
+                                        "example": "187"
+                                    },
+                                    "nombre": {
+                                        "type": "string",
+                                        "example": "Ingeniería en Ciencias de la Computación y Telecomunicaciones"
+                                    },
+                                    "abreviatura": {
+                                        "type": "string",
+                                        "example": "FICCT"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Facultad creada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Facultad"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/facultades/{facultad}": {
+            "get": {
+                "tags": [
+                    "Facultades"
+                ],
+                "summary": "Ver facultad",
+                "operationId": "79773d1fbec0641b68792ea8b92e2484",
+                "parameters": [
+                    {
+                        "name": "facultad",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Facultad",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Facultad"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Facultades"
+                ],
+                "summary": "Editar facultad",
+                "operationId": "8fb3096cd802bae5b0162cb33621e18d",
+                "parameters": [
+                    {
+                        "name": "facultad",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "codigo": {
+                                        "type": "string"
+                                    },
+                                    "nombre": {
+                                        "type": "string"
+                                    },
+                                    "abreviatura": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Facultad actualizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Facultad"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Facultades"
+                ],
+                "summary": "Eliminar facultad",
+                "operationId": "dfeac12db675348fa9980e0f3348ebe7",
+                "parameters": [
+                    {
+                        "name": "facultad",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Facultad eliminada"
                     }
                 },
                 "security": [
@@ -2734,6 +3154,40 @@
     },
     "components": {
         "schemas": {
+            "Facultad": {
+                "properties": {
+                    "codigo": {
+                        "type": "string",
+                        "example": "187"
+                    },
+                    "nombre": {
+                        "type": "string",
+                        "example": "Ingeniería en Ciencias de la Computación y Telecomunicaciones"
+                    },
+                    "abreviatura": {
+                        "type": "string",
+                        "example": "FICCT"
+                    }
+                },
+                "type": "object"
+            },
+            "Carrera": {
+                "properties": {
+                    "codigo": {
+                        "type": "string",
+                        "example": "187-09"
+                    },
+                    "nombre": {
+                        "type": "string",
+                        "example": "Ingeniería de Sistemas"
+                    },
+                    "facultad_codigo": {
+                        "type": "string",
+                        "example": "187"
+                    }
+                },
+                "type": "object"
+            },
             "Postulante": {
                 "properties": {
                     "documento": {
@@ -3043,6 +3497,14 @@
         {
             "name": "Roles",
             "description": "Gestión de roles y permisos"
+        },
+        {
+            "name": "Facultades",
+            "description": "Gestión de facultades"
+        },
+        {
+            "name": "Carreras",
+            "description": "Gestión de carreras"
         },
         {
             "name": "Postulantes",

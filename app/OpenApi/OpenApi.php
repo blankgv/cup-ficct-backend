@@ -11,6 +11,24 @@ use OpenApi\Attributes as OA;
 #[OA\Tag(name: 'Password', description: 'Recuperación y cambio de contraseña')]
 #[OA\Tag(name: 'Users', description: 'Gestión de usuarios')]
 #[OA\Tag(name: 'Roles', description: 'Gestión de roles y permisos')]
+#[OA\Tag(name: 'Facultades', description: 'Gestión de facultades')]
+#[OA\Schema(
+    schema: 'Facultad',
+    properties: [
+        new OA\Property(property: 'codigo', type: 'string', example: '187'),
+        new OA\Property(property: 'nombre', type: 'string', example: 'Ingeniería en Ciencias de la Computación y Telecomunicaciones'),
+        new OA\Property(property: 'abreviatura', type: 'string', example: 'FICCT'),
+    ]
+)]
+#[OA\Tag(name: 'Carreras', description: 'Gestión de carreras')]
+#[OA\Schema(
+    schema: 'Carrera',
+    properties: [
+        new OA\Property(property: 'codigo', type: 'string', example: '187-09'),
+        new OA\Property(property: 'nombre', type: 'string', example: 'Ingeniería de Sistemas'),
+        new OA\Property(property: 'facultad_codigo', type: 'string', example: '187'),
+    ]
+)]
 #[OA\Tag(name: 'Postulantes', description: 'Gestión de postulantes')]
 #[OA\Schema(
     schema: 'Postulante',
