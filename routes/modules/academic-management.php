@@ -1,7 +1,9 @@
 <?php
 
 use App\Modules\AcademicManagement\Controllers\AulaController;
+use App\Modules\AcademicManagement\Controllers\CarreraController;
 use App\Modules\AcademicManagement\Controllers\DocenteController;
+use App\Modules\AcademicManagement\Controllers\FacultadController;
 use App\Modules\AcademicManagement\Controllers\GrupoController;
 use App\Modules\AcademicManagement\Controllers\GrupoMateriaController;
 use App\Modules\AcademicManagement\Controllers\HorarioController;
@@ -11,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 
 // Módulo AcademicManagement (/api/academic-management).
 Route::middleware(['auth:api', 'password.changed', 'permission:academic.manage'])->group(function () {
+    Route::apiResource('facultades', FacultadController::class);
+    Route::apiResource('carreras', CarreraController::class);
     Route::apiResource('materias', MateriaController::class);
     Route::apiResource('modulos', ModuloController::class);
     Route::apiResource('grupos', GrupoController::class);

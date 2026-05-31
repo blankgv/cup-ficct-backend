@@ -271,6 +271,221 @@
                 ]
             }
         },
+        "/api/academic-management/carreras": {
+            "get": {
+                "tags": [
+                    "Carreras"
+                ],
+                "summary": "Listar carreras",
+                "operationId": "d4a0f35c37e7aa07fbf44e8f194d3571",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "facultad",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de carreras"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Carreras"
+                ],
+                "summary": "Crear carrera",
+                "operationId": "b1932b35c527e22e32dc8ecb6e1c60fe",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "codigo",
+                                    "nombre",
+                                    "facultad_codigo"
+                                ],
+                                "properties": {
+                                    "codigo": {
+                                        "type": "string",
+                                        "example": "187-09"
+                                    },
+                                    "nombre": {
+                                        "type": "string",
+                                        "example": "Ingeniería de Sistemas"
+                                    },
+                                    "facultad_codigo": {
+                                        "type": "string",
+                                        "example": "187"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Carrera creada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Carrera"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Código no coincide con la facultad"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/carreras/{carrera}": {
+            "get": {
+                "tags": [
+                    "Carreras"
+                ],
+                "summary": "Ver carrera",
+                "operationId": "46dcf98b62075afe4b75c196d78d3ee0",
+                "parameters": [
+                    {
+                        "name": "carrera",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Carrera",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Carrera"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Carreras"
+                ],
+                "summary": "Editar carrera",
+                "operationId": "3b1af4f410992b47268a347e966de965",
+                "parameters": [
+                    {
+                        "name": "carrera",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "codigo": {
+                                        "type": "string"
+                                    },
+                                    "nombre": {
+                                        "type": "string"
+                                    },
+                                    "facultad_codigo": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Carrera actualizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Carrera"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Carreras"
+                ],
+                "summary": "Eliminar carrera",
+                "operationId": "4f2cf275fe1836dadc863e877f4d47ec",
+                "parameters": [
+                    {
+                        "name": "carrera",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Carrera eliminada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/academic-management/docentes": {
             "get": {
                 "tags": [
@@ -548,6 +763,211 @@
                 "responses": {
                     "200": {
                         "description": "Cuenta eliminada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/facultades": {
+            "get": {
+                "tags": [
+                    "Facultades"
+                ],
+                "summary": "Listar facultades",
+                "operationId": "fed7df6412a72a1b72f2ffd8e6aa45c2",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de facultades"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Facultades"
+                ],
+                "summary": "Crear facultad",
+                "operationId": "33eaac6bcae15316bacafb351cfdc332",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "codigo",
+                                    "nombre",
+                                    "abreviatura"
+                                ],
+                                "properties": {
+                                    "codigo": {
+                                        "type": "string",
+                                        "example": "187"
+                                    },
+                                    "nombre": {
+                                        "type": "string",
+                                        "example": "Ingeniería en Ciencias de la Computación y Telecomunicaciones"
+                                    },
+                                    "abreviatura": {
+                                        "type": "string",
+                                        "example": "FICCT"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Facultad creada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Facultad"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/facultades/{facultad}": {
+            "get": {
+                "tags": [
+                    "Facultades"
+                ],
+                "summary": "Ver facultad",
+                "operationId": "79773d1fbec0641b68792ea8b92e2484",
+                "parameters": [
+                    {
+                        "name": "facultad",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Facultad",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Facultad"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Facultades"
+                ],
+                "summary": "Editar facultad",
+                "operationId": "8fb3096cd802bae5b0162cb33621e18d",
+                "parameters": [
+                    {
+                        "name": "facultad",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "codigo": {
+                                        "type": "string"
+                                    },
+                                    "nombre": {
+                                        "type": "string"
+                                    },
+                                    "abreviatura": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Facultad actualizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Facultad"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Facultades"
+                ],
+                "summary": "Eliminar facultad",
+                "operationId": "dfeac12db675348fa9980e0f3348ebe7",
+                "parameters": [
+                    {
+                        "name": "facultad",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Facultad eliminada"
                     }
                 },
                 "security": [
@@ -1776,6 +2196,959 @@
                 ]
             }
         },
+        "/api/applicant-admission/convocatorias": {
+            "get": {
+                "tags": [
+                    "Convocatorias"
+                ],
+                "summary": "Listar convocatorias",
+                "operationId": "052c003367ed0ab47d8cc474b2f53ab9",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de convocatorias"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Convocatorias"
+                ],
+                "summary": "Crear convocatoria",
+                "operationId": "dcbcee312992478a1b7eb8c657d87a4a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nombre",
+                                    "gestion",
+                                    "fecha_inicio",
+                                    "fecha_fin"
+                                ],
+                                "properties": {
+                                    "nombre": {
+                                        "type": "string",
+                                        "example": "Admisión CUP 2026-I"
+                                    },
+                                    "gestion": {
+                                        "type": "string",
+                                        "example": "2026"
+                                    },
+                                    "fecha_inicio": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-01-10"
+                                    },
+                                    "fecha_fin": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-02-10"
+                                    },
+                                    "estado": {
+                                        "type": "string",
+                                        "example": "ABIERTA",
+                                        "enum": [
+                                            "ABIERTA",
+                                            "CERRADA"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Convocatoria creada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Convocatoria"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/applicant-admission/convocatorias/{convocatoria}": {
+            "get": {
+                "tags": [
+                    "Convocatorias"
+                ],
+                "summary": "Ver convocatoria",
+                "operationId": "13a9669fa3b2141297b9c06225dcc9dd",
+                "parameters": [
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Convocatoria",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Convocatoria"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Convocatorias"
+                ],
+                "summary": "Editar convocatoria",
+                "operationId": "57caa457faa64c01c9f62b804acc5e3c",
+                "parameters": [
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nombre": {
+                                        "type": "string"
+                                    },
+                                    "gestion": {
+                                        "type": "string"
+                                    },
+                                    "fecha_inicio": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "fecha_fin": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "estado": {
+                                        "type": "string",
+                                        "enum": [
+                                            "ABIERTA",
+                                            "CERRADA"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Convocatoria actualizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Convocatoria"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Convocatorias"
+                ],
+                "summary": "Eliminar convocatoria",
+                "operationId": "509f1d23ad33b93c3db28bbf23433e0b",
+                "parameters": [
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Convocatoria eliminada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/applicant-admission/convocatorias/{convocatoria}/cupos": {
+            "get": {
+                "tags": [
+                    "Convocatorias"
+                ],
+                "summary": "Listar cupos por carrera",
+                "operationId": "8c3902f957f2ce14dbff31b893dee197",
+                "parameters": [
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cupos por carrera"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Convocatorias"
+                ],
+                "summary": "Fijar cupos de una carrera",
+                "operationId": "874af0b516dc2a22ac1426a719635e2f",
+                "parameters": [
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "carrera_codigo",
+                                    "cupos"
+                                ],
+                                "properties": {
+                                    "carrera_codigo": {
+                                        "type": "string",
+                                        "example": "187-09"
+                                    },
+                                    "cupos": {
+                                        "type": "integer",
+                                        "example": 80
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cupos actualizados"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/applicant-admission/convocatorias/{convocatoria}/cupos/{carrera}": {
+            "delete": {
+                "tags": [
+                    "Convocatorias"
+                ],
+                "summary": "Quitar una carrera de la convocatoria",
+                "operationId": "3b6043e9e68710ea1759be41e3d6bfa6",
+                "parameters": [
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "carrera",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Carrera quitada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/applicant-admission/postulantes/{postulante}/postulaciones": {
+            "get": {
+                "tags": [
+                    "Postulaciones"
+                ],
+                "summary": "Listar postulaciones del postulante",
+                "operationId": "2df52a8643b73adacdc6cf301503ace3",
+                "parameters": [
+                    {
+                        "name": "postulante",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Postulaciones"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Postulaciones"
+                ],
+                "summary": "Registrar postulación (1ra y 2da opción)",
+                "operationId": "f7fe77ff8036ff70949c509f21f6e932",
+                "parameters": [
+                    {
+                        "name": "postulante",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "convocatoria_id",
+                                    "carrera_primera_codigo",
+                                    "carrera_segunda_codigo"
+                                ],
+                                "properties": {
+                                    "convocatoria_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "carrera_primera_codigo": {
+                                        "type": "string",
+                                        "example": "187-09"
+                                    },
+                                    "carrera_segunda_codigo": {
+                                        "type": "string",
+                                        "example": "187-10"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Postulación creada (PENDIENTE)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Postulacion"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Convocatoria cerrada, duplicada o carrera no ofertada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/applicant-admission/postulantes/{postulante}/postulaciones/{convocatoria}": {
+            "get": {
+                "tags": [
+                    "Postulaciones"
+                ],
+                "summary": "Ver postulación",
+                "operationId": "e9bff3b2471c3a9def576dfcf0a87b8c",
+                "parameters": [
+                    {
+                        "name": "postulante",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Postulación",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Postulacion"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Postulaciones"
+                ],
+                "summary": "Cancelar postulación",
+                "operationId": "f7056cb6142f477e5056355ecfac30cb",
+                "parameters": [
+                    {
+                        "name": "postulante",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Postulación cancelada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/applicant-admission/postulantes": {
+            "get": {
+                "tags": [
+                    "Postulantes"
+                ],
+                "summary": "Listar postulantes",
+                "operationId": "54f8a438dd36576f80e42a51e987c202",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de postulantes"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Postulantes"
+                ],
+                "summary": "Registrar postulante",
+                "operationId": "b658e8a5b32ea447eb1d98e1e9c7c13f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "documento",
+                                    "nombres",
+                                    "apellidos",
+                                    "email",
+                                    "fecha_nacimiento",
+                                    "colegio"
+                                ],
+                                "properties": {
+                                    "documento": {
+                                        "type": "string",
+                                        "example": "9876543"
+                                    },
+                                    "nombres": {
+                                        "type": "string",
+                                        "example": "María José"
+                                    },
+                                    "apellidos": {
+                                        "type": "string",
+                                        "example": "Quispe Vargas"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "mquispe@example.com"
+                                    },
+                                    "telefono": {
+                                        "type": "string",
+                                        "example": "70000000"
+                                    },
+                                    "fecha_nacimiento": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2007-03-15"
+                                    },
+                                    "colegio": {
+                                        "type": "string",
+                                        "example": "Colegio Nacional"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Postulante creado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Postulante"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/applicant-admission/postulantes/{postulante}": {
+            "get": {
+                "tags": [
+                    "Postulantes"
+                ],
+                "summary": "Ver postulante",
+                "operationId": "4b6fd998ff0780a4e70afa717076d57a",
+                "parameters": [
+                    {
+                        "name": "postulante",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Postulante",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Postulante"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Postulantes"
+                ],
+                "summary": "Editar postulante",
+                "operationId": "0142d8f6b208eab7e94c4fbf5310ce5d",
+                "parameters": [
+                    {
+                        "name": "postulante",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "documento": {
+                                        "type": "string"
+                                    },
+                                    "nombres": {
+                                        "type": "string"
+                                    },
+                                    "apellidos": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "telefono": {
+                                        "type": "string"
+                                    },
+                                    "fecha_nacimiento": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "colegio": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Postulante actualizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Postulante"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Postulantes"
+                ],
+                "summary": "Eliminar postulante",
+                "operationId": "987fc6e99603209254748b8c19211dc2",
+                "parameters": [
+                    {
+                        "name": "postulante",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Postulante eliminado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/applicant-admission/postulantes/{postulante}/titulo": {
+            "get": {
+                "tags": [
+                    "Postulantes"
+                ],
+                "summary": "Descargar título (redirige a URL firmada)",
+                "operationId": "097ae079eacccbb3967721ef7d7478c3",
+                "parameters": [
+                    {
+                        "name": "postulante",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "302": {
+                        "description": "Redirige al archivo"
+                    },
+                    "404": {
+                        "description": "Sin título"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Postulantes"
+                ],
+                "summary": "Subir título de bachiller (PDF/imagen)",
+                "operationId": "2faaabab3478299d6247a811368e4f2a",
+                "parameters": [
+                    {
+                        "name": "postulante",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "titulo"
+                                ],
+                                "properties": {
+                                    "titulo": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Título subido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Postulante"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/applicant-admission/postulantes/{postulante}/postulaciones/{convocatoria}/verificar": {
+            "put": {
+                "tags": [
+                    "Postulaciones"
+                ],
+                "summary": "Verificar requisitos (aprueba la inscripción al CUP)",
+                "operationId": "7c659b54f0ea23582d23b4705b08897e",
+                "parameters": [
+                    {
+                        "name": "postulante",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Postulación VERIFICADO",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Postulacion"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/applicant-admission/postulantes/{postulante}/postulaciones/{convocatoria}/rechazar": {
+            "put": {
+                "tags": [
+                    "Postulaciones"
+                ],
+                "summary": "Rechazar por no cumplir requisitos",
+                "operationId": "6aef490d65a5cf4bb8c82cbc98d8b4e3",
+                "parameters": [
+                    {
+                        "name": "postulante",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "motivo"
+                                ],
+                                "properties": {
+                                    "motivo": {
+                                        "type": "string",
+                                        "example": "Falta certificado de nacimiento"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Postulación RECHAZADO",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Postulacion"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/auth/login": {
             "post": {
                 "tags": [
@@ -2496,6 +3869,153 @@
     },
     "components": {
         "schemas": {
+            "Postulacion": {
+                "properties": {
+                    "postulante_documento": {
+                        "type": "string",
+                        "example": "9876543"
+                    },
+                    "convocatoria_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "carrera_primera_codigo": {
+                        "type": "string",
+                        "example": "187-09"
+                    },
+                    "carrera_segunda_codigo": {
+                        "type": "string",
+                        "example": "187-10"
+                    },
+                    "estado": {
+                        "type": "string",
+                        "example": "PENDIENTE",
+                        "enum": [
+                            "PENDIENTE",
+                            "VERIFICADO",
+                            "RECHAZADO"
+                        ]
+                    },
+                    "observacion": {
+                        "type": "string",
+                        "example": "Falta certificado de nacimiento",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "Convocatoria": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "nombre": {
+                        "type": "string",
+                        "example": "Admisión CUP 2026-I"
+                    },
+                    "gestion": {
+                        "type": "string",
+                        "example": "2026"
+                    },
+                    "fecha_inicio": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2026-01-10"
+                    },
+                    "fecha_fin": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2026-02-10"
+                    },
+                    "estado": {
+                        "type": "string",
+                        "example": "ABIERTA",
+                        "enum": [
+                            "ABIERTA",
+                            "CERRADA"
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "Facultad": {
+                "properties": {
+                    "codigo": {
+                        "type": "string",
+                        "example": "187"
+                    },
+                    "nombre": {
+                        "type": "string",
+                        "example": "Ingeniería en Ciencias de la Computación y Telecomunicaciones"
+                    },
+                    "abreviatura": {
+                        "type": "string",
+                        "example": "FICCT"
+                    }
+                },
+                "type": "object"
+            },
+            "Carrera": {
+                "properties": {
+                    "codigo": {
+                        "type": "string",
+                        "example": "187-09"
+                    },
+                    "nombre": {
+                        "type": "string",
+                        "example": "Ingeniería de Sistemas"
+                    },
+                    "facultad_codigo": {
+                        "type": "string",
+                        "example": "187"
+                    }
+                },
+                "type": "object"
+            },
+            "Postulante": {
+                "properties": {
+                    "documento": {
+                        "type": "string",
+                        "example": "9876543"
+                    },
+                    "nombres": {
+                        "type": "string",
+                        "example": "María José"
+                    },
+                    "apellidos": {
+                        "type": "string",
+                        "example": "Quispe Vargas"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "mquispe@example.com"
+                    },
+                    "telefono": {
+                        "type": "string",
+                        "example": "70000000"
+                    },
+                    "fecha_nacimiento": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2007-03-15"
+                    },
+                    "colegio": {
+                        "type": "string",
+                        "example": "Colegio Nacional"
+                    },
+                    "ciudad": {
+                        "type": "string",
+                        "example": "Santa Cruz"
+                    },
+                    "titulo_bachiller_path": {
+                        "type": "string",
+                        "example": "titulos_bachiller/9876543.pdf",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
             "Materia": {
                 "properties": {
                     "sigla": {
@@ -2771,6 +4291,26 @@
         {
             "name": "Roles",
             "description": "Gestión de roles y permisos"
+        },
+        {
+            "name": "Postulaciones",
+            "description": "Postulaciones (1ra/2da opción, estado)"
+        },
+        {
+            "name": "Convocatorias",
+            "description": "Convocatorias y cupos por carrera"
+        },
+        {
+            "name": "Facultades",
+            "description": "Gestión de facultades"
+        },
+        {
+            "name": "Carreras",
+            "description": "Gestión de carreras"
+        },
+        {
+            "name": "Postulantes",
+            "description": "Gestión de postulantes"
         },
         {
             "name": "Materias",

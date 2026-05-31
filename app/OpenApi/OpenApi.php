@@ -11,6 +11,63 @@ use OpenApi\Attributes as OA;
 #[OA\Tag(name: 'Password', description: 'Recuperación y cambio de contraseña')]
 #[OA\Tag(name: 'Users', description: 'Gestión de usuarios')]
 #[OA\Tag(name: 'Roles', description: 'Gestión de roles y permisos')]
+#[OA\Tag(name: 'Postulaciones', description: 'Postulaciones (1ra/2da opción, estado)')]
+#[OA\Schema(
+    schema: 'Postulacion',
+    properties: [
+        new OA\Property(property: 'postulante_documento', type: 'string', example: '9876543'),
+        new OA\Property(property: 'convocatoria_id', type: 'integer', example: 1),
+        new OA\Property(property: 'carrera_primera_codigo', type: 'string', example: '187-09'),
+        new OA\Property(property: 'carrera_segunda_codigo', type: 'string', example: '187-10'),
+        new OA\Property(property: 'estado', type: 'string', enum: ['PENDIENTE', 'VERIFICADO', 'RECHAZADO'], example: 'PENDIENTE'),
+        new OA\Property(property: 'observacion', type: 'string', nullable: true, example: 'Falta certificado de nacimiento'),
+    ]
+)]
+#[OA\Tag(name: 'Convocatorias', description: 'Convocatorias y cupos por carrera')]
+#[OA\Schema(
+    schema: 'Convocatoria',
+    properties: [
+        new OA\Property(property: 'id', type: 'integer', example: 1),
+        new OA\Property(property: 'nombre', type: 'string', example: 'Admisión CUP 2026-I'),
+        new OA\Property(property: 'gestion', type: 'string', example: '2026'),
+        new OA\Property(property: 'fecha_inicio', type: 'string', format: 'date', example: '2026-01-10'),
+        new OA\Property(property: 'fecha_fin', type: 'string', format: 'date', example: '2026-02-10'),
+        new OA\Property(property: 'estado', type: 'string', enum: ['ABIERTA', 'CERRADA'], example: 'ABIERTA'),
+    ]
+)]
+#[OA\Tag(name: 'Facultades', description: 'Gestión de facultades')]
+#[OA\Schema(
+    schema: 'Facultad',
+    properties: [
+        new OA\Property(property: 'codigo', type: 'string', example: '187'),
+        new OA\Property(property: 'nombre', type: 'string', example: 'Ingeniería en Ciencias de la Computación y Telecomunicaciones'),
+        new OA\Property(property: 'abreviatura', type: 'string', example: 'FICCT'),
+    ]
+)]
+#[OA\Tag(name: 'Carreras', description: 'Gestión de carreras')]
+#[OA\Schema(
+    schema: 'Carrera',
+    properties: [
+        new OA\Property(property: 'codigo', type: 'string', example: '187-09'),
+        new OA\Property(property: 'nombre', type: 'string', example: 'Ingeniería de Sistemas'),
+        new OA\Property(property: 'facultad_codigo', type: 'string', example: '187'),
+    ]
+)]
+#[OA\Tag(name: 'Postulantes', description: 'Gestión de postulantes')]
+#[OA\Schema(
+    schema: 'Postulante',
+    properties: [
+        new OA\Property(property: 'documento', type: 'string', example: '9876543'),
+        new OA\Property(property: 'nombres', type: 'string', example: 'María José'),
+        new OA\Property(property: 'apellidos', type: 'string', example: 'Quispe Vargas'),
+        new OA\Property(property: 'email', type: 'string', example: 'mquispe@example.com'),
+        new OA\Property(property: 'telefono', type: 'string', example: '70000000'),
+        new OA\Property(property: 'fecha_nacimiento', type: 'string', format: 'date', example: '2007-03-15'),
+        new OA\Property(property: 'colegio', type: 'string', example: 'Colegio Nacional'),
+        new OA\Property(property: 'ciudad', type: 'string', example: 'Santa Cruz'),
+        new OA\Property(property: 'titulo_bachiller_path', type: 'string', nullable: true, example: 'titulos_bachiller/9876543.pdf'),
+    ]
+)]
 #[OA\Tag(name: 'Materias', description: 'Gestión de materias del curso')]
 #[OA\Tag(name: 'Modulos', description: 'Gestión de módulos (edificios)')]
 #[OA\Schema(
