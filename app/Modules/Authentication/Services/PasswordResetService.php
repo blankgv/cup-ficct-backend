@@ -5,7 +5,6 @@ namespace App\Modules\Authentication\Services;
 use App\Modules\Authentication\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 // Lógica de contraseñas: cambio en primer ingreso, recuperación y reseteo.
@@ -47,7 +46,6 @@ class PasswordResetService
             $user->forceFill([
                 'password' => Hash::make($password),
                 'must_change_password' => false,
-                'remember_token' => Str::random(60),
             ])->save();
         });
     }
