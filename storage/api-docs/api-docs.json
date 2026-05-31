@@ -503,6 +503,172 @@
                 ]
             }
         },
+        "/api/academic-management/grupos/{grupo}/materias": {
+            "get": {
+                "tags": [
+                    "Grupos"
+                ],
+                "summary": "Listar materias del grupo",
+                "operationId": "6ef980f6801f51c01408163ef6434548",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Materias del grupo"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Grupos"
+                ],
+                "summary": "Reemplazar materias del grupo",
+                "operationId": "610bb739e85df3173a3165f1445da9fb",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "siglas"
+                                ],
+                                "properties": {
+                                    "siglas": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "MAT",
+                                            "FIS",
+                                            "ING",
+                                            "COM"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Materias sincronizadas"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Grupos"
+                ],
+                "summary": "Agregar una materia al grupo",
+                "operationId": "d2d67820064bf4ab449241599e3201a7",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "sigla"
+                                ],
+                                "properties": {
+                                    "sigla": {
+                                        "type": "string",
+                                        "example": "MAT"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Materia agregada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/grupos/{grupo}/materias/{sigla}": {
+            "delete": {
+                "tags": [
+                    "Grupos"
+                ],
+                "summary": "Quitar una materia del grupo",
+                "operationId": "d2285b8f63fbd8e0d8d5260551d74a5a",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sigla",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Materia quitada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/academic-management/materias": {
             "get": {
                 "tags": [
