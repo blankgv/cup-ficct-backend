@@ -23,6 +23,7 @@ class PostulacionResource extends JsonResource
             'carrera_primera_codigo' => $this->carrera_primera_codigo,
             'carrera_segunda_codigo' => $this->carrera_segunda_codigo,
             'estado' => $this->estado,
+            'observacion' => $this->observacion,
             'created_at' => $this->created_at,
         ];
     }

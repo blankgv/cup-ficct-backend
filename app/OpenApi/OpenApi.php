@@ -20,6 +20,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'carrera_primera_codigo', type: 'string', example: '187-09'),
         new OA\Property(property: 'carrera_segunda_codigo', type: 'string', example: '187-10'),
         new OA\Property(property: 'estado', type: 'string', enum: ['PENDIENTE', 'VERIFICADO', 'RECHAZADO'], example: 'PENDIENTE'),
+        new OA\Property(property: 'observacion', type: 'string', nullable: true, example: 'Falta certificado de nacimiento'),
     ]
 )]
 #[OA\Tag(name: 'Convocatorias', description: 'Convocatorias y cupos por carrera')]

@@ -22,7 +22,7 @@ class Postulacion extends Model
 
     protected $fillable = [
         'postulante_documento', 'convocatoria_id',
-        'carrera_primera_codigo', 'carrera_segunda_codigo', 'estado',
+        'carrera_primera_codigo', 'carrera_segunda_codigo', 'estado', 'observacion',
     ];
 
     /**

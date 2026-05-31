@@ -3,6 +3,7 @@
 use App\Modules\ApplicantAdmission\Controllers\ConvocatoriaController;
 use App\Modules\ApplicantAdmission\Controllers\PostulacionController;
 use App\Modules\ApplicantAdmission\Controllers\PostulanteController;
+use App\Modules\ApplicantAdmission\Controllers\VerificacionController;
 use Illuminate\Support\Facades\Route;
 
 // Módulo ApplicantAdmission (/api/applicant-admission).
@@ -23,3 +24,11 @@ Route::middleware(['auth:api', 'password.changed', 'permission:applicant.manage'
     Route::put('convocatorias/{convocatoria}/cupos', [ConvocatoriaController::class, 'setCupos']);
     Route::delete('convocatorias/{convocatoria}/cupos/{carrera}', [ConvocatoriaController::class, 'removeCarrera']);
 });
+
+// Verificación de requisitos (permiso aparte: applicant.verify).
+Route::middleware(['auth:api', 'password.changed', 'permission:applicant.verify'])
+    ->prefix('postulantes/{postulante}/postulaciones/{convocatoria}')
+    ->group(function () {
+        Route::put('/verificar', [VerificacionController::class, 'verificar']);
+        Route::put('/rechazar', [VerificacionController::class, 'rechazar']);
+    });

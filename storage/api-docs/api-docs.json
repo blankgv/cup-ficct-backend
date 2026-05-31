@@ -2957,6 +2957,113 @@
                 ]
             }
         },
+        "/api/applicant-admission/postulantes/{postulante}/postulaciones/{convocatoria}/verificar": {
+            "put": {
+                "tags": [
+                    "Postulaciones"
+                ],
+                "summary": "Verificar requisitos (aprueba la inscripción al CUP)",
+                "operationId": "7c659b54f0ea23582d23b4705b08897e",
+                "parameters": [
+                    {
+                        "name": "postulante",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Postulación VERIFICADO",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Postulacion"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/applicant-admission/postulantes/{postulante}/postulaciones/{convocatoria}/rechazar": {
+            "put": {
+                "tags": [
+                    "Postulaciones"
+                ],
+                "summary": "Rechazar por no cumplir requisitos",
+                "operationId": "6aef490d65a5cf4bb8c82cbc98d8b4e3",
+                "parameters": [
+                    {
+                        "name": "postulante",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "motivo"
+                                ],
+                                "properties": {
+                                    "motivo": {
+                                        "type": "string",
+                                        "example": "Falta certificado de nacimiento"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Postulación RECHAZADO",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Postulacion"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/auth/login": {
             "post": {
                 "tags": [
@@ -3703,6 +3810,11 @@
                             "VERIFICADO",
                             "RECHAZADO"
                         ]
+                    },
+                    "observacion": {
+                        "type": "string",
+                        "example": "Falta certificado de nacimiento",
+                        "nullable": true
                     }
                 },
                 "type": "object"
