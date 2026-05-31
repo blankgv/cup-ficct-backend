@@ -14,6 +14,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Detrás del proxy de Render (SSL); confiar para detectar HTTPS.
+        $middleware->trustProxies(at: '*');
+
         // Rutas protegidas usan auth:api. CORS ya activo (config/cors.php).
         // Aliases para autorizar por permiso y forzar cambio de contraseña.
         $middleware->alias([
