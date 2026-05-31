@@ -2,9 +2,16 @@
 
 namespace App\Modules\Authentication\Models;
 
-use Spatie\Permission\Models\Permission as SpatiePermission;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-// Permiso del sistema (extiende spatie).
-class Permission extends SpatiePermission
+// Permiso del sistema. Pertenece a muchos roles.
+class Permission extends Model
 {
+    protected $fillable = ['name', 'description'];
+
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class);
+    }
 }

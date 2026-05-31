@@ -16,7 +16,6 @@ class RoleManagementTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->app[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
         $this->seed(AuthenticationSeeder::class);
     }
 
@@ -52,7 +51,7 @@ class RoleManagementTest extends TestCase
             ->assertJsonPath('data.name', 'AUXILIAR')
             ->assertJsonPath('data.permissions', [Perm::APPLICANT_MANAGE, Perm::REPORT_VIEW]);
 
-        $this->assertDatabaseHas('roles', ['name' => 'AUXILIAR', 'guard_name' => 'api']);
+        $this->assertDatabaseHas('roles', ['name' => 'AUXILIAR']);
     }
 
     public function test_admin_sincroniza_permisos_de_un_rol(): void

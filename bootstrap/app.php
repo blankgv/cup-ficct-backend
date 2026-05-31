@@ -15,11 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         // Rutas protegidas usan auth:api. CORS ya activo (config/cors.php).
-        // Aliases de spatie para autorizar por rol/permiso.
+        // Aliases para autorizar por permiso y forzar cambio de contraseña.
         $middleware->alias([
-            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
-            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
-            'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+            'permission' => \App\Http\Middleware\EnsurePermission::class,
             'password.changed' => \App\Http\Middleware\EnsurePasswordChanged::class,
         ]);
     })

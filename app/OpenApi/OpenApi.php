@@ -18,7 +18,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'name', type: 'string', example: 'Administrador CUP FICCT'),
         new OA\Property(property: 'email', type: 'string', example: 'admin@cup-ficct.local'),
         new OA\Property(property: 'must_change_password', type: 'boolean', example: false),
-        new OA\Property(property: 'roles', type: 'array', items: new OA\Items(type: 'string')),
+        new OA\Property(property: 'role', type: 'string', example: 'ADMINISTRADOR'),
         new OA\Property(property: 'permissions', type: 'array', items: new OA\Items(type: 'string')),
         new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
     ]

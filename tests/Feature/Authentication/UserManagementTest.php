@@ -15,7 +15,6 @@ class UserManagementTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->app[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
         $this->seed(AuthenticationSeeder::class);
     }
 
@@ -38,7 +37,7 @@ class UserManagementTest extends TestCase
             ])
             ->assertCreated()
             ->assertJsonPath('data.must_change_password', true)
-            ->assertJsonPath('data.roles.0', RoleName::DOCENTE);
+            ->assertJsonPath('data.role', RoleName::DOCENTE);
 
         $this->assertDatabaseHas('users', ['email' => 'nuevo@test.com']);
     }

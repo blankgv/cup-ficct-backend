@@ -4,6 +4,7 @@ namespace App\Modules\Authentication\Services;
 
 use App\Modules\Authentication\DTOs\AssignPermissionsDTO;
 use App\Modules\Authentication\DTOs\CreateRoleDTO;
+use App\Modules\Authentication\Models\Permission;
 use App\Modules\Authentication\Models\Role;
 use App\Modules\Authentication\Repositories\RoleRepository;
 use Illuminate\Database\Eloquent\Collection;
@@ -22,10 +23,7 @@ class RoleService
     public function create(CreateRoleDTO $data): Role
     {
         $role = $this->roles->create((string) $data->name);
-
-        if ($data->permissions !== []) {
-            $role->syncPermissions($data->permissions);
-        }
+        $this->sync($role, $data->permissions);
 
         return $role->load('permissions');
     }
@@ -38,7 +36,7 @@ class RoleService
         }
 
         if ($data->permissions !== []) {
-            $role->syncPermissions($data->permissions);
+            $this->sync($role, $data->permissions);
         }
 
         return $role->load('permissions');
@@ -52,8 +50,19 @@ class RoleService
     // Reemplaza los permisos del rol.
     public function syncPermissions(Role $role, AssignPermissionsDTO $data): Role
     {
-        $role->syncPermissions($data->permissions);
+        $this->sync($role, $data->permissions);
 
         return $role->load('permissions');
+    }
+
+    /**
+     * Sincroniza permisos por nombre.
+     *
+     * @param list<string> $names
+     */
+    private function sync(Role $role, array $names): void
+    {
+        $ids = Permission::whereIn('name', $names)->pluck('id');
+        $role->permissions()->sync($ids);
     }
 }

@@ -13,8 +13,8 @@ class RoleRepository
         return Role::query()->with('permissions')->orderBy('name')->get();
     }
 
-    public function create(string $name, string $guard = 'api'): Role
+    public function create(string $name, ?string $description = null): Role
     {
-        return Role::create(['name' => $name, 'guard_name' => $guard]);
+        return Role::create(['name' => $name, 'description' => $description]);
     }
 }

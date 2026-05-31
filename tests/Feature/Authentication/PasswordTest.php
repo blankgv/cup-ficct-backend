@@ -19,7 +19,6 @@ class PasswordTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->app[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
         $this->seed(AuthenticationSeeder::class);
     }
 

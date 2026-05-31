@@ -757,11 +757,9 @@
                         "type": "boolean",
                         "example": false
                     },
-                    "roles": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                    "role": {
+                        "type": "string",
+                        "example": "ADMINISTRADOR"
                     },
                     "permissions": {
                         "type": "array",

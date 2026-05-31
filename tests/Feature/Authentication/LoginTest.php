@@ -16,7 +16,6 @@ class LoginTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->app[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
         $this->seed(AuthenticationSeeder::class);
     }
 
@@ -35,7 +34,7 @@ class LoginTest extends TestCase
             'access_token',
             'token_type',
             'expires_in',
-            'user' => ['id', 'email', 'roles', 'permissions'],
+            'user' => ['id', 'email', 'role', 'permissions'],
         ]);
     }
 

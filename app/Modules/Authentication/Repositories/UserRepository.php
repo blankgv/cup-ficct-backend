@@ -30,7 +30,8 @@ class UserRepository
                         ->orWhereLike('email', "%{$search}%");
                 });
             })
-            ->when($role, fn ($q) => $q->role($role))
+            ->when($role, fn ($q) => $q->whereHas('role', fn ($r) => $r->where('name', $role)))
+            ->with('role')
             ->orderBy('name')
             ->paginate($perPage);
     }

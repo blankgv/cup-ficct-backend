@@ -43,7 +43,7 @@ class UserService
         ))->save();
 
         if ($data->role !== null) {
-            $user->syncRoles([$data->role]);
+            $user->assignRole($data->role);
         }
 
         return $user;
