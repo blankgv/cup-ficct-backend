@@ -8,6 +8,7 @@ final readonly class UpdateUserDTO
     public function __construct(
         public ?string $email = null,
         public ?string $role = null,
+        public ?string $username = null,
     ) {}
 
     /**
@@ -18,6 +19,7 @@ final readonly class UpdateUserDTO
         return new self(
             email: $data['email'] ?? null,
             role: $data['role'] ?? null,
+            username: $data['username'] ?? null,
         );
     }
 }

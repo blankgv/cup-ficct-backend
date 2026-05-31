@@ -3366,6 +3366,116 @@
                 ]
             }
         },
+        "/api/auth/me/profile": {
+            "put": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Actualizar mi perfil (username)",
+                "operationId": "a7820b7ccf30294c859bcc876da53ce1",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "username"
+                                ],
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "example": "jperez"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Perfil actualizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/me/foto": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Descargar mi foto (redirige a URL firmada)",
+                "operationId": "4c452453b00998bff292ad841d6de81a",
+                "responses": {
+                    "302": {
+                        "description": "Redirige a la foto"
+                    },
+                    "404": {
+                        "description": "Sin foto"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Subir mi foto de perfil",
+                "operationId": "a869bdc13786691dac42c750a309f77d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "foto"
+                                ],
+                                "properties": {
+                                    "foto": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Foto subida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/auth/roles": {
             "get": {
                 "tags": [
@@ -3720,6 +3830,10 @@
                                     "email": {
                                         "type": "string"
                                     },
+                                    "username": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
                                     "password": {
                                         "type": "string"
                                     },
@@ -3811,6 +3925,10 @@
                                     "email": {
                                         "type": "string"
                                     },
+                                    "username": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
                                     "role": {
                                         "type": "string"
                                     }
@@ -3857,6 +3975,91 @@
                 "responses": {
                     "200": {
                         "description": "Usuario eliminado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/users/{user}/foto": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Descargar foto del usuario (redirige a URL firmada)",
+                "operationId": "041beb7ca28a9b1a7e21e655e6c37cbe",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "302": {
+                        "description": "Redirige a la foto"
+                    },
+                    "404": {
+                        "description": "Sin foto"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Subir foto de perfil del usuario",
+                "operationId": "540129e68ba70d9b381af11871eb19e7",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "foto"
+                                ],
+                                "properties": {
+                                    "foto": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Foto subida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -4193,6 +4396,16 @@
                     "email": {
                         "type": "string",
                         "example": "admin@cup-ficct.local"
+                    },
+                    "username": {
+                        "type": "string",
+                        "example": "admin",
+                        "nullable": true
+                    },
+                    "foto_perfil_path": {
+                        "type": "string",
+                        "example": "fotos_perfil/1.png",
+                        "nullable": true
                     },
                     "must_change_password": {
                         "type": "boolean",

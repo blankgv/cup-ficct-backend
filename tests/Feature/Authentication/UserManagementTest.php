@@ -6,6 +6,8 @@ use App\Modules\Authentication\Models\User;
 use App\Modules\Authentication\Authorization\Role as RoleName;
 use Database\Seeders\AuthenticationSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class UserManagementTest extends TestCase
@@ -59,5 +61,45 @@ class UserManagementTest extends TestCase
         $this->actingAs($docente, 'api')
             ->getJson('/api/auth/users')
             ->assertForbidden();
+    }
+
+    public function test_admin_crea_usuario_con_username_opcional(): void
+    {
+        $this->actingAs($this->admin(), 'api')
+            ->postJson('/api/auth/users', [
+                'email' => 'conuser@test.com',
+                'username' => 'pepe',
+                'password' => 'secret123',
+                'role' => RoleName::DOCENTE,
+            ])
+            ->assertCreated()
+            ->assertJsonPath('data.username', 'pepe');
+    }
+
+    public function test_username_es_opcional_al_crear(): void
+    {
+        $this->actingAs($this->admin(), 'api')
+            ->postJson('/api/auth/users', [
+                'email' => 'sinuser@test.com',
+                'password' => 'secret123',
+                'role' => RoleName::DOCENTE,
+            ])
+            ->assertCreated()
+            ->assertJsonPath('data.username', null);
+    }
+
+    public function test_admin_sube_foto_de_usuario(): void
+    {
+        Storage::fake('r2');
+        $target = User::factory()->create(['must_change_password' => false]);
+
+        $this->actingAs($this->admin(), 'api')
+            ->postJson("/api/auth/users/{$target->id}/foto", [
+                'foto' => UploadedFile::fake()->create('u.png', 100, 'image/png'),
+            ])
+            ->assertOk()
+            ->assertJsonPath('data.foto_perfil_path', "fotos_perfil/{$target->id}.png");
+
+        Storage::disk('r2')->assertExists("fotos_perfil/{$target->id}.png");
     }
 }

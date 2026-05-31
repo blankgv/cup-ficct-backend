@@ -139,6 +139,8 @@ use OpenApi\Attributes as OA;
     properties: [
         new OA\Property(property: 'id', type: 'integer', example: 1),
         new OA\Property(property: 'email', type: 'string', example: 'admin@cup-ficct.local'),
+        new OA\Property(property: 'username', type: 'string', nullable: true, example: 'admin'),
+        new OA\Property(property: 'foto_perfil_path', type: 'string', nullable: true, example: 'fotos_perfil/1.png'),
         new OA\Property(property: 'must_change_password', type: 'boolean', example: false),
         new OA\Property(property: 'role', type: 'string', example: 'ADMINISTRADOR'),
         new OA\Property(property: 'permissions', type: 'array', items: new OA\Items(type: 'string')),

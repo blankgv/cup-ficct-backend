@@ -3,6 +3,7 @@
 use App\Modules\Authentication\Controllers\AuthController;
 use App\Modules\Authentication\Controllers\PasswordResetController;
 use App\Modules\Authentication\Controllers\PermissionController;
+use App\Modules\Authentication\Controllers\ProfileController;
 use App\Modules\Authentication\Controllers\RoleController;
 use App\Modules\Authentication\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -23,9 +24,17 @@ Route::middleware('auth:api')->group(function () {
     // Cambio de contraseña (disponible aunque deba cambiarla).
     Route::post('/change-password', [UserController::class, 'changePassword'])->name('auth.change-password');
 
+    // Perfil propio: username y foto.
+    Route::put('/me/profile', [ProfileController::class, 'update'])->name('auth.profile.update');
+    Route::post('/me/foto', [ProfileController::class, 'uploadFoto'])->name('auth.profile.foto.upload');
+    Route::get('/me/foto', [ProfileController::class, 'foto'])->name('auth.profile.foto');
+
     // CRUD de usuarios (requiere permiso y haber cambiado la contraseña inicial).
-    Route::middleware(['password.changed', 'permission:user.manage'])
-        ->apiResource('users', UserController::class);
+    Route::middleware(['password.changed', 'permission:user.manage'])->group(function () {
+        Route::apiResource('users', UserController::class);
+        Route::post('users/{user}/foto', [UserController::class, 'uploadFoto'])->name('users.foto.upload');
+        Route::get('users/{user}/foto', [UserController::class, 'foto'])->name('users.foto');
+    });
 
     // Gestión de roles y permisos (requiere permiso role.manage).
     Route::middleware(['password.changed', 'permission:role.manage'])->group(function () {
