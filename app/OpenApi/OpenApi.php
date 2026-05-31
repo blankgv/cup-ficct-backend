@@ -29,6 +29,18 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'ubicacion', type: 'string', example: 'Campus central'),
     ]
 )]
+#[OA\Tag(name: 'Aulas', description: 'Gestión de aulas por módulo')]
+#[OA\Schema(
+    schema: 'Aula',
+    properties: [
+        new OA\Property(property: 'modulo_numero', type: 'string', example: '236'),
+        new OA\Property(property: 'numero', type: 'integer', example: 1),
+        new OA\Property(property: 'nombre', type: 'string', example: 'Laboratorio A'),
+        new OA\Property(property: 'capacidad', type: 'integer', example: 40),
+        new OA\Property(property: 'piso', type: 'integer', example: 2),
+        new OA\Property(property: 'tipo', type: 'string', enum: ['COMUN', 'LABORATORIO', 'AUDITORIO'], example: 'LABORATORIO'),
+    ]
+)]
 #[OA\Schema(
     schema: 'User',
     properties: [

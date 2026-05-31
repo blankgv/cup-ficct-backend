@@ -12,6 +12,265 @@
         }
     ],
     "paths": {
+        "/api/academic-management/modulos/{modulo}/aulas": {
+            "get": {
+                "tags": [
+                    "Aulas"
+                ],
+                "summary": "Listar aulas de un módulo",
+                "operationId": "9b7d81b830df1b3d46f950881a9ea7a0",
+                "parameters": [
+                    {
+                        "name": "modulo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de aulas"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Aulas"
+                ],
+                "summary": "Crear aula en un módulo",
+                "operationId": "bfe5857c7ce73a6eaf08389efaf63a83",
+                "parameters": [
+                    {
+                        "name": "modulo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "numero",
+                                    "nombre",
+                                    "capacidad",
+                                    "piso",
+                                    "tipo"
+                                ],
+                                "properties": {
+                                    "numero": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "nombre": {
+                                        "type": "string",
+                                        "example": "Laboratorio A"
+                                    },
+                                    "capacidad": {
+                                        "type": "integer",
+                                        "example": 40
+                                    },
+                                    "piso": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "tipo": {
+                                        "type": "string",
+                                        "example": "LABORATORIO",
+                                        "enum": [
+                                            "COMUN",
+                                            "LABORATORIO",
+                                            "AUDITORIO"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Aula creada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Aula"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/modulos/{modulo}/aulas/{numero}": {
+            "get": {
+                "tags": [
+                    "Aulas"
+                ],
+                "summary": "Ver aula",
+                "operationId": "5488877410d870f6274c0eddf0523c82",
+                "parameters": [
+                    {
+                        "name": "modulo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "numero",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Aula",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Aula"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Aulas"
+                ],
+                "summary": "Editar aula",
+                "operationId": "d7c6a8c39511173367dee38b187d1aef",
+                "parameters": [
+                    {
+                        "name": "modulo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "numero",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nombre": {
+                                        "type": "string"
+                                    },
+                                    "capacidad": {
+                                        "type": "integer"
+                                    },
+                                    "piso": {
+                                        "type": "integer"
+                                    },
+                                    "tipo": {
+                                        "type": "string",
+                                        "enum": [
+                                            "COMUN",
+                                            "LABORATORIO",
+                                            "AUDITORIO"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Aula actualizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Aula"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Aulas"
+                ],
+                "summary": "Eliminar aula",
+                "operationId": "e1bf8ae2d4bed629de2baa8c01fe7511",
+                "parameters": [
+                    {
+                        "name": "modulo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "numero",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Aula eliminada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/academic-management/materias": {
             "get": {
                 "tags": [
@@ -1184,6 +1443,40 @@
                 },
                 "type": "object"
             },
+            "Aula": {
+                "properties": {
+                    "modulo_numero": {
+                        "type": "string",
+                        "example": "236"
+                    },
+                    "numero": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "nombre": {
+                        "type": "string",
+                        "example": "Laboratorio A"
+                    },
+                    "capacidad": {
+                        "type": "integer",
+                        "example": 40
+                    },
+                    "piso": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "tipo": {
+                        "type": "string",
+                        "example": "LABORATORIO",
+                        "enum": [
+                            "COMUN",
+                            "LABORATORIO",
+                            "AUDITORIO"
+                        ]
+                    }
+                },
+                "type": "object"
+            },
             "User": {
                 "properties": {
                     "id": {
@@ -1299,6 +1592,10 @@
         {
             "name": "Modulos",
             "description": "Gestión de módulos (edificios)"
+        },
+        {
+            "name": "Aulas",
+            "description": "Gestión de aulas por módulo"
         }
     ]
 }
