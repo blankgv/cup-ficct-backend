@@ -85,6 +85,7 @@ class MateriaController extends Controller
         requestBody: new OA\RequestBody(content: new OA\JsonContent(
             properties: [
                 new OA\Property(property: 'nombre', type: 'string'),
+                new OA\Property(property: 'sigla', type: 'string'),
                 new OA\Property(property: 'peso', type: 'number', format: 'float'),
             ]
         )),

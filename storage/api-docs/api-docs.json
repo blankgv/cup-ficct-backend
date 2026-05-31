@@ -163,6 +163,9 @@
                                     "nombre": {
                                         "type": "string"
                                     },
+                                    "sigla": {
+                                        "type": "string"
+                                    },
                                     "peso": {
                                         "type": "number",
                                         "format": "float"

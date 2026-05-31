@@ -52,6 +52,19 @@ class MateriaTest extends TestCase
             ->assertJsonPath('data.0.sigla', 'FIS');
     }
 
+    public function test_actualiza_la_sigla(): void
+    {
+        Materia::create(['nombre' => 'Inglés', 'sigla' => 'ING', 'peso' => 0.25]);
+
+        $this->actingAs($this->user(RoleName::COORDINADOR), 'api')
+            ->putJson('/api/academic-management/materias/ING', ['sigla' => 'ENG'])
+            ->assertOk()
+            ->assertJsonPath('data.sigla', 'ENG');
+
+        $this->assertDatabaseHas('materias', ['sigla' => 'ENG']);
+        $this->assertDatabaseMissing('materias', ['sigla' => 'ING']);
+    }
+
     public function test_peso_invalido_es_rechazado(): void
     {
         $this->actingAs($this->user(RoleName::COORDINADOR), 'api')
