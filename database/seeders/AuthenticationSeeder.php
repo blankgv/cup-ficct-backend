@@ -40,15 +40,14 @@ class AuthenticationSeeder extends Seeder
             $password = Hash::make('password');
 
             $users = [
-                ['name' => 'Administrador CUP FICCT', 'email' => 'gutierrez.vasquez.emanuel@gmail.com', 'role' => RoleName::ADMINISTRADOR],
-                ['name' => 'Coordinador Académico',   'email' => 'coordinador@cup-ficct.local', 'role' => RoleName::COORDINADOR],
-                ['name' => 'Docente Demo',             'email' => 'docente@cup-ficct.local',     'role' => RoleName::DOCENTE],
-                ['name' => 'Postulante Demo',          'email' => 'postulante@cup-ficct.local',  'role' => RoleName::POSTULANTE],
+                ['email' => 'gutierrez.vasquez.emanuel@gmail.com', 'role' => RoleName::ADMINISTRADOR],
+                ['email' => 'coordinador@cup-ficct.local', 'role' => RoleName::COORDINADOR],
+                ['email' => 'docente@cup-ficct.local',     'role' => RoleName::DOCENTE],
+                ['email' => 'postulante@cup-ficct.local',  'role' => RoleName::POSTULANTE],
             ];
 
             foreach ($users as $u) {
                 User::create([
-                    'name' => $u['name'],
                     'email' => $u['email'],
                     'password' => $password,
                 ])->assignRole($u['role']);

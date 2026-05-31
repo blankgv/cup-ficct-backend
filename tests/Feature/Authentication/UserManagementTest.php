@@ -30,7 +30,6 @@ class UserManagementTest extends TestCase
     {
         $this->actingAs($this->admin(), 'api')
             ->postJson('/api/auth/users', [
-                'name' => 'Nuevo Usuario',
                 'email' => 'nuevo@test.com',
                 'password' => 'secret123',
                 'role' => RoleName::DOCENTE,
@@ -44,7 +43,7 @@ class UserManagementTest extends TestCase
 
     public function test_admin_lista_y_busca_usuarios(): void
     {
-        User::factory()->create(['name' => 'Buscable', 'email' => 'buscable@test.com']);
+        User::factory()->create(['email' => 'buscable@test.com']);
 
         $this->actingAs($this->admin(), 'api')
             ->getJson('/api/auth/users?search=buscable')

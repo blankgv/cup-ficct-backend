@@ -575,15 +575,11 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "name",
                                     "email",
                                     "password",
                                     "role"
                                 ],
                                 "properties": {
-                                    "name": {
-                                        "type": "string"
-                                    },
                                     "email": {
                                         "type": "string"
                                     },
@@ -675,9 +671,6 @@
                         "application/json": {
                             "schema": {
                                 "properties": {
-                                    "name": {
-                                        "type": "string"
-                                    },
                                     "email": {
                                         "type": "string"
                                     },
@@ -744,10 +737,6 @@
                     "id": {
                         "type": "integer",
                         "example": 1
-                    },
-                    "name": {
-                        "type": "string",
-                        "example": "Administrador CUP FICCT"
                     },
                     "email": {
                         "type": "string",

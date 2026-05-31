@@ -24,15 +24,10 @@ class UserRepository
     public function paginate(?string $search, ?string $role, int $perPage): LengthAwarePaginator
     {
         return User::query()
-            ->when($search, function ($q) use ($search) {
-                $q->where(function ($w) use ($search) {
-                    $w->whereLike('name', "%{$search}%")
-                        ->orWhereLike('email', "%{$search}%");
-                });
-            })
+            ->when($search, fn ($q) => $q->whereLike('email', "%{$search}%"))
             ->when($role, fn ($q) => $q->whereHas('role', fn ($r) => $r->where('name', $role)))
             ->with('role')
-            ->orderBy('name')
+            ->orderBy('email')
             ->paginate($perPage);
     }
 

@@ -86,9 +86,8 @@ class UserController extends Controller
         summary: 'Crear usuario',
         security: [['bearerAuth' => []]],
         requestBody: new OA\RequestBody(required: true, content: new OA\JsonContent(
-            required: ['name', 'email', 'password', 'role'],
+            required: ['email', 'password', 'role'],
             properties: [
-                new OA\Property(property: 'name', type: 'string'),
                 new OA\Property(property: 'email', type: 'string'),
                 new OA\Property(property: 'password', type: 'string'),
                 new OA\Property(property: 'role', type: 'string', example: 'DOCENTE'),
@@ -124,7 +123,6 @@ class UserController extends Controller
         parameters: [new OA\Parameter(name: 'user', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))],
         requestBody: new OA\RequestBody(content: new OA\JsonContent(
             properties: [
-                new OA\Property(property: 'name', type: 'string'),
                 new OA\Property(property: 'email', type: 'string'),
                 new OA\Property(property: 'role', type: 'string'),
             ]

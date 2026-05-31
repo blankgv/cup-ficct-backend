@@ -15,7 +15,6 @@ use OpenApi\Attributes as OA;
     schema: 'User',
     properties: [
         new OA\Property(property: 'id', type: 'integer', example: 1),
-        new OA\Property(property: 'name', type: 'string', example: 'Administrador CUP FICCT'),
         new OA\Property(property: 'email', type: 'string', example: 'admin@cup-ficct.local'),
         new OA\Property(property: 'must_change_password', type: 'boolean', example: false),
         new OA\Property(property: 'role', type: 'string', example: 'ADMINISTRADOR'),

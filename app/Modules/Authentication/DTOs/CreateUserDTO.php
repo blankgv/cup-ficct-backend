@@ -6,7 +6,6 @@ namespace App\Modules\Authentication\DTOs;
 final readonly class CreateUserDTO
 {
     public function __construct(
-        public string $name,
         public string $email,
         public string $password,
         public string $role,
@@ -18,7 +17,6 @@ final readonly class CreateUserDTO
     public static function fromArray(array $data): self
     {
         return new self(
-            name: (string) $data['name'],
             email: (string) $data['email'],
             password: (string) $data['password'],
             role: (string) $data['role'],
