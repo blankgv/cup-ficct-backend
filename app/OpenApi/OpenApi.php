@@ -11,6 +11,20 @@ use OpenApi\Attributes as OA;
 #[OA\Tag(name: 'Password', description: 'Recuperación y cambio de contraseña')]
 #[OA\Tag(name: 'Users', description: 'Gestión de usuarios')]
 #[OA\Tag(name: 'Roles', description: 'Gestión de roles y permisos')]
+#[OA\Tag(name: 'Pagos', description: 'Pagos de la postulación')]
+#[OA\Schema(
+    schema: 'Pago',
+    properties: [
+        new OA\Property(property: 'id', type: 'integer', example: 1),
+        new OA\Property(property: 'postulante_documento', type: 'string', example: '9876543'),
+        new OA\Property(property: 'convocatoria_id', type: 'integer', example: 1),
+        new OA\Property(property: 'monto', type: 'number', format: 'float', example: 350.0),
+        new OA\Property(property: 'concepto', type: 'string', example: 'Inscripción CUP 2026'),
+        new OA\Property(property: 'metodo', type: 'string', enum: ['EFECTIVO', 'TRANSFERENCIA', 'QR', 'TARJETA']),
+        new OA\Property(property: 'fecha_pago', type: 'string', format: 'date-time', example: '2026-01-15 10:30'),
+        new OA\Property(property: 'estado', type: 'string', enum: ['PENDIENTE', 'PAGADO', 'RECHAZADO'], example: 'PENDIENTE'),
+    ]
+)]
 #[OA\Tag(name: 'Postulaciones', description: 'Postulaciones (1ra/2da opción, estado)')]
 #[OA\Schema(
     schema: 'Postulacion',

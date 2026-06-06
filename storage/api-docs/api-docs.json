@@ -4107,10 +4107,623 @@
                     }
                 ]
             }
+        },
+        "/api/payments/pagos/{pago}/comprobantes": {
+            "get": {
+                "tags": [
+                    "Pagos"
+                ],
+                "summary": "Listar comprobantes de un pago",
+                "operationId": "9f13699c2a90a54164dd80affbbd5937",
+                "parameters": [
+                    {
+                        "name": "pago",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de comprobantes"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Pagos"
+                ],
+                "summary": "Subir comprobante del pago (PDF/imagen, máx 5 MB)",
+                "operationId": "f4abf0b11779a7126b1f100a3a942887",
+                "parameters": [
+                    {
+                        "name": "pago",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "comprobante"
+                                ],
+                                "properties": {
+                                    "comprobante": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Comprobante subido"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/payments/comprobantes/{comprobante}/descargar": {
+            "get": {
+                "tags": [
+                    "Pagos"
+                ],
+                "summary": "Descargar comprobante (redirige a URL firmada)",
+                "operationId": "7474322bf4d7e2f3e3d936bffcc690a8",
+                "parameters": [
+                    {
+                        "name": "comprobante",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "302": {
+                        "description": "Redirige al archivo"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/payments/pagos/{pago}/checkout": {
+            "post": {
+                "tags": [
+                    "Pagos"
+                ],
+                "summary": "Iniciar cobro por pasarela (devuelve URL de pago)",
+                "operationId": "ddd7c6d70af1c4f9a8efe55310bfdd5c",
+                "parameters": [
+                    {
+                        "name": "pago",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "gateway",
+                        "in": "query",
+                        "description": "Pasarela (stripe|paypal). Si se omite, usa la del entorno.",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "stripe",
+                                "paypal"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "URL de la pasarela",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "url": {
+                                            "type": "string",
+                                            "example": "https://www.paypal.com/checkoutnow?token=..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Pasarela no soportada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/payments/webhook/stripe": {
+            "post": {
+                "tags": [
+                    "Pagos"
+                ],
+                "summary": "Webhook de Stripe (confirma el pago)",
+                "operationId": "40da5ccf6bb5e3f1baf739624c11221c",
+                "responses": {
+                    "200": {
+                        "description": "Procesado"
+                    }
+                }
+            }
+        },
+        "/api/payments/webhook/paypal": {
+            "post": {
+                "tags": [
+                    "Pagos"
+                ],
+                "summary": "Webhook de PayPal (confirma el pago)",
+                "operationId": "c9a0346306a8126d9f91acc90105c9e8",
+                "responses": {
+                    "200": {
+                        "description": "Procesado"
+                    }
+                }
+            }
+        },
+        "/api/payments/pagos": {
+            "get": {
+                "tags": [
+                    "Pagos"
+                ],
+                "summary": "Listar pagos",
+                "operationId": "ae829e5b32bceb332690abb5b2307a26",
+                "parameters": [
+                    {
+                        "name": "postulante",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "convocatoria",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de pagos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Pagos"
+                ],
+                "summary": "Registrar pago (estado PENDIENTE)",
+                "operationId": "ff9f7ebfb7af632c757c22175c29d858",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "postulante_documento",
+                                    "convocatoria_id",
+                                    "monto",
+                                    "concepto",
+                                    "metodo",
+                                    "fecha_pago"
+                                ],
+                                "properties": {
+                                    "postulante_documento": {
+                                        "type": "string",
+                                        "example": "9876543"
+                                    },
+                                    "convocatoria_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "monto": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 350
+                                    },
+                                    "concepto": {
+                                        "type": "string",
+                                        "example": "Inscripción CUP 2026"
+                                    },
+                                    "metodo": {
+                                        "type": "string",
+                                        "example": "QR",
+                                        "enum": [
+                                            "EFECTIVO",
+                                            "TRANSFERENCIA",
+                                            "QR",
+                                            "TARJETA"
+                                        ]
+                                    },
+                                    "fecha_pago": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2026-01-15 10:30"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Pago registrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Pago"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/payments/pagos/{pago}": {
+            "get": {
+                "tags": [
+                    "Pagos"
+                ],
+                "summary": "Ver pago",
+                "operationId": "ae53083e309579e9e112b7697aad829a",
+                "parameters": [
+                    {
+                        "name": "pago",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Pago",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Pago"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Pagos"
+                ],
+                "summary": "Editar pago",
+                "operationId": "cdf2f09aebe84a050e3c03ad01203a10",
+                "parameters": [
+                    {
+                        "name": "pago",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "monto": {
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "concepto": {
+                                        "type": "string"
+                                    },
+                                    "metodo": {
+                                        "type": "string",
+                                        "enum": [
+                                            "EFECTIVO",
+                                            "TRANSFERENCIA",
+                                            "QR",
+                                            "TARJETA"
+                                        ]
+                                    },
+                                    "fecha_pago": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Pago actualizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Pago"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Pagos"
+                ],
+                "summary": "Eliminar pago",
+                "operationId": "9cac532e500bce8947a3ede1f8a0cabb",
+                "parameters": [
+                    {
+                        "name": "pago",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Pago eliminado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/payments/pagos/{pago}/confirmar": {
+            "post": {
+                "tags": [
+                    "Pagos"
+                ],
+                "summary": "Confirmar pago manualmente (PENDIENTE → PAGADO)",
+                "operationId": "d8bff893f8e26433ad1e8c907fd1155c",
+                "parameters": [
+                    {
+                        "name": "pago",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Pago confirmado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Pago"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "El pago no está pendiente"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/payments/pagos/{pago}/rechazar": {
+            "post": {
+                "tags": [
+                    "Pagos"
+                ],
+                "summary": "Rechazar pago manualmente (PENDIENTE → RECHAZADO)",
+                "operationId": "d2f7ed9739268b2b472e3a75ee44a980",
+                "parameters": [
+                    {
+                        "name": "pago",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "motivo"
+                                ],
+                                "properties": {
+                                    "motivo": {
+                                        "type": "string",
+                                        "example": "Comprobante ilegible"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Pago rechazado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Pago"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "El pago no está pendiente"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/payments/pagos/{pago}/recibo": {
+            "get": {
+                "tags": [
+                    "Pagos"
+                ],
+                "summary": "Descargar recibo del pago (PDF, solo PAGADO; redirige a URL firmada)",
+                "operationId": "8b8636c6f7399e4a04b4631c6c1e4879",
+                "parameters": [
+                    {
+                        "name": "pago",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "302": {
+                        "description": "Redirige al PDF"
+                    },
+                    "422": {
+                        "description": "El pago no está confirmado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
         "schemas": {
+            "Pago": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "postulante_documento": {
+                        "type": "string",
+                        "example": "9876543"
+                    },
+                    "convocatoria_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "monto": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 350
+                    },
+                    "concepto": {
+                        "type": "string",
+                        "example": "Inscripción CUP 2026"
+                    },
+                    "metodo": {
+                        "type": "string",
+                        "enum": [
+                            "EFECTIVO",
+                            "TRANSFERENCIA",
+                            "QR",
+                            "TARJETA"
+                        ]
+                    },
+                    "fecha_pago": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-01-15 10:30"
+                    },
+                    "estado": {
+                        "type": "string",
+                        "example": "PENDIENTE",
+                        "enum": [
+                            "PENDIENTE",
+                            "PAGADO",
+                            "RECHAZADO"
+                        ]
+                    }
+                },
+                "type": "object"
+            },
             "Postulacion": {
                 "properties": {
                     "postulante_documento": {
@@ -4543,6 +5156,10 @@
         {
             "name": "Roles",
             "description": "Gestión de roles y permisos"
+        },
+        {
+            "name": "Pagos",
+            "description": "Pagos de la postulación"
         },
         {
             "name": "Postulaciones",

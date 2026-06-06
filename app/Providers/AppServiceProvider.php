@@ -9,7 +9,7 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        //
+        // La pasarela de pago se resuelve por nombre en PaymentGatewayFactory (Stripe / PayPal).
     }
 
     public function boot(): void
