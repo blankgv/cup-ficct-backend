@@ -2,19 +2,17 @@
 
 namespace App\Modules\ApplicantAdmission\Models;
 
-use App\Modules\AcademicManagement\Enums\Turno;
-use App\Modules\AcademicManagement\Models\Carrera;
-use App\Modules\ApplicantAdmission\Enums\EstadoPostulacion;
+use App\Modules\AcademicManagement\Models\Grupo;
 use App\Support\HasCompositePrimaryKey;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-// Postulación. PK compuesta (postulante_documento, convocatoria_id).
-class Postulacion extends Model
+// Inscripción del postulante a un grupo. PK compuesta (postulante_documento, convocatoria_id).
+class Inscripcion extends Model
 {
     use HasCompositePrimaryKey;
 
-    protected $table = 'postulaciones';
+    protected $table = 'inscripciones';
 
     /** @var list<string> */
     protected $primaryKey = ['postulante_documento', 'convocatoria_id'];
@@ -22,8 +20,7 @@ class Postulacion extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'postulante_documento', 'convocatoria_id',
-        'carrera_primera_codigo', 'carrera_segunda_codigo', 'estado', 'observacion', 'turno_preferencia',
+        'postulante_documento', 'convocatoria_id', 'grupo_id', 'fecha_asignacion',
     ];
 
     /**
@@ -33,8 +30,8 @@ class Postulacion extends Model
     {
         return [
             'convocatoria_id' => 'integer',
-            'estado' => EstadoPostulacion::class,
-            'turno_preferencia' => Turno::class,
+            'grupo_id' => 'integer',
+            'fecha_asignacion' => 'datetime',
         ];
     }
 
@@ -48,13 +45,8 @@ class Postulacion extends Model
         return $this->belongsTo(Convocatoria::class, 'convocatoria_id');
     }
 
-    public function carreraPrimera(): BelongsTo
+    public function grupo(): BelongsTo
     {
-        return $this->belongsTo(Carrera::class, 'carrera_primera_codigo', 'codigo');
-    }
-
-    public function carreraSegunda(): BelongsTo
-    {
-        return $this->belongsTo(Carrera::class, 'carrera_segunda_codigo', 'codigo');
+        return $this->belongsTo(Grupo::class, 'grupo_id');
     }
 }

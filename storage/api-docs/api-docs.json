@@ -2196,6 +2196,60 @@
                 ]
             }
         },
+        "/api/applicant-admission/convocatorias/{convocatoria}/generar-grupos": {
+            "post": {
+                "tags": [
+                    "Convocatorias"
+                ],
+                "summary": "Generar grupos y asignar automáticamente a los elegibles (VERIFICADO + PAGADO). Regenera si ya existían",
+                "operationId": "77a7478c5447cd2076940b2667f8207d",
+                "parameters": [
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Resumen",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "grupos_creados": {
+                                            "type": "integer",
+                                            "example": 4
+                                        },
+                                        "inscritos": {
+                                            "type": "integer",
+                                            "example": 250
+                                        },
+                                        "manana": {
+                                            "type": "integer",
+                                            "example": 130
+                                        },
+                                        "tarde": {
+                                            "type": "integer",
+                                            "example": 120
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/applicant-admission/convocatorias": {
             "get": {
                 "tags": [
@@ -2710,6 +2764,73 @@
                 "responses": {
                     "200": {
                         "description": "Postulación cancelada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/applicant-admission/postulantes/{postulante}/postulaciones/{convocatoria}/turno": {
+            "put": {
+                "tags": [
+                    "Postulaciones"
+                ],
+                "summary": "Fijar preferencia de turno (MANANA/TARDE) para la asignación de grupo",
+                "operationId": "07e9d5d32ac1b43fff5d50addf9278aa",
+                "parameters": [
+                    {
+                        "name": "postulante",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "turno"
+                                ],
+                                "properties": {
+                                    "turno": {
+                                        "type": "string",
+                                        "example": "MANANA",
+                                        "enum": [
+                                            "MANANA",
+                                            "TARDE"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Preferencia guardada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Postulacion"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
