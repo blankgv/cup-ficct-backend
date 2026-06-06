@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Route;
 
 // Módulo ApplicantAdmission (/api/applicant-admission).
 Route::middleware(['auth:api', 'password.changed', 'permission:applicant.manage'])->group(function () {
+    // Carga masiva (antes del apiResource para que /lote no choque con /{postulante}).
+    Route::post('postulantes/lote', [PostulanteController::class, 'importLote']);
     Route::apiResource('postulantes', PostulanteController::class);
 
     // Título de bachiller (R2).

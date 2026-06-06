@@ -2,7 +2,9 @@
 
 namespace App\Modules\ApplicantAdmission\Models;
 
+use App\Modules\Authentication\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 // Postulante. PK = documento (CI).
 class Postulante extends Model
@@ -15,7 +17,12 @@ class Postulante extends Model
 
     public $incrementing = false;
 
-    protected $fillable = ['documento', 'nombres', 'apellidos', 'email', 'telefono', 'fecha_nacimiento', 'colegio', 'ciudad', 'titulo_bachiller_path'];
+    protected $fillable = ['documento', 'nombres', 'apellidos', 'email', 'telefono', 'fecha_nacimiento', 'colegio', 'ciudad', 'titulo_bachiller_path', 'user_id'];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
     /**
      * @return array<string, string>

@@ -2719,6 +2719,45 @@
                 ]
             }
         },
+        "/api/applicant-admission/postulantes/lote": {
+            "post": {
+                "tags": [
+                    "Postulantes"
+                ],
+                "summary": "Carga masiva de postulantes (CSV). Crea su usuario (rol POSTULANTE)",
+                "operationId": "485be734c277113b5d2d277aea798c2f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "archivo"
+                                ],
+                                "properties": {
+                                    "archivo": {
+                                        "description": "CSV con encabezados: documento,nombres,apellidos,email,fecha_nacimiento,colegio,ciudad,telefono",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Resumen {creados, omitidos, errores}"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/applicant-admission/postulantes": {
             "get": {
                 "tags": [
