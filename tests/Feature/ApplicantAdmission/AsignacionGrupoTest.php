@@ -9,7 +9,10 @@ use App\Modules\ApplicantAdmission\Models\Convocatoria;
 use App\Modules\ApplicantAdmission\Models\Inscripcion;
 use App\Modules\ApplicantAdmission\Models\Postulacion;
 use App\Modules\ApplicantAdmission\Models\Postulante;
+use App\Modules\Authentication\Authorization\Permission as Perm;
 use App\Modules\Authentication\Authorization\Role as RoleName;
+use App\Modules\Authentication\Models\Permission;
+use App\Modules\Authentication\Models\Role;
 use App\Modules\Authentication\Models\User;
 use App\Modules\Payments\Models\Pago;
 use Database\Seeders\AuthenticationSeeder;
@@ -38,6 +41,18 @@ class AsignacionGrupoTest extends TestCase
     {
         $u = User::factory()->create(['must_change_password' => false]);
         $u->assignRole(RoleName::ADMINISTRADOR);
+
+        return $u;
+    }
+
+    // Usuario con un rol que solo tiene applicant.assign (no applicant.manage).
+    private function soloAsignar(): User
+    {
+        $role = Role::create(['name' => 'asignador', 'description' => 'Solo asignación de grupos']);
+        $role->permissions()->sync(Permission::where('name', Perm::APPLICANT_ASSIGN)->pluck('id'));
+
+        $u = User::factory()->create(['must_change_password' => false]);
+        $u->role()->associate($role)->save();
 
         return $u;
     }
@@ -126,6 +141,16 @@ class AsignacionGrupoTest extends TestCase
         $this->actingAs($u, 'api')
             ->postJson("/api/applicant-admission/convocatorias/{$this->convId}/generar-grupos")
             ->assertForbidden();
+    }
+
+    public function test_con_permiso_assign_genera(): void
+    {
+        $this->postulante('1', 'MANANA', '2026-01-10 08:00');
+
+        $this->actingAs($this->soloAsignar(), 'api')
+            ->postJson("/api/applicant-admission/convocatorias/{$this->convId}/generar-grupos")
+            ->assertOk()
+            ->assertJson(['inscritos' => 1]);
     }
 
     public function test_fija_preferencia_de_turno(): void

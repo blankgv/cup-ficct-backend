@@ -4,11 +4,13 @@ use App\Modules\AcademicManagement\Controllers\AulaController;
 use App\Modules\AcademicManagement\Controllers\CarreraController;
 use App\Modules\AcademicManagement\Controllers\DocenteController;
 use App\Modules\AcademicManagement\Controllers\FacultadController;
+use App\Modules\AcademicManagement\Controllers\FeriadoController;
 use App\Modules\AcademicManagement\Controllers\GrupoController;
 use App\Modules\AcademicManagement\Controllers\GrupoMateriaController;
 use App\Modules\AcademicManagement\Controllers\HorarioController;
 use App\Modules\AcademicManagement\Controllers\MateriaController;
 use App\Modules\AcademicManagement\Controllers\ModuloController;
+use App\Modules\AcademicManagement\Controllers\PeriodoController;
 use Illuminate\Support\Facades\Route;
 
 // Módulo AcademicManagement (/api/academic-management).
@@ -18,6 +20,10 @@ Route::middleware(['auth:api', 'password.changed', 'permission:academic.manage']
     Route::apiResource('materias', MateriaController::class);
     Route::apiResource('modulos', ModuloController::class);
     Route::apiResource('grupos', GrupoController::class);
+    Route::apiResource('periodos', PeriodoController::class);
+    // Feriados (import antes del apiResource para que /importar no choque con /{feriado}).
+    Route::post('feriados/importar', [FeriadoController::class, 'importar']);
+    Route::apiResource('feriados', FeriadoController::class)->except(['show']);
     Route::apiResource('docentes', DocenteController::class);
     Route::post('docentes/{docente}/usuario', [DocenteController::class, 'createAccount']);
     Route::delete('docentes/{docente}/usuario', [DocenteController::class, 'deleteAccount']);

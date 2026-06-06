@@ -4,12 +4,14 @@ namespace App\Modules\ApplicantAdmission\Services;
 
 use App\Modules\AcademicManagement\Enums\Turno;
 use App\Modules\AcademicManagement\Models\Grupo;
+use App\Modules\AcademicManagement\Models\Periodo;
 use App\Modules\ApplicantAdmission\Enums\EstadoPostulacion;
 use App\Modules\ApplicantAdmission\Models\Convocatoria;
 use App\Modules\ApplicantAdmission\Models\Inscripcion;
 use App\Modules\Payments\Enums\EstadoPago;
 use App\Modules\Payments\Models\Pago;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 // Genera grupos y asigna automáticamente a los postulantes elegibles.
 class AsignacionGrupoService
@@ -22,9 +24,14 @@ class AsignacionGrupoService
      *
      * @return array<string, int>
      */
-    public function generar(Convocatoria $convocatoria): array
+    public function generar(Convocatoria $convocatoria, ?int $periodoId = null): array
     {
-        return DB::transaction(function () use ($convocatoria) {
+        // Valida el periodo de clases si se indicó.
+        if ($periodoId !== null && Periodo::find($periodoId) === null) {
+            throw ValidationException::withMessages(['periodo_id' => 'El periodo de clases no existe.']);
+        }
+
+        return DB::transaction(function () use ($convocatoria, $periodoId) {
             // Borra lo autogenerado previo (idempotencia por regeneración).
             Inscripcion::where('convocatoria_id', $convocatoria->id)->delete();
             Grupo::where('convocatoria_id', $convocatoria->id)->delete();
@@ -38,7 +45,7 @@ class AsignacionGrupoService
 
             // k grupos por turno: 70 máx por grupo, igual cantidad mañana/tarde.
             $k = (int) ceil($total / (self::CAPACIDAD * 2));
-            $grupos = $this->crearGrupos($convocatoria, $k);
+            $grupos = $this->crearGrupos($convocatoria, $k, $periodoId);
 
             $contador = [Turno::MANANA->value => 0, Turno::TARDE->value => 0];
 
@@ -96,7 +103,7 @@ class AsignacionGrupoService
      *
      * @return array<string, list<array{id:int, libres:int}>>
      */
-    private function crearGrupos(Convocatoria $convocatoria, int $k): array
+    private function crearGrupos(Convocatoria $convocatoria, int $k, ?int $periodoId): array
     {
         $grupos = [Turno::MANANA->value => [], Turno::TARDE->value => []];
         $prefijo = [Turno::MANANA->value => 'M', Turno::TARDE->value => 'T'];
@@ -109,6 +116,7 @@ class AsignacionGrupoService
                     'capacidad' => self::CAPACIDAD,
                     'gestion' => $convocatoria->gestion,
                     'convocatoria_id' => $convocatoria->id,
+                    'periodo_id' => $periodoId,
                 ]);
 
                 $grupos[$turno][] = ['id' => $grupo->id, 'libres' => self::CAPACIDAD];

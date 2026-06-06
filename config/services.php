@@ -46,6 +46,12 @@ return [
         'cancel_url' => env('STRIPE_CANCEL_URL', env('FRONTEND_URL').'/pagos/cancelado'),
     ],
 
+    // API de feriados (pre-llena la tabla; la facultad luego edita).
+    'feriados' => [
+        'api_url' => env('FERIADOS_API_URL'),
+        'pais' => env('FERIADOS_PAIS'),
+    ],
+
     // Pasarela de pago PayPal (todo se lee del entorno).
     'paypal' => [
         'client_id' => env('PAYPAL_CLIENT_ID'),
