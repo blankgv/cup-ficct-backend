@@ -8,6 +8,7 @@ use App\Modules\Payments\Enums\EstadoPago;
 use App\Modules\Payments\Enums\MetodoPago;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 // Pago de la postulación.
 class Pago extends Model
@@ -40,5 +41,10 @@ class Pago extends Model
     public function convocatoria(): BelongsTo
     {
         return $this->belongsTo(Convocatoria::class, 'convocatoria_id');
+    }
+
+    public function comprobantes(): HasMany
+    {
+        return $this->hasMany(Comprobante::class, 'pago_id');
     }
 }

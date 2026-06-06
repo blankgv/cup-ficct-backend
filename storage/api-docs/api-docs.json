@@ -4108,6 +4108,110 @@
                 ]
             }
         },
+        "/api/payments/pagos/{pago}/comprobantes": {
+            "get": {
+                "tags": [
+                    "Pagos"
+                ],
+                "summary": "Listar comprobantes de un pago",
+                "operationId": "9f13699c2a90a54164dd80affbbd5937",
+                "parameters": [
+                    {
+                        "name": "pago",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de comprobantes"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Pagos"
+                ],
+                "summary": "Subir comprobante del pago (PDF/imagen, máx 5 MB)",
+                "operationId": "f4abf0b11779a7126b1f100a3a942887",
+                "parameters": [
+                    {
+                        "name": "pago",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "comprobante"
+                                ],
+                                "properties": {
+                                    "comprobante": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Comprobante subido"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/payments/comprobantes/{comprobante}/descargar": {
+            "get": {
+                "tags": [
+                    "Pagos"
+                ],
+                "summary": "Descargar comprobante (redirige a URL firmada)",
+                "operationId": "7474322bf4d7e2f3e3d936bffcc690a8",
+                "parameters": [
+                    {
+                        "name": "comprobante",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "302": {
+                        "description": "Redirige al archivo"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/payments/pagos/{pago}/checkout": {
             "post": {
                 "tags": [

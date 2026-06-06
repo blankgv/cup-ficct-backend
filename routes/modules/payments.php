@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\Payments\Controllers\ComprobanteController;
 use App\Modules\Payments\Controllers\PagoCheckoutController;
 use App\Modules\Payments\Controllers\PagoController;
 use Illuminate\Support\Facades\Route;
@@ -11,9 +12,13 @@ Route::post('webhook/stripe', [PagoCheckoutController::class, 'webhookStripe'])-
 
 Route::middleware(['auth:api', 'password.changed', 'permission:payment.manage'])->group(function () {
     Route::apiResource('pagos', PagoController::class);
+    // Revisión de comprobantes (staff).
+    Route::get('pagos/{pago}/comprobantes', [ComprobanteController::class, 'index'])->name('pagos.comprobantes.index');
+    Route::get('comprobantes/{comprobante}/descargar', [ComprobanteController::class, 'download'])->name('comprobantes.descargar');
 });
 
-// Checkout: cualquier usuario autenticado (el postulante paga su propio pago).
+// Checkout y subida de comprobante: cualquier usuario autenticado (el postulante paga su propio pago).
 Route::middleware(['auth:api', 'password.changed'])->group(function () {
     Route::post('pagos/{pago}/checkout', [PagoCheckoutController::class, 'checkout'])->name('pagos.checkout');
+    Route::post('pagos/{pago}/comprobantes', [ComprobanteController::class, 'store'])->name('pagos.comprobantes.store');
 });
