@@ -4229,6 +4229,182 @@
                 ]
             }
         },
+        "/api/evaluation/notas": {
+            "post": {
+                "tags": [
+                    "Notas"
+                ],
+                "summary": "Cargar/actualizar una nota (examen) de un postulante",
+                "operationId": "d3b9fafba7226f38af5b7b75e854b607",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "postulante_documento",
+                                    "convocatoria_id",
+                                    "materia_sigla",
+                                    "numero",
+                                    "valor"
+                                ],
+                                "properties": {
+                                    "postulante_documento": {
+                                        "type": "string",
+                                        "example": "9876543"
+                                    },
+                                    "convocatoria_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "materia_sigla": {
+                                        "type": "string",
+                                        "example": "MAT"
+                                    },
+                                    "numero": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "valor": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 75.5
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Nota guardada"
+                    },
+                    "422": {
+                        "description": "No inscrito o materia ajena al grupo"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/evaluation/grupos/{grupo}/materias/{materia}/notas": {
+            "post": {
+                "tags": [
+                    "Notas"
+                ],
+                "summary": "Carga masiva de un examen para una materia del grupo",
+                "operationId": "b958a27ea800eefc7aceb19338f0827b",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "materia",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "numero",
+                                    "notas"
+                                ],
+                                "properties": {
+                                    "numero": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "notas": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "postulante_documento": {
+                                                    "type": "string",
+                                                    "example": "9876543"
+                                                },
+                                                "valor": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 80
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Resumen {guardadas, omitidas, no_inscritos}"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/evaluation/postulantes/{postulante}/convocatorias/{convocatoria}/boletin": {
+            "get": {
+                "tags": [
+                    "Notas"
+                ],
+                "summary": "Boletín: notas, promedio ponderado y estado (APROBADO/REPROBADO)",
+                "operationId": "ec9fc3fa661244dacb699a2beaf9e29e",
+                "parameters": [
+                    {
+                        "name": "postulante",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Boletín"
+                    },
+                    "422": {
+                        "description": "No inscrito"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/payments/pagos/{pago}/comprobantes": {
             "get": {
                 "tags": [
@@ -5325,6 +5501,10 @@
         {
             "name": "Aulas",
             "description": "Gestión de aulas por módulo"
+        },
+        {
+            "name": "Notas",
+            "description": "Notas"
         }
     ]
 }
