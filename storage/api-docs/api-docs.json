@@ -4513,6 +4513,103 @@
                     }
                 ]
             }
+        },
+        "/api/payments/pagos/{pago}/confirmar": {
+            "post": {
+                "tags": [
+                    "Pagos"
+                ],
+                "summary": "Confirmar pago manualmente (PENDIENTE → PAGADO)",
+                "operationId": "d8bff893f8e26433ad1e8c907fd1155c",
+                "parameters": [
+                    {
+                        "name": "pago",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Pago confirmado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Pago"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "El pago no está pendiente"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/payments/pagos/{pago}/rechazar": {
+            "post": {
+                "tags": [
+                    "Pagos"
+                ],
+                "summary": "Rechazar pago manualmente (PENDIENTE → RECHAZADO)",
+                "operationId": "d2f7ed9739268b2b472e3a75ee44a980",
+                "parameters": [
+                    {
+                        "name": "pago",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "motivo"
+                                ],
+                                "properties": {
+                                    "motivo": {
+                                        "type": "string",
+                                        "example": "Comprobante ilegible"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Pago rechazado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Pago"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "El pago no está pendiente"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {

@@ -12,6 +12,9 @@ Route::post('webhook/stripe', [PagoCheckoutController::class, 'webhookStripe'])-
 
 Route::middleware(['auth:api', 'password.changed', 'permission:payment.manage'])->group(function () {
     Route::apiResource('pagos', PagoController::class);
+    // Confirmación/rechazo manual (staff).
+    Route::post('pagos/{pago}/confirmar', [PagoController::class, 'confirmar'])->name('pagos.confirmar');
+    Route::post('pagos/{pago}/rechazar', [PagoController::class, 'rechazar'])->name('pagos.rechazar');
     // Revisión de comprobantes (staff).
     Route::get('pagos/{pago}/comprobantes', [ComprobanteController::class, 'index'])->name('pagos.comprobantes.index');
     Route::get('comprobantes/{comprobante}/descargar', [ComprobanteController::class, 'download'])->name('comprobantes.descargar');

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Payments\DTOs\CreatePagoDTO;
 use App\Modules\Payments\DTOs\UpdatePagoDTO;
 use App\Modules\Payments\Models\Pago;
+use App\Modules\Payments\Requests\RechazarPagoRequest;
 use App\Modules\Payments\Requests\StorePagoRequest;
 use App\Modules\Payments\Requests\UpdatePagoRequest;
 use App\Modules\Payments\Resources\PagoResource;
@@ -111,5 +112,41 @@ class PagoController extends Controller
         $this->pagos->delete($pago);
 
         return response()->json(['message' => 'Pago eliminado.']);
+    }
+
+    #[OA\Post(
+        path: '/api/payments/pagos/{pago}/confirmar',
+        tags: ['Pagos'],
+        summary: 'Confirmar pago manualmente (PENDIENTE → PAGADO)',
+        security: [['bearerAuth' => []]],
+        parameters: [new OA\Parameter(name: 'pago', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))],
+        responses: [
+            new OA\Response(response: 200, description: 'Pago confirmado', content: new OA\JsonContent(ref: '#/components/schemas/Pago')),
+            new OA\Response(response: 422, description: 'El pago no está pendiente'),
+        ]
+    )]
+    public function confirmar(Request $request, Pago $pago): PagoResource
+    {
+        return new PagoResource($this->pagos->confirmar($pago, $request->user()));
+    }
+
+    #[OA\Post(
+        path: '/api/payments/pagos/{pago}/rechazar',
+        tags: ['Pagos'],
+        summary: 'Rechazar pago manualmente (PENDIENTE → RECHAZADO)',
+        security: [['bearerAuth' => []]],
+        parameters: [new OA\Parameter(name: 'pago', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))],
+        requestBody: new OA\RequestBody(required: true, content: new OA\JsonContent(
+            required: ['motivo'],
+            properties: [new OA\Property(property: 'motivo', type: 'string', example: 'Comprobante ilegible')]
+        )),
+        responses: [
+            new OA\Response(response: 200, description: 'Pago rechazado', content: new OA\JsonContent(ref: '#/components/schemas/Pago')),
+            new OA\Response(response: 422, description: 'El pago no está pendiente'),
+        ]
+    )]
+    public function rechazar(RechazarPagoRequest $request, Pago $pago): PagoResource
+    {
+        return new PagoResource($this->pagos->rechazar($pago, $request->user(), $request->validated()['motivo']));
     }
 }

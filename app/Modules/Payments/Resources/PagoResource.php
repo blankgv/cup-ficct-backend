@@ -26,6 +26,9 @@ class PagoResource extends JsonResource
             'metodo' => $this->metodo,
             'fecha_pago' => $this->fecha_pago?->format('Y-m-d H:i'),
             'estado' => $this->estado,
+            'confirmado_por' => $this->confirmado_por,
+            'confirmado_at' => $this->confirmado_at?->format('Y-m-d H:i'),
+            'motivo_rechazo' => $this->motivo_rechazo,
             'created_at' => $this->created_at,
         ];
     }
