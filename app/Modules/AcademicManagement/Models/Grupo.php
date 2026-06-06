@@ -5,6 +5,7 @@ namespace App\Modules\AcademicManagement\Models;
 use App\Modules\AcademicManagement\Enums\Turno;
 use App\Modules\ApplicantAdmission\Models\Inscripcion;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -13,7 +14,7 @@ class Grupo extends Model
 {
     protected $table = 'grupos';
 
-    protected $fillable = ['codigo', 'turno', 'capacidad', 'gestion', 'convocatoria_id'];
+    protected $fillable = ['codigo', 'turno', 'capacidad', 'gestion', 'convocatoria_id', 'periodo_id'];
 
     /**
      * @return array<string, string>
@@ -23,8 +24,14 @@ class Grupo extends Model
         return [
             'capacidad' => 'integer',
             'convocatoria_id' => 'integer',
+            'periodo_id' => 'integer',
             'turno' => Turno::class,
         ];
+    }
+
+    public function periodo(): BelongsTo
+    {
+        return $this->belongsTo(Periodo::class, 'periodo_id');
     }
 
     // Inscripciones (postulantes asignados) del grupo.

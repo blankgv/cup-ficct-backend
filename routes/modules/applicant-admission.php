@@ -27,14 +27,17 @@ Route::middleware(['auth:api', 'password.changed', 'permission:applicant.manage'
     });
     Route::apiResource('convocatorias', ConvocatoriaController::class);
 
-    // Generación automática de grupos de la convocatoria.
-    Route::post('convocatorias/{convocatoria}/generar-grupos', [AsignacionGrupoController::class, 'generar']);
-
     // Cupos por carrera en la convocatoria.
     Route::get('convocatorias/{convocatoria}/cupos', [ConvocatoriaController::class, 'cupos']);
     Route::put('convocatorias/{convocatoria}/cupos', [ConvocatoriaController::class, 'setCupos']);
     Route::delete('convocatorias/{convocatoria}/cupos/{carrera}', [ConvocatoriaController::class, 'removeCarrera']);
 });
+
+// Generación automática de grupos de la convocatoria (permiso aparte: applicant.assign).
+Route::middleware(['auth:api', 'password.changed', 'permission:applicant.assign'])
+    ->group(function () {
+        Route::post('convocatorias/{convocatoria}/generar-grupos', [AsignacionGrupoController::class, 'generar']);
+    });
 
 // Verificación de requisitos (permiso aparte: applicant.verify).
 Route::middleware(['auth:api', 'password.changed', 'permission:applicant.verify'])

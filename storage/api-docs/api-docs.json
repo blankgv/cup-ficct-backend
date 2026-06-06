@@ -977,6 +977,204 @@
                 ]
             }
         },
+        "/api/academic-management/feriados": {
+            "get": {
+                "tags": [
+                    "Feriados"
+                ],
+                "summary": "Listar feriados",
+                "operationId": "4f97795226c00c0579431cbcccb36c63",
+                "parameters": [
+                    {
+                        "name": "gestion",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de feriados"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Feriados"
+                ],
+                "summary": "Crear feriado",
+                "operationId": "4487daf0be89f37e7a87a01283296b3e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "fecha",
+                                    "descripcion",
+                                    "gestion"
+                                ],
+                                "properties": {
+                                    "fecha": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-05-01"
+                                    },
+                                    "descripcion": {
+                                        "type": "string",
+                                        "example": "Día del Trabajo"
+                                    },
+                                    "gestion": {
+                                        "type": "string",
+                                        "example": "2026"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Feriado creado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/feriados/importar": {
+            "post": {
+                "tags": [
+                    "Feriados"
+                ],
+                "summary": "Importar feriados de una gestión desde la API",
+                "operationId": "94442a4af247e137f39c59381d679ed1",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "gestion"
+                                ],
+                                "properties": {
+                                    "gestion": {
+                                        "type": "string",
+                                        "example": "2026"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Resumen {importados}"
+                    },
+                    "422": {
+                        "description": "API no configurada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/feriados/{feriado}": {
+            "put": {
+                "tags": [
+                    "Feriados"
+                ],
+                "summary": "Editar feriado",
+                "operationId": "e385aa378203f4f613bea171603376bb",
+                "parameters": [
+                    {
+                        "name": "feriado",
+                        "in": "path",
+                        "description": "Fecha (Y-m-d)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "descripcion": {
+                                        "type": "string"
+                                    },
+                                    "gestion": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Feriado actualizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Feriados"
+                ],
+                "summary": "Eliminar feriado",
+                "operationId": "79d5ab447a1493e7a4a7ee8d605f2403",
+                "parameters": [
+                    {
+                        "name": "feriado",
+                        "in": "path",
+                        "description": "Fecha (Y-m-d)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Feriado eliminado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/academic-management/grupos": {
             "get": {
                 "tags": [
@@ -2196,6 +2394,202 @@
                 ]
             }
         },
+        "/api/academic-management/periodos": {
+            "get": {
+                "tags": [
+                    "Periodos"
+                ],
+                "summary": "Listar periodos",
+                "operationId": "e7fc12160f71d8c682d4a3b544f76dd4",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de periodos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Periodos"
+                ],
+                "summary": "Crear periodo de clases",
+                "operationId": "e021f2ea006fa08502262c2360ab5d90",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "codigo",
+                                    "gestion",
+                                    "fecha_inicio_clases",
+                                    "fecha_fin_clases"
+                                ],
+                                "properties": {
+                                    "codigo": {
+                                        "type": "string",
+                                        "example": "1/2026"
+                                    },
+                                    "gestion": {
+                                        "type": "string",
+                                        "example": "2026"
+                                    },
+                                    "fecha_inicio_clases": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-03-01"
+                                    },
+                                    "fecha_fin_clases": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-06-30"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Periodo creado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/academic-management/periodos/{periodo}": {
+            "get": {
+                "tags": [
+                    "Periodos"
+                ],
+                "summary": "Ver periodo",
+                "operationId": "1b9c026a30b3b389b9fbecd4d45a68fe",
+                "parameters": [
+                    {
+                        "name": "periodo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Periodo"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Periodos"
+                ],
+                "summary": "Editar periodo",
+                "operationId": "a945c177f42dfa606f13ab2521d04869",
+                "parameters": [
+                    {
+                        "name": "periodo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "codigo": {
+                                        "type": "string"
+                                    },
+                                    "gestion": {
+                                        "type": "string"
+                                    },
+                                    "fecha_inicio_clases": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "fecha_fin_clases": {
+                                        "type": "string",
+                                        "format": "date"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Periodo actualizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Periodos"
+                ],
+                "summary": "Eliminar periodo",
+                "operationId": "76e528babd75f1f13fcb3d2e85b6c34b",
+                "parameters": [
+                    {
+                        "name": "periodo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Periodo eliminado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/applicant-admission/convocatorias/{convocatoria}/generar-grupos": {
             "post": {
                 "tags": [
@@ -2213,6 +2607,22 @@
                         }
                     }
                 ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "periodo_id": {
+                                        "description": "Periodo de clases asignado a los grupos creados",
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Resumen",
@@ -4229,6 +4639,192 @@
                 ]
             }
         },
+        "/api/evaluation/asistencias": {
+            "post": {
+                "tags": [
+                    "Asistencia"
+                ],
+                "summary": "Registrar/actualizar la asistencia de un postulante en una fecha",
+                "operationId": "0eccb125e2b8e9a3a344983a73558184",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "postulante_documento",
+                                    "convocatoria_id",
+                                    "materia_sigla",
+                                    "fecha",
+                                    "estado"
+                                ],
+                                "properties": {
+                                    "postulante_documento": {
+                                        "type": "string",
+                                        "example": "9876543"
+                                    },
+                                    "convocatoria_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "materia_sigla": {
+                                        "type": "string",
+                                        "example": "MAT"
+                                    },
+                                    "fecha": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-03-01"
+                                    },
+                                    "estado": {
+                                        "type": "string",
+                                        "example": "PRESENTE",
+                                        "enum": [
+                                            "PRESENTE",
+                                            "AUSENTE",
+                                            "JUSTIFICADO"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Asistencia guardada"
+                    },
+                    "422": {
+                        "description": "No inscrito o materia ajena al grupo"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/evaluation/grupos/{grupo}/materias/{materia}/asistencias": {
+            "post": {
+                "tags": [
+                    "Asistencia"
+                ],
+                "summary": "Carga masiva de asistencia de una fecha para una materia del grupo",
+                "operationId": "a756a04e8eecf0cab98545b013a04948",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "materia",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "fecha",
+                                    "asistencias"
+                                ],
+                                "properties": {
+                                    "fecha": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-03-01"
+                                    },
+                                    "asistencias": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "postulante_documento": {
+                                                    "type": "string",
+                                                    "example": "9876543"
+                                                },
+                                                "estado": {
+                                                    "type": "string",
+                                                    "example": "PRESENTE",
+                                                    "enum": [
+                                                        "PRESENTE",
+                                                        "AUSENTE",
+                                                        "JUSTIFICADO"
+                                                    ]
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Resumen {guardadas, omitidas, no_inscritos}"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/evaluation/postulantes/{postulante}/convocatorias/{convocatoria}/asistencia": {
+            "get": {
+                "tags": [
+                    "Asistencia"
+                ],
+                "summary": "Reporte: % de asistencia por materia, % global y habilitación (≥ 80%)",
+                "operationId": "a218d5a048b04c4ba6cd2cab3aa0f721",
+                "parameters": [
+                    {
+                        "name": "postulante",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Reporte de asistencia"
+                    },
+                    "422": {
+                        "description": "No inscrito"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/evaluation/notas": {
             "post": {
                 "tags": [
@@ -5501,6 +6097,18 @@
         {
             "name": "Aulas",
             "description": "Gestión de aulas por módulo"
+        },
+        {
+            "name": "Feriados",
+            "description": "Feriados"
+        },
+        {
+            "name": "Periodos",
+            "description": "Periodos"
+        },
+        {
+            "name": "Asistencia",
+            "description": "Asistencia"
         },
         {
             "name": "Notas",
