@@ -15,7 +15,7 @@ class Pago extends Model
     protected $table = 'pagos';
 
     protected $fillable = [
-        'postulante_documento', 'convocatoria_id', 'monto', 'concepto', 'metodo', 'fecha_pago', 'estado',
+        'postulante_documento', 'convocatoria_id', 'monto', 'concepto', 'metodo', 'fecha_pago', 'estado', 'gateway', 'referencia',
     ];
 
     /**

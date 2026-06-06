@@ -35,4 +35,15 @@ return [
         ],
     ],
 
+    // Pasarela de pago Stripe.
+    'stripe' => [
+        'key' => env('STRIPE_KEY'),
+        'secret' => env('STRIPE_SECRET'),
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+        'currency' => env('STRIPE_CURRENCY', 'usd'),
+        // URLs del frontend a las que Stripe redirige tras el pago.
+        'success_url' => env('STRIPE_SUCCESS_URL', env('FRONTEND_URL').'/pagos/exito'),
+        'cancel_url' => env('STRIPE_CANCEL_URL', env('FRONTEND_URL').'/pagos/cancelado'),
+    ],
+
 ];

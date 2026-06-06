@@ -4108,6 +4108,62 @@
                 ]
             }
         },
+        "/api/payments/pagos/{pago}/checkout": {
+            "post": {
+                "tags": [
+                    "Pagos"
+                ],
+                "summary": "Iniciar cobro por pasarela (devuelve URL de pago)",
+                "operationId": "ddd7c6d70af1c4f9a8efe55310bfdd5c",
+                "parameters": [
+                    {
+                        "name": "pago",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "URL de la pasarela",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "url": {
+                                            "type": "string",
+                                            "example": "https://checkout.stripe.com/..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/payments/webhook/stripe": {
+            "post": {
+                "tags": [
+                    "Pagos"
+                ],
+                "summary": "Webhook de Stripe (confirma el pago)",
+                "operationId": "40da5ccf6bb5e3f1baf739624c11221c",
+                "responses": {
+                    "200": {
+                        "description": "Procesado"
+                    }
+                }
+            }
+        },
         "/api/payments/pagos": {
             "get": {
                 "tags": [
