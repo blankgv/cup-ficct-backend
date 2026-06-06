@@ -4,18 +4,20 @@ namespace App\Modules\Reports\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\ApplicantAdmission\Models\Convocatoria;
+use App\Modules\Reports\Services\OpenAiReportInterpreter;
 use App\Modules\Reports\Services\ReportExporter;
 use App\Modules\Reports\Services\ReportService;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\Response;
 
-// Reportes: consulta (JSON) y exportación (Excel/PDF).
+// Reportes: consulta (JSON), exportación (Excel/PDF) y consulta por voz (texto + IA).
 class ReportController extends Controller
 {
     public function __construct(
         private readonly ReportService $reports,
         private readonly ReportExporter $exporter,
+        private readonly OpenAiReportInterpreter $interpreter,
     ) {}
 
     #[OA\Get(
@@ -33,13 +35,10 @@ class ReportController extends Controller
     )]
     public function estudiantesPorGrupo(Request $request): Response
     {
-        $gestion = $request->query('gestion');
-        abort_if($gestion === null, 422, 'El parámetro gestion es obligatorio.');
+        abort_if($request->query('gestion') === null, 422, 'El parámetro gestion es obligatorio.');
 
         $report = $this->reports->estudiantesPorGrupo(
-            (string) $gestion,
-            $request->query('grupo_id') !== null ? (int) $request->query('grupo_id') : null,
-            $request->query('nombre'),
+            $request->only(['gestion', 'grupo_id', 'turno', 'nombre', 'carrera'])
         );
 
         return $this->responder($request, $report);
@@ -58,7 +57,9 @@ class ReportController extends Controller
     )]
     public function postulantes(Request $request, Convocatoria $convocatoria): Response
     {
-        return $this->responder($request, $this->reports->postulantesPorConvocatoria($convocatoria));
+        return $this->responder($request, $this->reports->postulantesPorConvocatoria(
+            $convocatoria, $request->only(['estado', 'carrera', 'turno_preferencia', 'nombre'])
+        ));
     }
 
     #[OA\Get(
@@ -74,7 +75,9 @@ class ReportController extends Controller
     )]
     public function recaudacion(Request $request, Convocatoria $convocatoria): Response
     {
-        return $this->responder($request, $this->reports->recaudacion($convocatoria));
+        return $this->responder($request, $this->reports->recaudacion(
+            $convocatoria, $request->only(['estado', 'metodo', 'desde', 'hasta'])
+        ));
     }
 
     #[OA\Get(
@@ -90,7 +93,9 @@ class ReportController extends Controller
     )]
     public function resultados(Request $request, Convocatoria $convocatoria): Response
     {
-        return $this->responder($request, $this->reports->resultados($convocatoria));
+        return $this->responder($request, $this->reports->resultados(
+            $convocatoria, $request->only(['estado', 'nota_min', 'nota_max', 'grupo_id'])
+        ));
     }
 
     #[OA\Get(
@@ -106,20 +111,50 @@ class ReportController extends Controller
     )]
     public function asignacionCarreras(Request $request, Convocatoria $convocatoria): Response
     {
-        return $this->responder($request, $this->reports->asignacionCarreras($convocatoria));
+        return $this->responder($request, $this->reports->asignacionCarreras(
+            $convocatoria, $request->only(['carrera'])
+        ));
+    }
+
+    #[OA\Post(
+        path: '/api/reports/voz',
+        tags: ['Reportes'],
+        summary: 'Reporte por voz: el front manda el texto transcrito; la IA elige reporte + filtros. format=json|excel|pdf',
+        security: [['bearerAuth' => []]],
+        requestBody: new OA\RequestBody(required: true, content: new OA\JsonContent(
+            required: ['texto'],
+            properties: [
+                new OA\Property(property: 'texto', type: 'string', example: 'Dame los estudiantes del turno mañana de la gestión 2026'),
+                new OA\Property(property: 'format', type: 'string', enum: ['json', 'excel', 'pdf'], example: 'json'),
+            ]
+        )),
+        responses: [
+            new OA\Response(response: 200, description: 'Reporte (con la interpretación de la IA en JSON)'),
+            new OA\Response(response: 422, description: 'No se pudo interpretar o faltan datos'),
+        ]
+    )]
+    public function voz(Request $request): Response
+    {
+        $request->validate(['texto' => ['required', 'string']]);
+
+        $interpretacion = $this->interpreter->interpretar($request->input('texto'));
+        $report = $this->reports->porClave($interpretacion['reporte'], $interpretacion['filtros']);
+
+        return $this->responder($request, $report, $interpretacion);
     }
 
     /**
      * Devuelve el reporte en el formato pedido. Excel/PDF requieren permiso report.export.
      *
      * @param array{titulo:string, headers:list<string>, rows:list<list<mixed>>} $report
+     * @param array<string, mixed>|null $interpretacion
      */
-    private function responder(Request $request, array $report): Response
+    private function responder(Request $request, array $report, ?array $interpretacion = null): Response
     {
-        $format = (string) $request->query('format', 'json');
+        $format = (string) $request->input('format', 'json');
 
         if ($format === 'json') {
-            return response()->json($report);
+            return response()->json($interpretacion === null ? $report : ['interpretacion' => $interpretacion] + $report);
         }
 
         abort_unless(in_array($format, ['excel', 'pdf'], true), 422, 'Formato no soportado.');

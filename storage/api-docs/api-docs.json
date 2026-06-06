@@ -5840,6 +5840,56 @@
                     }
                 ]
             }
+        },
+        "/api/reports/voz": {
+            "post": {
+                "tags": [
+                    "Reportes"
+                ],
+                "summary": "Reporte por voz: el front manda el texto transcrito; la IA elige reporte + filtros. format=json|excel|pdf",
+                "operationId": "0cac7a24664d7ddb37f8f855ee5e346a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "texto"
+                                ],
+                                "properties": {
+                                    "texto": {
+                                        "type": "string",
+                                        "example": "Dame los estudiantes del turno mañana de la gestión 2026"
+                                    },
+                                    "format": {
+                                        "type": "string",
+                                        "example": "json",
+                                        "enum": [
+                                            "json",
+                                            "excel",
+                                            "pdf"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Reporte (con la interpretación de la IA en JSON)"
+                    },
+                    "422": {
+                        "description": "No se pudo interpretar o faltan datos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {

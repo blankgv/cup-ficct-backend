@@ -52,6 +52,13 @@ return [
         'pais' => env('FERIADOS_PAIS'),
     ],
 
+    // OpenAI: interpreta el texto del reporte por voz (todo del entorno).
+    'openai' => [
+        'api_key' => env('OPENAI_API_KEY'),
+        'model' => env('OPENAI_MODEL'),
+        'base_url' => env('OPENAI_BASE_URL'),
+    ],
+
     // Pasarela de pago PayPal (todo se lee del entorno).
     'paypal' => [
         'client_id' => env('PAYPAL_CLIENT_ID'),
