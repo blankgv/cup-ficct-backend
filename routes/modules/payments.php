@@ -3,6 +3,7 @@
 use App\Modules\Payments\Controllers\ComprobanteController;
 use App\Modules\Payments\Controllers\PagoCheckoutController;
 use App\Modules\Payments\Controllers\PagoController;
+use App\Modules\Payments\Controllers\ReciboController;
 use Illuminate\Support\Facades\Route;
 
 // Módulo Payments (/api/payments).
@@ -24,4 +25,5 @@ Route::middleware(['auth:api', 'password.changed', 'permission:payment.manage'])
 Route::middleware(['auth:api', 'password.changed'])->group(function () {
     Route::post('pagos/{pago}/checkout', [PagoCheckoutController::class, 'checkout'])->name('pagos.checkout');
     Route::post('pagos/{pago}/comprobantes', [ComprobanteController::class, 'store'])->name('pagos.comprobantes.store');
+    Route::get('pagos/{pago}/recibo', [ReciboController::class, 'download'])->name('pagos.recibo');
 });

@@ -4610,6 +4610,38 @@
                     }
                 ]
             }
+        },
+        "/api/payments/pagos/{pago}/recibo": {
+            "get": {
+                "tags": [
+                    "Pagos"
+                ],
+                "summary": "Descargar recibo del pago (PDF, solo PAGADO; redirige a URL firmada)",
+                "operationId": "8b8636c6f7399e4a04b4631c6c1e4879",
+                "parameters": [
+                    {
+                        "name": "pago",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "302": {
+                        "description": "Redirige al PDF"
+                    },
+                    "422": {
+                        "description": "El pago no está confirmado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
