@@ -10,6 +10,7 @@ use App\Modules\ApplicantAdmission\Models\Postulante;
 use App\Modules\Authentication\Authorization\Role as RoleName;
 use App\Modules\Authentication\Models\User;
 use App\Modules\Payments\Gateways\PaymentGateway;
+use App\Modules\Payments\Gateways\StripeGateway;
 use App\Modules\Payments\Models\Pago;
 use Database\Seeders\AuthenticationSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -48,8 +49,9 @@ class PagoCheckoutTest extends TestCase
 
     public function test_checkout_devuelve_url(): void
     {
-        // Gateway falso para no llamar a Stripe real.
-        $this->app->bind(PaymentGateway::class, fn () => new class implements PaymentGateway
+        // Pasarela por defecto + Stripe falso para no llamar a la API real.
+        config(['payments.default_gateway' => 'stripe']);
+        $this->app->bind(StripeGateway::class, fn () => new class implements PaymentGateway
         {
             public function checkout(Pago $pago): string
             {
@@ -61,6 +63,13 @@ class PagoCheckoutTest extends TestCase
             ->postJson("/api/payments/pagos/{$this->pago->id}/checkout")
             ->assertOk()
             ->assertJsonPath('url', "https://checkout.stripe.com/test/{$this->pago->id}");
+    }
+
+    public function test_checkout_pasarela_no_soportada_da_422(): void
+    {
+        $this->actingAs($this->admin(), 'api')
+            ->postJson("/api/payments/pagos/{$this->pago->id}/checkout?gateway=bitcoin")
+            ->assertStatus(422);
     }
 
     public function test_webhook_marca_pagado(): void

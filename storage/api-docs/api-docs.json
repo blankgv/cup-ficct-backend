@@ -4227,6 +4227,18 @@
                         "schema": {
                             "type": "integer"
                         }
+                    },
+                    {
+                        "name": "gateway",
+                        "in": "query",
+                        "description": "Pasarela (stripe|paypal). Si se omite, usa la del entorno.",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "stripe",
+                                "paypal"
+                            ]
+                        }
                     }
                 ],
                 "responses": {
@@ -4238,13 +4250,16 @@
                                     "properties": {
                                         "url": {
                                             "type": "string",
-                                            "example": "https://checkout.stripe.com/..."
+                                            "example": "https://www.paypal.com/checkoutnow?token=..."
                                         }
                                     },
                                     "type": "object"
                                 }
                             }
                         }
+                    },
+                    "422": {
+                        "description": "Pasarela no soportada"
                     }
                 },
                 "security": [
@@ -4261,6 +4276,20 @@
                 ],
                 "summary": "Webhook de Stripe (confirma el pago)",
                 "operationId": "40da5ccf6bb5e3f1baf739624c11221c",
+                "responses": {
+                    "200": {
+                        "description": "Procesado"
+                    }
+                }
+            }
+        },
+        "/api/payments/webhook/paypal": {
+            "post": {
+                "tags": [
+                    "Pagos"
+                ],
+                "summary": "Webhook de PayPal (confirma el pago)",
+                "operationId": "c9a0346306a8126d9f91acc90105c9e8",
                 "responses": {
                     "200": {
                         "description": "Procesado"

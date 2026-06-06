@@ -46,4 +46,17 @@ return [
         'cancel_url' => env('STRIPE_CANCEL_URL', env('FRONTEND_URL').'/pagos/cancelado'),
     ],
 
+    // Pasarela de pago PayPal (todo se lee del entorno).
+    'paypal' => [
+        'client_id' => env('PAYPAL_CLIENT_ID'),
+        'secret' => env('PAYPAL_SECRET'),
+        // URL base de la API: sandbox o producción (se define en el entorno).
+        'base_url' => env('PAYPAL_BASE_URL'),
+        'currency' => env('PAYPAL_CURRENCY'),
+        'webhook_id' => env('PAYPAL_WEBHOOK_ID'),
+        // URLs del frontend a las que PayPal redirige tras la aprobación.
+        'success_url' => env('PAYPAL_SUCCESS_URL'),
+        'cancel_url' => env('PAYPAL_CANCEL_URL'),
+    ],
+
 ];

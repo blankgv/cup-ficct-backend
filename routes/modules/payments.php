@@ -8,8 +8,9 @@ use Illuminate\Support\Facades\Route;
 
 // Módulo Payments (/api/payments).
 
-// Webhook de Stripe: público (lo llama Stripe, valida por firma).
+// Webhooks de pasarela: públicos (los llama la pasarela, valida por firma).
 Route::post('webhook/stripe', [PagoCheckoutController::class, 'webhookStripe'])->name('payments.webhook.stripe');
+Route::post('webhook/paypal', [PagoCheckoutController::class, 'webhookPaypal'])->name('payments.webhook.paypal');
 
 Route::middleware(['auth:api', 'password.changed', 'permission:payment.manage'])->group(function () {
     Route::apiResource('pagos', PagoController::class);

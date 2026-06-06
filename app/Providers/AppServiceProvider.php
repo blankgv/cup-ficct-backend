@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Modules\Payments\Gateways\PaymentGateway;
-use App\Modules\Payments\Gateways\StripeGateway;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\ServiceProvider;
 
@@ -11,8 +9,7 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        // Pasarela de pago por defecto: Stripe (PayPal se sumará después).
-        $this->app->bind(PaymentGateway::class, StripeGateway::class);
+        // La pasarela de pago se resuelve por nombre en PaymentGatewayFactory (Stripe / PayPal).
     }
 
     public function boot(): void
