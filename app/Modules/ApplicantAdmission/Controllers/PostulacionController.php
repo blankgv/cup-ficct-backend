@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\ApplicantAdmission\DTOs\CreatePostulacionDTO;
 use App\Modules\ApplicantAdmission\Models\Postulacion;
 use App\Modules\ApplicantAdmission\Models\Postulante;
+use App\Modules\ApplicantAdmission\Requests\SetTurnoPreferenciaRequest;
 use App\Modules\ApplicantAdmission\Requests\StorePostulacionRequest;
 use App\Modules\ApplicantAdmission\Resources\PostulacionResource;
 use App\Modules\ApplicantAdmission\Services\PostulacionService;
@@ -91,6 +92,28 @@ class PostulacionController extends Controller
         $this->postulaciones->delete($this->resolve($postulante, $convocatoria));
 
         return response()->json(['message' => 'Postulación cancelada.']);
+    }
+
+    #[OA\Put(
+        path: '/api/applicant-admission/postulantes/{postulante}/postulaciones/{convocatoria}/turno',
+        tags: ['Postulaciones'],
+        summary: 'Fijar preferencia de turno (MANANA/TARDE) para la asignación de grupo',
+        security: [['bearerAuth' => []]],
+        parameters: [
+            new OA\Parameter(name: 'postulante', in: 'path', required: true, schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'convocatoria', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+        ],
+        requestBody: new OA\RequestBody(required: true, content: new OA\JsonContent(
+            required: ['turno'],
+            properties: [new OA\Property(property: 'turno', type: 'string', enum: ['MANANA', 'TARDE'], example: 'MANANA')]
+        )),
+        responses: [new OA\Response(response: 200, description: 'Preferencia guardada', content: new OA\JsonContent(ref: '#/components/schemas/Postulacion'))]
+    )]
+    public function setTurno(SetTurnoPreferenciaRequest $request, Postulante $postulante, int $convocatoria): PostulacionResource
+    {
+        return new PostulacionResource(
+            $this->postulaciones->setTurnoPreferencia($this->resolve($postulante, $convocatoria), $request->validated()['turno'])
+        );
     }
 
     private function resolve(Postulante $postulante, int $convocatoria): Postulacion

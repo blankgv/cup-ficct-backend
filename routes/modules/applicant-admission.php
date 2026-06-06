@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\ApplicantAdmission\Controllers\AsignacionGrupoController;
 use App\Modules\ApplicantAdmission\Controllers\ConvocatoriaController;
 use App\Modules\ApplicantAdmission\Controllers\PostulacionController;
 use App\Modules\ApplicantAdmission\Controllers\PostulanteController;
@@ -21,9 +22,13 @@ Route::middleware(['auth:api', 'password.changed', 'permission:applicant.manage'
         Route::get('/', [PostulacionController::class, 'index']);
         Route::post('/', [PostulacionController::class, 'store']);
         Route::get('/{convocatoria}', [PostulacionController::class, 'show']);
+        Route::put('/{convocatoria}/turno', [PostulacionController::class, 'setTurno']);
         Route::delete('/{convocatoria}', [PostulacionController::class, 'destroy']);
     });
     Route::apiResource('convocatorias', ConvocatoriaController::class);
+
+    // Generación automática de grupos de la convocatoria.
+    Route::post('convocatorias/{convocatoria}/generar-grupos', [AsignacionGrupoController::class, 'generar']);
 
     // Cupos por carrera en la convocatoria.
     Route::get('convocatorias/{convocatoria}/cupos', [ConvocatoriaController::class, 'cupos']);

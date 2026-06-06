@@ -2,6 +2,7 @@
 
 namespace App\Modules\ApplicantAdmission\Models;
 
+use App\Modules\AcademicManagement\Enums\Turno;
 use App\Modules\AcademicManagement\Models\Carrera;
 use App\Modules\ApplicantAdmission\Enums\EstadoPostulacion;
 use App\Support\HasCompositePrimaryKey;
@@ -22,7 +23,7 @@ class Postulacion extends Model
 
     protected $fillable = [
         'postulante_documento', 'convocatoria_id',
-        'carrera_primera_codigo', 'carrera_segunda_codigo', 'estado', 'observacion',
+        'carrera_primera_codigo', 'carrera_segunda_codigo', 'estado', 'observacion', 'turno_preferencia',
     ];
 
     /**
@@ -33,6 +34,7 @@ class Postulacion extends Model
         return [
             'convocatoria_id' => 'integer',
             'estado' => EstadoPostulacion::class,
+            'turno_preferencia' => Turno::class,
         ];
     }
 

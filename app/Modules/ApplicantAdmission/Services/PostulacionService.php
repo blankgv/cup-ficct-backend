@@ -48,4 +48,12 @@ class PostulacionService
     {
         $postulacion->delete();
     }
+
+    // Fija la preferencia de turno del postulante.
+    public function setTurnoPreferencia(Postulacion $postulacion, string $turno): Postulacion
+    {
+        $postulacion->update(['turno_preferencia' => $turno]);
+
+        return $postulacion;
+    }
 }
