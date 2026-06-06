@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Modules\ApplicantAdmission\DTOs\CreatePostulanteDTO;
 use App\Modules\ApplicantAdmission\DTOs\UpdatePostulanteDTO;
 use App\Modules\ApplicantAdmission\Models\Postulante;
+use App\Modules\ApplicantAdmission\Requests\BatchPostulantesRequest;
 use App\Modules\ApplicantAdmission\Requests\StorePostulanteRequest;
 use App\Modules\ApplicantAdmission\Requests\UpdatePostulanteRequest;
 use App\Modules\ApplicantAdmission\Requests\UploadTituloRequest;
 use App\Modules\ApplicantAdmission\Resources\PostulanteResource;
+use App\Modules\ApplicantAdmission\Services\BatchPostulanteService;
 use App\Modules\ApplicantAdmission\Services\PostulanteService;
 use App\Modules\ApplicantAdmission\Services\TituloService;
 use Illuminate\Http\JsonResponse;
@@ -24,7 +26,27 @@ class PostulanteController extends Controller
     public function __construct(
         private readonly PostulanteService $postulantes,
         private readonly TituloService $titulos,
+        private readonly BatchPostulanteService $batch,
     ) {}
+
+    #[OA\Post(
+        path: '/api/applicant-admission/postulantes/lote',
+        tags: ['Postulantes'],
+        summary: 'Carga masiva de postulantes (CSV). Crea su usuario (rol POSTULANTE)',
+        security: [['bearerAuth' => []]],
+        requestBody: new OA\RequestBody(required: true, content: new OA\MediaType(
+            mediaType: 'multipart/form-data',
+            schema: new OA\Schema(
+                required: ['archivo'],
+                properties: [new OA\Property(property: 'archivo', type: 'string', format: 'binary', description: 'CSV con encabezados: documento,nombres,apellidos,email,fecha_nacimiento,colegio,ciudad,telefono')]
+            )
+        )),
+        responses: [new OA\Response(response: 200, description: 'Resumen {creados, omitidos, errores}')]
+    )]
+    public function importLote(BatchPostulantesRequest $request): JsonResponse
+    {
+        return response()->json($this->batch->import($request->file('archivo')));
+    }
 
     #[OA\Get(
         path: '/api/applicant-admission/postulantes',
