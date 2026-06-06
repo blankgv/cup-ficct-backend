@@ -2,6 +2,7 @@
 
 namespace App\Modules\ApplicantAdmission\Models;
 
+use App\Modules\AcademicManagement\Models\Carrera;
 use App\Modules\AcademicManagement\Models\Grupo;
 use App\Support\HasCompositePrimaryKey;
 use Illuminate\Database\Eloquent\Model;
@@ -20,7 +21,7 @@ class Inscripcion extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'postulante_documento', 'convocatoria_id', 'grupo_id', 'fecha_asignacion',
+        'postulante_documento', 'convocatoria_id', 'grupo_id', 'fecha_asignacion', 'carrera_asignada_codigo',
     ];
 
     /**
@@ -48,5 +49,10 @@ class Inscripcion extends Model
     public function grupo(): BelongsTo
     {
         return $this->belongsTo(Grupo::class, 'grupo_id');
+    }
+
+    public function carreraAsignada(): BelongsTo
+    {
+        return $this->belongsTo(Carrera::class, 'carrera_asignada_codigo', 'codigo');
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\ApplicantAdmission\Controllers\AsignacionCarreraController;
 use App\Modules\ApplicantAdmission\Controllers\AsignacionGrupoController;
 use App\Modules\ApplicantAdmission\Controllers\ConvocatoriaController;
 use App\Modules\ApplicantAdmission\Controllers\PostulacionController;
@@ -37,6 +38,7 @@ Route::middleware(['auth:api', 'password.changed', 'permission:applicant.manage'
 Route::middleware(['auth:api', 'password.changed', 'permission:applicant.assign'])
     ->group(function () {
         Route::post('convocatorias/{convocatoria}/generar-grupos', [AsignacionGrupoController::class, 'generar']);
+        Route::post('convocatorias/{convocatoria}/asignar-carreras', [AsignacionCarreraController::class, 'generar']);
     });
 
 // Verificación de requisitos (permiso aparte: applicant.verify).
