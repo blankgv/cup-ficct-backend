@@ -8,6 +8,8 @@ use App\Modules\Authentication\Models\User;
 use Database\Seeders\AuthenticationSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Tests\TestCase;
 
 class BatchPostulanteTest extends TestCase
@@ -88,6 +90,28 @@ class BatchPostulanteTest extends TestCase
             ->assertJsonPath('omitidos', 1);
 
         $this->assertDatabaseMissing('postulantes', ['documento' => '444']);
+    }
+
+    public function test_carga_masiva_por_excel(): void
+    {
+        $ss = new Spreadsheet();
+        $hoja = $ss->getActiveSheet();
+        $hoja->fromArray([
+            ['documento', 'nombres', 'apellidos', 'email', 'fecha_nacimiento', 'colegio', 'ciudad', 'telefono'],
+            ['555', 'Sofia', 'Vaca', 'sofia@e.com', '2007-05-05', 'Colegio', 'Santa Cruz', '777'],
+        ]);
+        $path = tempnam(sys_get_temp_dir(), 'post').'.xlsx';
+        (new Xlsx($ss))->save($path);
+
+        $archivo = new UploadedFile($path, 'postulantes.xlsx', null, null, true);
+
+        $this->actingAs($this->coordinador(), 'api')
+            ->post('/api/applicant-admission/postulantes/lote', ['archivo' => $archivo])
+            ->assertOk()
+            ->assertJsonPath('creados', 1);
+
+        $this->assertDatabaseHas('postulantes', ['documento' => '555', 'email' => 'sofia@e.com']);
+        @unlink($path);
     }
 
     public function test_sin_permiso_no_accede(): void

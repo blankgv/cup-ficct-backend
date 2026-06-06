@@ -9,17 +9,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libzip-dev \
         libicu-dev \
         libonig-dev \
+        libpng-dev \
+        libjpeg-dev \
+        libfreetype-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Extensiones PHP (incluye PostgreSQL).
-RUN docker-php-ext-install \
+# Extensiones PHP (PostgreSQL, GD para imágenes/Excel, etc.).
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install \
         pdo \
         pdo_pgsql \
         pgsql \
         bcmath \
         intl \
         zip \
-        opcache
+        opcache \
+        gd
 
 # Composer.
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer

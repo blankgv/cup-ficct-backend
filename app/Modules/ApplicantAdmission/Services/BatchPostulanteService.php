@@ -10,6 +10,7 @@ use App\Modules\Authentication\Services\UserService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 // Carga masiva de postulantes desde CSV. Crea su usuario (rol POSTULANTE).
 class BatchPostulanteService
@@ -26,7 +27,7 @@ class BatchPostulanteService
      */
     public function import(UploadedFile $archivo): array
     {
-        $filas = $this->leerCsv($archivo);
+        $filas = $this->leerArchivo($archivo);
 
         $creados = 0;
         $omitidos = 0;
@@ -77,25 +78,60 @@ class BatchPostulanteService
     }
 
     /**
+     * Lee el archivo (CSV o Excel) a una matriz [encabezados, ...filas].
+     *
      * @return list<array<string, string>>
      */
-    private function leerCsv(UploadedFile $archivo): array
+    private function leerArchivo(UploadedFile $archivo): array
     {
-        $contenido = file_get_contents($archivo->getRealPath());
-        $lineas = preg_split('/\r\n|\r|\n/', trim((string) $contenido));
+        $ext = strtolower($archivo->getClientOriginalExtension());
+        $matriz = in_array($ext, ['xlsx', 'xls'], true)
+            ? $this->matrizExcel($archivo)
+            : $this->matrizCsv($archivo);
 
-        if ($lineas === false || count($lineas) < 2) {
+        return $this->filasDesdeMatriz($matriz);
+    }
+
+    /**
+     * @return list<list<string>>
+     */
+    private function matrizCsv(UploadedFile $archivo): array
+    {
+        $contenido = (string) file_get_contents($archivo->getRealPath());
+        $lineas = preg_split('/\r\n|\r|\n/', trim($contenido)) ?: [];
+
+        return array_map(fn (string $l) => str_getcsv($l), array_filter($lineas, fn ($l) => trim($l) !== ''));
+    }
+
+    /**
+     * @return list<list<string>>
+     */
+    private function matrizExcel(UploadedFile $archivo): array
+    {
+        $hoja = IOFactory::load($archivo->getRealPath())->getActiveSheet()->toArray();
+
+        return array_values(array_filter(
+            array_map(fn ($fila) => array_map(fn ($c) => (string) ($c ?? ''), $fila), $hoja),
+            fn ($fila) => trim(implode('', $fila)) !== '',
+        ));
+    }
+
+    /**
+     * Mapea la matriz a filas asociativas usando la primera fila como encabezados.
+     *
+     * @param list<list<string>> $matriz
+     * @return list<array<string, string>>
+     */
+    private function filasDesdeMatriz(array $matriz): array
+    {
+        if (count($matriz) < 2) {
             return [];
         }
 
-        $encabezados = array_map(fn ($h) => trim(strtolower($h)), str_getcsv(array_shift($lineas)));
+        $encabezados = array_map(fn ($h) => trim(strtolower((string) $h)), array_shift($matriz));
 
         $filas = [];
-        foreach ($lineas as $linea) {
-            if (trim($linea) === '') {
-                continue;
-            }
-            $valores = str_getcsv($linea);
+        foreach ($matriz as $valores) {
             $fila = [];
             foreach (self::COLUMNAS as $col) {
                 $idx = array_search($col, $encabezados, true);
