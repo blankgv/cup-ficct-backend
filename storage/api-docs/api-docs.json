@@ -2590,6 +2590,63 @@
                 ]
             }
         },
+        "/api/applicant-admission/convocatorias/{convocatoria}/asignar-carreras": {
+            "post": {
+                "tags": [
+                    "Convocatorias"
+                ],
+                "summary": "Asignar carrera definitiva a los aprobados (promedio ≥ 60 + habilitados), por nota desc y cupos. Regenera",
+                "operationId": "433ede7fb6963bbe3c5b56217fdc6986",
+                "parameters": [
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Resumen",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "elegibles": {
+                                            "type": "integer",
+                                            "example": 180
+                                        },
+                                        "asignados": {
+                                            "type": "integer",
+                                            "example": 150
+                                        },
+                                        "sin_cupo": {
+                                            "type": "integer",
+                                            "example": 30
+                                        },
+                                        "por_carrera": {
+                                            "type": "object",
+                                            "example": {
+                                                "187-09": 80,
+                                                "187-10": 70
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/applicant-admission/convocatorias/{convocatoria}/generar-grupos": {
             "post": {
                 "tags": [
