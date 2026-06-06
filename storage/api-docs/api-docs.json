@@ -5621,6 +5621,225 @@
                     }
                 ]
             }
+        },
+        "/api/reports/estudiantes-por-grupo": {
+            "get": {
+                "tags": [
+                    "Reportes"
+                ],
+                "summary": "Estudiantes por grupo de una gestión (filtro por nombre). format=json|excel|pdf",
+                "operationId": "457edbd46b26bf0e8ebe5a38b76e918b",
+                "parameters": [
+                    {
+                        "name": "gestion",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "grupo_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "nombre",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "format",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "json",
+                                "excel",
+                                "pdf"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Reporte"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/reports/convocatorias/{convocatoria}/postulantes": {
+            "get": {
+                "tags": [
+                    "Reportes"
+                ],
+                "summary": "Postulantes por convocatoria. format=json|excel|pdf",
+                "operationId": "698dd590069f9848f71bd0dcbe2d5230",
+                "parameters": [
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "format",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "json",
+                                "excel",
+                                "pdf"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Reporte"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/reports/convocatorias/{convocatoria}/recaudacion": {
+            "get": {
+                "tags": [
+                    "Reportes"
+                ],
+                "summary": "Recaudación de pagos por convocatoria. format=json|excel|pdf",
+                "operationId": "5cc5a61d9a48cbaf1b6cbd4683d0a58e",
+                "parameters": [
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "format",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "json",
+                                "excel",
+                                "pdf"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Reporte"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/reports/convocatorias/{convocatoria}/resultados": {
+            "get": {
+                "tags": [
+                    "Reportes"
+                ],
+                "summary": "Resultados (promedio + estado) por convocatoria. format=json|excel|pdf",
+                "operationId": "5463594686f51e2d7f391f24cac08e90",
+                "parameters": [
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "format",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "json",
+                                "excel",
+                                "pdf"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Reporte"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/reports/convocatorias/{convocatoria}/asignacion-carreras": {
+            "get": {
+                "tags": [
+                    "Reportes"
+                ],
+                "summary": "Asignación de carreras vs cupos. format=json|excel|pdf",
+                "operationId": "5c3fcdbd9e2f1865acf3cbff026b316a",
+                "parameters": [
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "format",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "json",
+                                "excel",
+                                "pdf"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Reporte"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -6170,6 +6389,10 @@
         {
             "name": "Notas",
             "description": "Notas"
+        },
+        {
+            "name": "Reportes",
+            "description": "Reportes"
         }
     ]
 }
