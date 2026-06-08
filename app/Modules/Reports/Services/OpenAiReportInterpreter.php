@@ -64,6 +64,7 @@ class OpenAiReportInterpreter
         - recaudacion: pagos de una convocatoria. Requiere convocatoria. Filtros: estado, metodo, desde, hasta (fechas YYYY-MM-DD).
         - resultados: notas/promedios de una convocatoria. Requiere convocatoria. Filtros: estado (APROBADO/REPROBADO), nota_min, nota_max, grupo_id.
         - asignacion_carreras: cupos vs asignados de una convocatoria. Requiere convocatoria. Filtros: carrera.
+        - admitidos: estudiantes admitidos = aprobados que recibieron cupo (carrera asignada / entraron a la facultad). Requiere convocatoria. Filtros: carrera.
         Valores: turno y turno_preferencia = MANANA, TARDE o NOCHE. metodo = EFECTIVO, TRANSFERENCIA, QR o TARJETA.
         No inventes filtros que el usuario no haya pedido.
         TXT;
@@ -84,7 +85,7 @@ class OpenAiReportInterpreter
                     'properties' => [
                         'reporte' => [
                             'type' => 'string',
-                            'enum' => ['estudiantes_por_grupo', 'postulantes', 'recaudacion', 'resultados', 'asignacion_carreras'],
+                            'enum' => ['estudiantes_por_grupo', 'postulantes', 'recaudacion', 'resultados', 'asignacion_carreras', 'admitidos'],
                             'description' => 'El reporte a generar.',
                         ],
                         'filtros' => [
