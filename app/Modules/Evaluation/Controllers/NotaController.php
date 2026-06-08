@@ -5,6 +5,7 @@ namespace App\Modules\Evaluation\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\AcademicManagement\Models\Grupo;
 use App\Modules\AcademicManagement\Models\Materia;
+use App\Modules\ApplicantAdmission\Models\Inscripcion;
 use App\Modules\ApplicantAdmission\Models\Postulante;
 use App\Modules\Evaluation\Requests\BatchNotasRequest;
 use App\Modules\Evaluation\Requests\StoreNotaRequest;
@@ -32,6 +33,34 @@ class NotaController extends Controller
     public function misGrupos(): JsonResponse
     {
         return response()->json($this->guard->misGrupos());
+    }
+
+    #[OA\Get(
+        path: '/api/evaluation/grupos/{grupo}/estudiantes',
+        tags: ['Notas'],
+        summary: 'Roster (inscritos) de un grupo, para las planillas',
+        security: [['bearerAuth' => []]],
+        parameters: [
+            new OA\Parameter(name: 'grupo', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+        ],
+        responses: [new OA\Response(response: 200, description: 'Lista de inscritos {documento, nombre}')]
+    )]
+    public function estudiantes(Grupo $grupo): JsonResponse
+    {
+        $this->guard->assertGrupoDocente($grupo->id);
+
+        $roster = Inscripcion::with('postulante')
+            ->where('grupo_id', $grupo->id)
+            ->get()
+            ->map(fn (Inscripcion $i) => [
+                'documento' => $i->postulante_documento,
+                'nombre' => $i->postulante
+                    ? trim("{$i->postulante->nombres} {$i->postulante->apellidos}")
+                    : '-',
+            ])
+            ->values();
+
+        return response()->json($roster);
     }
 
     #[OA\Post(
