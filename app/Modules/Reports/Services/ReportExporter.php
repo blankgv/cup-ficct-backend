@@ -20,7 +20,11 @@ class ReportExporter
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->fromArray([$report['headers']], null, 'A1');
         if ($report['rows'] !== []) {
-            $sheet->fromArray($report['rows'], null, 'A2');
+            $rows = array_map(
+                fn (array $row) => array_map([$this, 'normalizar'], $row),
+                $report['rows'],
+            );
+            $sheet->fromArray($rows, null, 'A2');
         }
 
         $writer = new Xlsx($spreadsheet);
@@ -39,6 +43,22 @@ class ReportExporter
     {
         return Pdf::loadView('reports.tabla', $report)
             ->download($this->nombreArchivo($report['titulo'], 'pdf'));
+    }
+
+    // Convierte cualquier valor a un escalar que PhpSpreadsheet pueda escribir.
+    private function normalizar(mixed $valor): mixed
+    {
+        if ($valor === null || is_scalar($valor)) {
+            return $valor;
+        }
+        if ($valor instanceof \BackedEnum) {
+            return $valor->value;
+        }
+        if ($valor instanceof \Stringable || (is_object($valor) && method_exists($valor, '__toString'))) {
+            return (string) $valor;
+        }
+
+        return json_encode($valor);
     }
 
     private function nombreArchivo(string $titulo, string $ext): string
