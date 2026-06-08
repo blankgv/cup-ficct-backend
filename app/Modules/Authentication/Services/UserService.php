@@ -19,14 +19,14 @@ class UserService
         return $this->users->paginate($search, $role, $perPage);
     }
 
-    // Crea un usuario, le asigna el rol y lo marca para cambiar contraseña.
+    // Crea un usuario y le asigna el rol. Marca cambio de contraseña según el DTO.
     public function create(CreateUserDTO $data): User
     {
         $user = $this->users->create([
             'email' => $data->email,
             'username' => $data->username,
             'password' => Hash::make($data->password),
-            'must_change_password' => true,
+            'must_change_password' => $data->mustChangePassword,
         ]);
 
         $user->assignRole($data->role);
