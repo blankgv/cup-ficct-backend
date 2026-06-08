@@ -17,6 +17,22 @@ class EvaluacionAccessGuard
         return Docente::query()->where('user_id', Auth::id())->value('ci');
     }
 
+    // El docente debe dictar al menos una materia en el grupo (roster del grupo).
+    public function assertGrupoDocente(int $grupoId): void
+    {
+        $ci = $this->docenteCi();
+        if ($ci === null) {
+            return;
+        }
+
+        $ok = DB::table('grupo_materia')
+            ->where('grupo_id', $grupoId)
+            ->where('docente_ci', $ci)
+            ->exists();
+
+        abort_unless($ok, 403, 'Este grupo no está entre tus asignaciones.');
+    }
+
     // Endpoints por grupo+materia (planillas batch).
     public function assertGrupoMateria(int $grupoId, string $materiaSigla): void
     {
