@@ -5,10 +5,15 @@ use App\Modules\ApplicantAdmission\Controllers\AsignacionGrupoController;
 use App\Modules\ApplicantAdmission\Controllers\ConvocatoriaController;
 use App\Modules\ApplicantAdmission\Controllers\PostulacionController;
 use App\Modules\ApplicantAdmission\Controllers\PostulanteController;
+use App\Modules\ApplicantAdmission\Controllers\RegistroController;
 use App\Modules\ApplicantAdmission\Controllers\VerificacionController;
 use Illuminate\Support\Facades\Route;
 
 // Módulo ApplicantAdmission (/api/applicant-admission).
+
+// Pública: auto-registro de postulantes (crea cuenta rol POSTULANTE y autentica).
+Route::post('registro', [RegistroController::class, 'register'])->name('applicant.registro');
+
 Route::middleware(['auth:api', 'password.changed', 'permission:applicant.manage'])->group(function () {
     // Carga masiva (antes del apiResource para que /lote no choque con /{postulante}).
     Route::post('postulantes/lote', [PostulanteController::class, 'importLote']);
