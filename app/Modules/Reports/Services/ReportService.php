@@ -162,7 +162,12 @@ class ReportService
             ->orderBy('estado')
             ->orderBy('metodo')
             ->get()
-            ->map(fn ($p) => [$p->estado, $p->metodo, (int) $p->cantidad, number_format((float) $p->total, 2, '.', '')])
+            ->map(fn ($p) => [
+                $p->estado instanceof \BackedEnum ? $p->estado->value : $p->estado,
+                $p->metodo instanceof \BackedEnum ? $p->metodo->value : $p->metodo,
+                (int) $p->cantidad,
+                number_format((float) $p->total, 2, '.', ''),
+            ])
             ->all();
 
         return [
