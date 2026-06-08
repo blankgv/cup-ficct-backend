@@ -14,6 +14,7 @@ use App\Modules\Payments\Services\PagoService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\DB;
 use OpenApi\Attributes as OA;
 
 // CRUD de pagos.
@@ -73,8 +74,16 @@ class PagoController extends Controller
         parameters: [new OA\Parameter(name: 'pago', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))],
         responses: [new OA\Response(response: 200, description: 'Pago', content: new OA\JsonContent(ref: '#/components/schemas/Pago'))]
     )]
-    public function show(Pago $pago): PagoResource
+    // Accesible al staff (payment.manage) o al dueño del pago (su postulante).
+    public function show(Request $request, Pago $pago): PagoResource
     {
+        $user = $request->user();
+        $esStaff = $user->hasPermission('payment.manage');
+        $documento = DB::table('postulantes')->where('user_id', $user->id)->value('documento');
+        $esDueno = $documento !== null && $documento === $pago->postulante_documento;
+
+        abort_unless($esStaff || $esDueno, 403, 'No autorizado para ver este pago.');
+
         return new PagoResource($pago);
     }
 
