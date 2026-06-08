@@ -4,14 +4,18 @@ namespace App\Modules\ApplicantAdmission\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\ApplicantAdmission\DTOs\UpdatePostulanteDTO;
+use App\Modules\ApplicantAdmission\Models\Inscripcion;
 use App\Modules\ApplicantAdmission\Models\Postulante;
 use App\Modules\ApplicantAdmission\Requests\CompletarPerfilRequest;
 use App\Modules\ApplicantAdmission\Requests\UploadTituloRequest;
 use App\Modules\ApplicantAdmission\Resources\PostulanteResource;
 use App\Modules\ApplicantAdmission\Services\PostulanteService;
 use App\Modules\ApplicantAdmission\Services\TituloService;
+use App\Modules\Evaluation\Services\AsistenciaService;
+use App\Modules\Evaluation\Services\NotaService;
 use App\Modules\Payments\Models\Pago;
 use App\Modules\Payments\Resources\PagoResource;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +27,22 @@ class MiPostulanteController extends Controller
     public function __construct(
         private readonly PostulanteService $postulantes,
         private readonly TituloService $titulos,
+        private readonly NotaService $notas,
+        private readonly AsistenciaService $asistencias,
     ) {}
+
+    // Convocatoria de la inscripción más reciente del postulante (o 404).
+    private function convocatoriaInscrito(Postulante $postulante): int
+    {
+        $convId = Inscripcion::query()
+            ->where('postulante_documento', $postulante->documento)
+            ->latest('fecha_asignacion')
+            ->value('convocatoria_id');
+
+        abort_if($convId === null, 404, 'Todavía no estás inscrito en ningún grupo.');
+
+        return (int) $convId;
+    }
 
     // Resuelve el postulante del usuario autenticado.
     private function postulante(): Postulante
@@ -116,6 +135,44 @@ class MiPostulanteController extends Controller
                 ->where('postulante_documento', $this->postulante()->documento)
                 ->latest()
                 ->get(),
+        );
+    }
+
+    #[OA\Get(
+        path: '/api/applicant-admission/mi-postulante/boletin',
+        tags: ['ApplicantAdmission'],
+        summary: 'Mi boletín (notas, promedio y estado) de mi inscripción',
+        security: [['bearerAuth' => []]],
+        responses: [
+            new OA\Response(response: 200, description: 'Boletín del postulante'),
+            new OA\Response(response: 404, description: 'No inscrito'),
+        ]
+    )]
+    public function boletin(): JsonResponse
+    {
+        $postulante = $this->postulante();
+
+        return response()->json(
+            $this->notas->boletin($postulante, $this->convocatoriaInscrito($postulante)),
+        );
+    }
+
+    #[OA\Get(
+        path: '/api/applicant-admission/mi-postulante/asistencia',
+        tags: ['ApplicantAdmission'],
+        summary: 'Mi asistencia (% por materia, global y habilitación)',
+        security: [['bearerAuth' => []]],
+        responses: [
+            new OA\Response(response: 200, description: 'Reporte de asistencia del postulante'),
+            new OA\Response(response: 404, description: 'No inscrito'),
+        ]
+    )]
+    public function asistencia(): JsonResponse
+    {
+        $postulante = $this->postulante();
+
+        return response()->json(
+            $this->asistencias->reporte($postulante, $this->convocatoriaInscrito($postulante)),
         );
     }
 }
