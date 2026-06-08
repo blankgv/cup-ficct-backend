@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Route;
 
 // Notas.
 Route::middleware(['auth:api', 'password.changed', 'permission:grade.manage'])->group(function () {
+    // Grupos/materias del usuario (docente: los suyos; staff: todos).
+    Route::get('mis-grupos', [NotaController::class, 'misGrupos']);
     Route::post('notas', [NotaController::class, 'store']);
     Route::post('grupos/{grupo}/materias/{materia}/notas', [NotaController::class, 'storeBatch']);
     Route::get('postulantes/{postulante}/convocatorias/{convocatoria}/boletin', [NotaController::class, 'boletin']);

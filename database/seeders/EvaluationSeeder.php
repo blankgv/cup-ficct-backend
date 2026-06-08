@@ -6,11 +6,11 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
-// Notas (1 parcial por materia) y asistencia (6 fechas) para cada inscrito.
+// Notas (1 parcial por materia) y asistencia (todos los días hábiles del periodo,
+// ~90% presente) para cada inscrito.
 class EvaluationSeeder extends Seeder
 {
     private const MATERIAS = ['MAT', 'FIS', 'ING', 'COM'];
-    private const FECHAS = 6;
 
     public function run(): void
     {
@@ -18,8 +18,14 @@ class EvaluationSeeder extends Seeder
             return;
         }
 
-        // Fecha base por convocatoria (inicio de clases) para generar las asistencias.
-        $inicios = DB::table('convocatorias')->pluck('fecha_inicio', 'id');
+        @ini_set('memory_limit', '512M');
+
+        // Días hábiles (lun–vie) de cada convocatoria → las sesiones esperadas.
+        $convs = DB::table('convocatorias')->get(['id', 'fecha_inicio', 'fecha_fin']);
+        $diasPorConv = [];
+        foreach ($convs as $c) {
+            $diasPorConv[$c->id] = $this->diasHabiles($c->fecha_inicio, $c->fecha_fin);
+        }
 
         $inscripciones = DB::table('inscripciones')->select('postulante_documento', 'convocatoria_id')->get();
 
@@ -29,7 +35,6 @@ class EvaluationSeeder extends Seeder
         foreach ($inscripciones as $ins) {
             $doc = $ins->postulante_documento;
             $convId = $ins->convocatoria_id;
-            $base = Carbon::parse($inicios[$convId]);
             $semilla = (int) substr($doc, -4);
 
             foreach (self::MATERIAS as $mi => $sigla) {
@@ -45,27 +50,49 @@ class EvaluationSeeder extends Seeder
                     'updated_at' => now(),
                 ];
 
-                // Asistencia: mayormente PRESENTE; una falta ocasional.
-                for ($f = 0; $f < self::FECHAS; $f++) {
-                    $falta = (($semilla + $mi + $f) % 7) === 0;
+                // Asistencia en cada día hábil; ~1 de cada 11 es falta (>80% → habilitado).
+                foreach ($diasPorConv[$convId] as $idx => $fecha) {
+                    $falta = (($semilla + $mi + $idx) % 11) === 0;
                     $asistencias[] = [
                         'postulante_documento' => $doc,
                         'convocatoria_id' => $convId,
                         'materia_sigla' => $sigla,
-                        'fecha' => $base->copy()->addDays($f * 2)->toDateString(),
+                        'fecha' => $fecha,
                         'estado' => $falta ? 'AUSENTE' : 'PRESENTE',
                         'created_at' => now(),
                         'updated_at' => now(),
                     ];
                 }
             }
+
+            // Volcar por lotes para no agotar memoria (78k+ filas de asistencia).
+            if (count($asistencias) >= 4000) {
+                DB::table('asistencias')->insert($asistencias);
+                $asistencias = [];
+            }
         }
 
         foreach (array_chunk($notas, 1000) as $chunk) {
             DB::table('notas')->insert($chunk);
         }
-        foreach (array_chunk($asistencias, 1000) as $chunk) {
-            DB::table('asistencias')->insert($chunk);
+        if ($asistencias !== []) {
+            DB::table('asistencias')->insert($asistencias);
         }
+    }
+
+    /** @return list<string> Fechas (Y-m-d) de lunes a viernes en el rango. */
+    private function diasHabiles(string $desde, string $hasta): array
+    {
+        $dias = [];
+        $cursor = Carbon::parse($desde);
+        $fin = Carbon::parse($hasta);
+        while ($cursor->lte($fin)) {
+            if ($cursor->isWeekday()) {
+                $dias[] = $cursor->toDateString();
+            }
+            $cursor->addDay();
+        }
+
+        return $dias;
     }
 }
