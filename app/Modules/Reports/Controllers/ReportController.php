@@ -116,6 +116,25 @@ class ReportController extends Controller
         ));
     }
 
+    #[OA\Get(
+        path: '/api/reports/convocatorias/{convocatoria}/admitidos',
+        tags: ['Reportes'],
+        summary: 'Admitidos: aprobados con cupo (carrera asignada). format=json|excel|pdf',
+        security: [['bearerAuth' => []]],
+        parameters: [
+            new OA\Parameter(name: 'convocatoria', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'carrera', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'format', in: 'query', schema: new OA\Schema(type: 'string', enum: ['json', 'excel', 'pdf'])),
+        ],
+        responses: [new OA\Response(response: 200, description: 'Reporte')]
+    )]
+    public function admitidos(Request $request, Convocatoria $convocatoria): Response
+    {
+        return $this->responder($request, $this->reports->admitidos(
+            $convocatoria, $request->only(['carrera'])
+        ));
+    }
+
     #[OA\Post(
         path: '/api/reports/voz',
         tags: ['Reportes'],
