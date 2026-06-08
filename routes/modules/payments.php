@@ -13,7 +13,8 @@ Route::post('webhook/stripe', [PagoCheckoutController::class, 'webhookStripe'])-
 Route::post('webhook/paypal', [PagoCheckoutController::class, 'webhookPaypal'])->name('payments.webhook.paypal');
 
 Route::middleware(['auth:api', 'password.changed', 'permission:payment.manage'])->group(function () {
-    Route::apiResource('pagos', PagoController::class);
+    // El detalle (show) se define aparte para permitirlo también al dueño del pago.
+    Route::apiResource('pagos', PagoController::class)->except('show');
     // Confirmación/rechazo manual (staff).
     Route::post('pagos/{pago}/confirmar', [PagoController::class, 'confirmar'])->name('pagos.confirmar');
     Route::post('pagos/{pago}/rechazar', [PagoController::class, 'rechazar'])->name('pagos.rechazar');
@@ -22,8 +23,9 @@ Route::middleware(['auth:api', 'password.changed', 'permission:payment.manage'])
     Route::get('comprobantes/{comprobante}/descargar', [ComprobanteController::class, 'download'])->name('comprobantes.descargar');
 });
 
-// Checkout y subida de comprobante: cualquier usuario autenticado (el postulante paga su propio pago).
+// Pago propio: detalle, checkout y comprobante (cualquier autenticado; show valida dueño/staff).
 Route::middleware(['auth:api', 'password.changed'])->group(function () {
+    Route::get('pagos/{pago}', [PagoController::class, 'show'])->name('pagos.show');
     Route::post('pagos/{pago}/checkout', [PagoCheckoutController::class, 'checkout'])->name('pagos.checkout');
     Route::post('pagos/{pago}/comprobantes', [ComprobanteController::class, 'store'])->name('pagos.comprobantes.store');
     Route::get('pagos/{pago}/recibo', [ReciboController::class, 'download'])->name('pagos.recibo');
