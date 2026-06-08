@@ -29,6 +29,7 @@ class ApplicantAdmissionSeeder extends Seeder
 
     private string $password = '';
     private int $roleId = 0;
+    private int $docenteRoleId = 0;
     private int $docCounter = 4000000;
     private int $aulaCounter = 1;
 
@@ -40,6 +41,7 @@ class ApplicantAdmissionSeeder extends Seeder
 
         $this->password = Hash::make('password');
         $this->roleId = (int) DB::table('roles')->where('name', 'POSTULANTE')->value('id');
+        $this->docenteRoleId = (int) DB::table('roles')->where('name', 'DOCENTE')->value('id');
 
         $docentes = $this->docentes();
 
@@ -59,14 +61,27 @@ class ApplicantAdmissionSeeder extends Seeder
         $cis = [];
         for ($i = 0; $i < 8; $i++) {
             $ci = (string) (3000000 + $i);
+            $email = "docente{$i}@cup-ficct.local";
+
+            // Cuenta de acceso del docente (rol DOCENTE) para el área de evaluación.
+            $userId = DB::table('users')->insertGetId([
+                'email' => $email,
+                'username' => null,
+                'password' => $this->password,
+                'must_change_password' => false,
+                'role_id' => $this->docenteRoleId,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
             Docente::create([
                 'ci' => $ci,
                 'nombres' => self::NOMBRES[$i % count(self::NOMBRES)],
                 'apellidos' => self::APELLIDOS[($i + 5) % count(self::APELLIDOS)],
-                'email' => "docente{$i}@cup-ficct.local",
+                'email' => $email,
                 'telefono' => '700'.str_pad((string) $i, 5, '0', STR_PAD_LEFT),
                 'profesion' => 'Ingeniero',
-                'user_id' => null,
+                'user_id' => $userId,
             ]);
             $cis[] = $ci;
         }
