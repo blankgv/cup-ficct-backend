@@ -10,7 +10,10 @@ use App\Modules\ApplicantAdmission\Requests\UploadTituloRequest;
 use App\Modules\ApplicantAdmission\Resources\PostulanteResource;
 use App\Modules\ApplicantAdmission\Services\PostulanteService;
 use App\Modules\ApplicantAdmission\Services\TituloService;
+use App\Modules\Payments\Models\Pago;
+use App\Modules\Payments\Resources\PagoResource;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 use OpenApi\Attributes as OA;
 
@@ -97,5 +100,22 @@ class MiPostulanteController extends Controller
         abort_if($url === null, 404, 'No tenés título cargado.');
 
         return redirect()->away($url);
+    }
+
+    #[OA\Get(
+        path: '/api/applicant-admission/mi-postulante/pagos',
+        tags: ['ApplicantAdmission'],
+        summary: 'Mis pagos (cobros de inscripción y otros)',
+        security: [['bearerAuth' => []]],
+        responses: [new OA\Response(response: 200, description: 'Lista de pagos del postulante')]
+    )]
+    public function pagos(): AnonymousResourceCollection
+    {
+        return PagoResource::collection(
+            Pago::query()
+                ->where('postulante_documento', $this->postulante()->documento)
+                ->latest()
+                ->get(),
+        );
     }
 }

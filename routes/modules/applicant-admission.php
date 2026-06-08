@@ -21,6 +21,7 @@ Route::middleware(['auth:api', 'password.changed'])->group(function () {
     Route::put('mi-postulante', [MiPostulanteController::class, 'update']);
     Route::post('mi-postulante/titulo', [MiPostulanteController::class, 'uploadTitulo']);
     Route::get('mi-postulante/titulo', [MiPostulanteController::class, 'downloadTitulo']);
+    Route::get('mi-postulante/pagos', [MiPostulanteController::class, 'pagos']);
 });
 
 Route::middleware(['auth:api', 'password.changed', 'permission:applicant.manage'])->group(function () {
