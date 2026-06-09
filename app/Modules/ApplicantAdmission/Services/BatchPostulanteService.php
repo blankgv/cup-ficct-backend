@@ -2,6 +2,9 @@
 
 namespace App\Modules\ApplicantAdmission\Services;
 
+use App\Modules\AcademicManagement\Models\Carrera;
+use App\Modules\ApplicantAdmission\Models\Convocatoria;
+use App\Modules\ApplicantAdmission\Models\Postulacion;
 use App\Modules\ApplicantAdmission\Models\Postulante;
 use App\Modules\Authentication\Authorization\Role;
 use App\Modules\Authentication\DTOs\CreateUserDTO;
@@ -14,29 +17,44 @@ use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use ZipArchive;
 
-// Carga masiva de postulantes desde CSV/Excel. Crea su usuario (rol POSTULANTE) y,
-// opcionalmente, sube su título desde un ZIP (cada archivo nombrado por documento).
+// Carga masiva de postulantes desde CSV/Excel. Crea su usuario (rol POSTULANTE),
+// su postulación (verificada → genera el cobro de inscripción) y, opcionalmente,
+// sube su título desde un ZIP (cada archivo nombrado por documento).
 class BatchPostulanteService
 {
-    /** Columnas esperadas en el CSV (en este orden no es obligatorio; se usan los encabezados). */
-    private const COLUMNAS = ['documento', 'nombres', 'apellidos', 'email', 'fecha_nacimiento', 'colegio', 'ciudad', 'telefono'];
+    /** Columnas leídas del archivo (se mapean por encabezado, el orden no importa). */
+    private const COLUMNAS = [
+        'documento', 'nombres', 'apellidos', 'email', 'fecha_nacimiento', 'colegio', 'ciudad', 'telefono',
+        'convocatoria', 'turno', 'carrera_primera', 'carrera_segunda',
+    ];
 
     private const TITULO_EXT = ['pdf', 'jpg', 'jpeg', 'png'];
+
+    private const TURNOS = ['MANANA', 'TARDE', 'NOCHE'];
 
     public function __construct(
         private readonly UserService $users,
         private readonly TituloService $titulos,
+        private readonly VerificacionService $verificacion,
     ) {}
 
     /**
-     * Procesa el archivo: inserta filas válidas, salta inválidas/duplicadas y reporta.
-     * Si viene un ZIP de títulos, sube el de cada postulante creado (match por documento).
+     * Procesa el archivo: por cada fila válida crea postulante + cuenta + postulación
+     * verificada (genera el cobro de inscripción). Sube el título si viene en el ZIP.
      *
-     * @return array{creados:int, omitidos:int, errores:list<array{fila:int, error:string}>, titulos_subidos:int, titulos_sin_match:list<string>}
+     * @return array{creados:int, omitidos:int, errores:list<array{fila:int, error:string}>, postulaciones:int, titulos_subidos:int, titulos_sin_match:list<string>}
      */
     public function import(UploadedFile $archivo, ?UploadedFile $titulos = null): array
     {
         $filas = $this->leerArchivo($archivo);
+
+        // Mapas para resolver convocatoria/carrera por id/código o por nombre.
+        $convocatorias = Convocatoria::all();
+        $convPorNombre = $convocatorias->keyBy(fn ($c) => mb_strtolower($c->nombre));
+        $convPorId = $convocatorias->keyBy('id');
+        $carreras = Carrera::all();
+        $carreraCodes = $carreras->keyBy('codigo');
+        $carreraPorNombre = $carreras->keyBy(fn ($c) => mb_strtolower($c->nombre));
 
         // Mapa documento → ruta del título extraído del ZIP (si lo hay).
         [$mapaTitulos, $dirTmp] = $titulos !== null ? $this->extraerTitulos($titulos) : [[], null];
@@ -45,6 +63,7 @@ class BatchPostulanteService
         $creados = 0;
         $omitidos = 0;
         $errores = [];
+        $postulaciones = 0;
         $titulosSubidos = 0;
 
         foreach ($filas as $i => $fila) {
@@ -65,14 +84,34 @@ class BatchPostulanteService
                 continue;
             }
 
-            $postulante = DB::transaction(function () use ($fila) {
+            // Resolver la postulación (convocatoria, turno, carreras).
+            $convId = $this->resolverConvocatoria($fila['convocatoria'], $convPorId, $convPorNombre);
+            $turno = $this->resolverTurno($fila['turno']);
+            $c1 = $this->resolverCarrera($fila['carrera_primera'], $carreraCodes, $carreraPorNombre);
+            $c2 = $this->resolverCarrera($fila['carrera_segunda'], $carreraCodes, $carreraPorNombre);
+
+            $motivo = match (true) {
+                $convId === null => "Convocatoria no encontrada: «{$fila['convocatoria']}».",
+                $turno === null => "Turno inválido: «{$fila['turno']}» (MANANA/TARDE/NOCHE).",
+                $c1 === null => "Carrera 1ra opción no encontrada: «{$fila['carrera_primera']}».",
+                $c2 === null => "Carrera 2da opción no encontrada: «{$fila['carrera_segunda']}».",
+                default => null,
+            };
+            if ($motivo !== null) {
+                $omitidos++;
+                $errores[] = ['fila' => $numeroFila, 'error' => $motivo];
+
+                continue;
+            }
+
+            $postulante = DB::transaction(function () use ($fila, $convId, $turno, $c1, $c2) {
                 $user = $this->users->create(new CreateUserDTO(
                     email: $fila['email'],
                     password: $fila['documento'],
                     role: Role::POSTULANTE,
                 ));
 
-                return Postulante::create([
+                $postulante = Postulante::create([
                     'documento' => $fila['documento'],
                     'nombres' => $fila['nombres'],
                     'apellidos' => $fila['apellidos'],
@@ -83,9 +122,23 @@ class BatchPostulanteService
                     'ciudad' => $fila['ciudad'],
                     'user_id' => $user->id,
                 ]);
+
+                // Postulación cargada por staff → se da por verificada y se genera el cobro.
+                $postulacion = Postulacion::create([
+                    'postulante_documento' => $postulante->documento,
+                    'convocatoria_id' => $convId,
+                    'carrera_primera_codigo' => $c1,
+                    'carrera_segunda_codigo' => $c2,
+                    'turno_preferencia' => $turno,
+                    'estado' => 'PENDIENTE',
+                ]);
+                $this->verificacion->verificar($postulacion);
+
+                return $postulante;
             });
 
             $creados++;
+            $postulaciones++;
 
             // Subir el título si el ZIP trae un archivo nombrado por este documento.
             $doc = $fila['documento'];
@@ -110,9 +163,50 @@ class BatchPostulanteService
             'creados' => $creados,
             'omitidos' => $omitidos,
             'errores' => $errores,
+            'postulaciones' => $postulaciones,
             'titulos_subidos' => $titulosSubidos,
             'titulos_sin_match' => $sinMatch,
         ];
+    }
+
+    /**
+     * @param \Illuminate\Support\Collection<int|string, Convocatoria> $porId
+     * @param \Illuminate\Support\Collection<string, Convocatoria> $porNombre
+     */
+    private function resolverConvocatoria(string $valor, $porId, $porNombre): ?int
+    {
+        $valor = trim($valor);
+        if ($valor === '') {
+            return null;
+        }
+        if (ctype_digit($valor) && $porId->has((int) $valor)) {
+            return (int) $valor;
+        }
+        $match = $porNombre->get(mb_strtolower($valor));
+
+        return $match?->id;
+    }
+
+    /**
+     * @param \Illuminate\Support\Collection<string, Carrera> $porCodigo
+     * @param \Illuminate\Support\Collection<string, Carrera> $porNombre
+     */
+    private function resolverCarrera(string $valor, $porCodigo, $porNombre): ?string
+    {
+        $valor = trim($valor);
+        if ($porCodigo->has($valor)) {
+            return $valor;
+        }
+
+        return $porNombre->get(mb_strtolower($valor))?->codigo;
+    }
+
+    // Normaliza el turno (acepta MAÑANA/MANANA, sin acentos, mayúsculas).
+    private function resolverTurno(string $valor): ?string
+    {
+        $t = strtoupper(strtr(trim($valor), ['Ñ' => 'N', 'ñ' => 'N']));
+
+        return in_array($t, self::TURNOS, true) ? $t : null;
     }
 
     /**
