@@ -9,29 +9,43 @@ use App\Modules\Authentication\Models\User;
 use App\Modules\Authentication\Services\UserService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use ZipArchive;
 
-// Carga masiva de postulantes desde CSV. Crea su usuario (rol POSTULANTE).
+// Carga masiva de postulantes desde CSV/Excel. Crea su usuario (rol POSTULANTE) y,
+// opcionalmente, sube su título desde un ZIP (cada archivo nombrado por documento).
 class BatchPostulanteService
 {
     /** Columnas esperadas en el CSV (en este orden no es obligatorio; se usan los encabezados). */
     private const COLUMNAS = ['documento', 'nombres', 'apellidos', 'email', 'fecha_nacimiento', 'colegio', 'ciudad', 'telefono'];
 
-    public function __construct(private readonly UserService $users) {}
+    private const TITULO_EXT = ['pdf', 'jpg', 'jpeg', 'png'];
+
+    public function __construct(
+        private readonly UserService $users,
+        private readonly TituloService $titulos,
+    ) {}
 
     /**
-     * Procesa el CSV: inserta filas válidas, salta inválidas/duplicadas y reporta.
+     * Procesa el archivo: inserta filas válidas, salta inválidas/duplicadas y reporta.
+     * Si viene un ZIP de títulos, sube el de cada postulante creado (match por documento).
      *
-     * @return array{creados:int, omitidos:int, errores:list<array{fila:int, error:string}>}
+     * @return array{creados:int, omitidos:int, errores:list<array{fila:int, error:string}>, titulos_subidos:int, titulos_sin_match:list<string>}
      */
-    public function import(UploadedFile $archivo): array
+    public function import(UploadedFile $archivo, ?UploadedFile $titulos = null): array
     {
         $filas = $this->leerArchivo($archivo);
+
+        // Mapa documento → ruta del título extraído del ZIP (si lo hay).
+        [$mapaTitulos, $dirTmp] = $titulos !== null ? $this->extraerTitulos($titulos) : [[], null];
+        $titulosUsados = [];
 
         $creados = 0;
         $omitidos = 0;
         $errores = [];
+        $titulosSubidos = 0;
 
         foreach ($filas as $i => $fila) {
             $numeroFila = $i + 2; // +1 encabezado, +1 base 1
@@ -51,14 +65,14 @@ class BatchPostulanteService
                 continue;
             }
 
-            DB::transaction(function () use ($fila) {
+            $postulante = DB::transaction(function () use ($fila) {
                 $user = $this->users->create(new CreateUserDTO(
                     email: $fila['email'],
                     password: $fila['documento'],
                     role: Role::POSTULANTE,
                 ));
 
-                Postulante::create([
+                return Postulante::create([
                     'documento' => $fila['documento'],
                     'nombres' => $fila['nombres'],
                     'apellidos' => $fila['apellidos'],
@@ -72,9 +86,69 @@ class BatchPostulanteService
             });
 
             $creados++;
+
+            // Subir el título si el ZIP trae un archivo nombrado por este documento.
+            $doc = $fila['documento'];
+            if (isset($mapaTitulos[$doc])) {
+                $this->titulos->upload($postulante, $this->archivoSubible($mapaTitulos[$doc]));
+                $titulosUsados[$doc] = true;
+                $titulosSubidos++;
+            }
         }
 
-        return ['creados' => $creados, 'omitidos' => $omitidos, 'errores' => $errores];
+        // Títulos del ZIP que no calzaron con ningún postulante creado.
+        $sinMatch = array_values(array_map(
+            fn (string $doc) => basename($mapaTitulos[$doc]),
+            array_diff(array_keys($mapaTitulos), array_keys($titulosUsados)),
+        ));
+
+        if ($dirTmp !== null) {
+            File::deleteDirectory($dirTmp);
+        }
+
+        return [
+            'creados' => $creados,
+            'omitidos' => $omitidos,
+            'errores' => $errores,
+            'titulos_subidos' => $titulosSubidos,
+            'titulos_sin_match' => $sinMatch,
+        ];
+    }
+
+    /**
+     * Extrae el ZIP a un directorio temporal y mapea documento → ruta del archivo.
+     *
+     * @return array{0: array<string, string>, 1: string|null}
+     */
+    private function extraerTitulos(UploadedFile $zip): array
+    {
+        $dir = storage_path('app/tmp/titulos_'.uniqid());
+        File::ensureDirectoryExists($dir);
+
+        $archive = new ZipArchive();
+        if ($archive->open($zip->getRealPath()) !== true) {
+            return [[], $dir];
+        }
+        $archive->extractTo($dir);
+        $archive->close();
+
+        $mapa = [];
+        foreach (File::allFiles($dir) as $file) {
+            $ext = strtolower($file->getExtension());
+            if (! in_array($ext, self::TITULO_EXT, true)) {
+                continue;
+            }
+            // El nombre (sin extensión) es el documento del postulante.
+            $mapa[$file->getFilenameWithoutExtension()] = $file->getRealPath();
+        }
+
+        return [$mapa, $dir];
+    }
+
+    // Envuelve un archivo del disco como UploadedFile para reusar TituloService.
+    private function archivoSubible(string $path): UploadedFile
+    {
+        return new UploadedFile($path, basename($path), null, null, true);
     }
 
     /**
