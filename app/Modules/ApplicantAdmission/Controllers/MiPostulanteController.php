@@ -3,12 +3,19 @@
 namespace App\Modules\ApplicantAdmission\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\AcademicManagement\Models\Carrera;
+use App\Modules\ApplicantAdmission\DTOs\CreatePostulacionDTO;
 use App\Modules\ApplicantAdmission\DTOs\UpdatePostulanteDTO;
+use App\Modules\ApplicantAdmission\Enums\EstadoConvocatoria;
+use App\Modules\ApplicantAdmission\Models\Convocatoria;
 use App\Modules\ApplicantAdmission\Models\Inscripcion;
+use App\Modules\ApplicantAdmission\Models\Postulacion;
 use App\Modules\ApplicantAdmission\Models\Postulante;
 use App\Modules\ApplicantAdmission\Requests\CompletarPerfilRequest;
+use App\Modules\ApplicantAdmission\Requests\CrearMiPostulacionRequest;
 use App\Modules\ApplicantAdmission\Requests\UploadTituloRequest;
 use App\Modules\ApplicantAdmission\Resources\PostulanteResource;
+use App\Modules\ApplicantAdmission\Services\PostulacionService;
 use App\Modules\ApplicantAdmission\Services\PostulanteService;
 use App\Modules\ApplicantAdmission\Services\TituloService;
 use App\Modules\Evaluation\Services\AsistenciaService;
@@ -19,6 +26,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use OpenApi\Attributes as OA;
 
 // Autogestión del propio postulante (el dueño, sin permiso de staff).
@@ -29,6 +37,7 @@ class MiPostulanteController extends Controller
         private readonly TituloService $titulos,
         private readonly NotaService $notas,
         private readonly AsistenciaService $asistencias,
+        private readonly PostulacionService $postulacionesSrv,
     ) {}
 
     // Convocatoria de la inscripción más reciente del postulante (o 404).
@@ -174,5 +183,104 @@ class MiPostulanteController extends Controller
         return response()->json(
             $this->asistencias->reporte($postulante, $this->convocatoriaInscrito($postulante)),
         );
+    }
+
+    #[OA\Get(
+        path: '/api/applicant-admission/mi-postulante/convocatorias',
+        tags: ['ApplicantAdmission'],
+        summary: 'Convocatorias abiertas y sus carreras (para postularme)',
+        security: [['bearerAuth' => []]],
+        responses: [new OA\Response(response: 200, description: 'Convocatorias abiertas')]
+    )]
+    public function convocatoriasAbiertas(): JsonResponse
+    {
+        $data = Convocatoria::query()
+            ->where('estado', EstadoConvocatoria::ABIERTA->value)
+            ->with('carreras')
+            ->get()
+            ->map(fn (Convocatoria $c) => [
+                'id' => $c->id,
+                'nombre' => $c->nombre,
+                'gestion' => $c->gestion,
+                'carreras' => $c->carreras->map(fn ($ca) => [
+                    'codigo' => $ca->codigo,
+                    'nombre' => $ca->nombre,
+                ])->values(),
+            ]);
+
+        return response()->json($data);
+    }
+
+    #[OA\Get(
+        path: '/api/applicant-admission/mi-postulante/postulaciones',
+        tags: ['ApplicantAdmission'],
+        summary: 'Mis postulaciones (estado, carreras, turno)',
+        security: [['bearerAuth' => []]],
+        responses: [new OA\Response(response: 200, description: 'Mis postulaciones')]
+    )]
+    public function postulaciones(): JsonResponse
+    {
+        $nombres = Carrera::query()->pluck('nombre', 'codigo');
+
+        $data = Postulacion::query()
+            ->where('postulante_documento', $this->postulante()->documento)
+            ->with('convocatoria')
+            ->latest()
+            ->get()
+            ->map(fn (Postulacion $p) => [
+                'id' => $p->id,
+                'convocatoria_id' => $p->convocatoria_id,
+                'convocatoria' => $p->convocatoria?->nombre,
+                'gestion' => $p->convocatoria?->gestion,
+                'carrera_primera' => $p->carrera_primera_codigo,
+                'carrera_primera_nombre' => (string) ($nombres[$p->carrera_primera_codigo] ?? ''),
+                'carrera_segunda' => $p->carrera_segunda_codigo,
+                'carrera_segunda_nombre' => (string) ($nombres[$p->carrera_segunda_codigo] ?? ''),
+                'turno_preferencia' => $p->turno_preferencia instanceof \BackedEnum
+                    ? $p->turno_preferencia->value
+                    : $p->turno_preferencia,
+                'estado' => $p->estado instanceof \BackedEnum ? $p->estado->value : $p->estado,
+                'observacion' => $p->observacion,
+            ]);
+
+        return response()->json($data);
+    }
+
+    #[OA\Post(
+        path: '/api/applicant-admission/mi-postulante/postulaciones',
+        tags: ['ApplicantAdmission'],
+        summary: 'Crear mi postulación (convocatoria, carreras 1ª/2ª, turno) → queda PENDIENTE',
+        security: [['bearerAuth' => []]],
+        responses: [
+            new OA\Response(response: 201, description: 'Postulación creada (pendiente de verificación)'),
+            new OA\Response(response: 422, description: 'Datos inválidos o ya postulado'),
+        ]
+    )]
+    public function crearPostulacion(CrearMiPostulacionRequest $request): JsonResponse
+    {
+        $postulante = $this->postulante();
+        $data = $request->validated();
+
+        $convocatoria = Convocatoria::findOrFail((int) $data['convocatoria_id']);
+        $ofrecidas = $convocatoria->carreras->pluck('codigo');
+
+        foreach (['carrera_primera_codigo', 'carrera_segunda_codigo'] as $campo) {
+            if (! $ofrecidas->contains($data[$campo])) {
+                throw ValidationException::withMessages([
+                    $campo => 'Esa carrera no está ofertada en la convocatoria.',
+                ]);
+            }
+        }
+
+        // Reusa la validación (convocatoria abierta + sin duplicado) y fija el turno.
+        $postulacion = $this->postulacionesSrv->create(new CreatePostulacionDTO(
+            postulanteDocumento: $postulante->documento,
+            convocatoriaId: (int) $data['convocatoria_id'],
+            carreraPrimera: (string) $data['carrera_primera_codigo'],
+            carreraSegunda: (string) $data['carrera_segunda_codigo'],
+        ));
+        $this->postulacionesSrv->setTurnoPreferencia($postulacion, (string) $data['turno_preferencia']);
+
+        return response()->json(['message' => 'Postulación registrada. Queda pendiente de verificación.'], 201);
     }
 }

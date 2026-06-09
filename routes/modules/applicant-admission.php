@@ -24,6 +24,10 @@ Route::middleware(['auth:api', 'password.changed'])->group(function () {
     Route::get('mi-postulante/pagos', [MiPostulanteController::class, 'pagos']);
     Route::get('mi-postulante/boletin', [MiPostulanteController::class, 'boletin']);
     Route::get('mi-postulante/asistencia', [MiPostulanteController::class, 'asistencia']);
+    // Autopostulación: convocatorias abiertas + crear/listar mis postulaciones.
+    Route::get('mi-postulante/convocatorias', [MiPostulanteController::class, 'convocatoriasAbiertas']);
+    Route::get('mi-postulante/postulaciones', [MiPostulanteController::class, 'postulaciones']);
+    Route::post('mi-postulante/postulaciones', [MiPostulanteController::class, 'crearPostulacion']);
 });
 
 Route::middleware(['auth:api', 'password.changed', 'permission:applicant.manage'])->group(function () {
