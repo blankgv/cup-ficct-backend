@@ -29,6 +29,7 @@ class ReportService
             'recaudacion' => $this->recaudacion($this->convocatoria($filtros), $filtros),
             'resultados' => $this->resultados($this->convocatoria($filtros), $filtros),
             'asignacion_carreras' => $this->asignacionCarreras($this->convocatoria($filtros), $filtros),
+            'admitidos' => $this->admitidos($this->convocatoria($filtros), $filtros),
             default => throw ValidationException::withMessages(['reporte' => "No se reconoció el reporte solicitado: «{$clave}»."]),
         };
     }
@@ -162,7 +163,12 @@ class ReportService
             ->orderBy('estado')
             ->orderBy('metodo')
             ->get()
-            ->map(fn ($p) => [$p->estado, $p->metodo, (int) $p->cantidad, number_format((float) $p->total, 2, '.', '')])
+            ->map(fn ($p) => [
+                $p->estado instanceof \BackedEnum ? $p->estado->value : $p->estado,
+                $p->metodo instanceof \BackedEnum ? $p->metodo->value : $p->metodo,
+                (int) $p->cantidad,
+                number_format((float) $p->total, 2, '.', ''),
+            ])
             ->all();
 
         return [
@@ -236,6 +242,45 @@ class ReportService
         return [
             'titulo' => "Asignacion de carreras - {$convocatoria->nombre}",
             'headers' => ['Carrera', 'Nombre', 'Cupos', 'Asignados', 'Disponibles'],
+            'rows' => $rows,
+        ];
+    }
+
+    /**
+     * Admitidos: aprobados (boletín ≥ 60) que recibieron cupo (carrera asignada). Filtro: carrera.
+     *
+     * @param array<string, mixed> $f
+     * @return array{titulo:string, headers:list<string>, rows:list<list<mixed>>}
+     */
+    public function admitidos(Convocatoria $convocatoria, array $f = []): array
+    {
+        $nombres = $convocatoria->carreras->pluck('nombre', 'codigo');
+
+        $rows = Inscripcion::with('postulante')
+            ->where('convocatoria_id', $convocatoria->id)
+            ->whereNotNull('carrera_asignada_codigo')
+            ->when($f['carrera'] ?? null, fn ($q, $v) => $q->where('carrera_asignada_codigo', $v))
+            ->get()
+            ->map(function (Inscripcion $i) use ($convocatoria, $nombres) {
+                $boletin = $this->notas->boletin($i->postulante, $convocatoria->id);
+
+                return [
+                    'documento' => $i->postulante_documento,
+                    'nombre' => $i->postulante ? trim("{$i->postulante->nombres} {$i->postulante->apellidos}") : '-',
+                    'carrera' => $i->carrera_asignada_codigo,
+                    'carrera_nombre' => (string) ($nombres[$i->carrera_asignada_codigo] ?? ''),
+                    'promedio' => (float) $boletin['promedio_final'],
+                    'estado' => (string) $boletin['estado'],
+                ];
+            })
+            ->where('estado', 'APROBADO')
+            ->map(fn ($r) => [$r['documento'], $r['nombre'], $r['carrera'], $r['carrera_nombre'], $r['promedio']])
+            ->values()
+            ->all();
+
+        return [
+            'titulo' => "Admitidos - {$convocatoria->nombre}",
+            'headers' => ['Documento', 'Estudiante', 'Carrera', 'Nombre carrera', 'Promedio final'],
             'rows' => $rows,
         ];
     }

@@ -10,13 +10,17 @@ use App\Modules\Evaluation\Requests\BatchAsistenciasRequest;
 use App\Modules\Evaluation\Requests\StoreAsistenciaRequest;
 use App\Modules\Evaluation\Resources\AsistenciaResource;
 use App\Modules\Evaluation\Services\AsistenciaService;
+use App\Modules\Evaluation\Services\EvaluacionAccessGuard;
 use Illuminate\Http\JsonResponse;
 use OpenApi\Attributes as OA;
 
 // Registro y consulta de asistencia.
 class AsistenciaController extends Controller
 {
-    public function __construct(private readonly AsistenciaService $asistencias) {}
+    public function __construct(
+        private readonly AsistenciaService $asistencias,
+        private readonly EvaluacionAccessGuard $guard,
+    ) {}
 
     #[OA\Post(
         path: '/api/evaluation/asistencias',
@@ -40,8 +44,15 @@ class AsistenciaController extends Controller
     )]
     public function store(StoreAsistenciaRequest $request): JsonResponse
     {
+        $data = $request->validated();
+        $this->guard->assertMateriaDeInscripcion(
+            (string) $data['postulante_documento'],
+            (int) $data['convocatoria_id'],
+            (string) $data['materia_sigla'],
+        );
+
         // Upsert idempotente → 200 siempre.
-        return (new AsistenciaResource($this->asistencias->upsert($request->validated())))->response()->setStatusCode(200);
+        return (new AsistenciaResource($this->asistencias->upsert($data)))->response()->setStatusCode(200);
     }
 
     #[OA\Post(
@@ -69,6 +80,7 @@ class AsistenciaController extends Controller
     )]
     public function storeBatch(BatchAsistenciasRequest $request, Grupo $grupo, Materia $materia): JsonResponse
     {
+        $this->guard->assertGrupoMateria($grupo->id, $materia->sigla);
         $data = $request->validated();
 
         return response()->json($this->asistencias->batch($grupo, $materia, $data['fecha'], $data['asistencias']));
@@ -90,6 +102,8 @@ class AsistenciaController extends Controller
     )]
     public function reporte(Postulante $postulante, int $convocatoria): JsonResponse
     {
+        $this->guard->assertEnGrupoDeInscripcion($postulante->documento, $convocatoria);
+
         return response()->json($this->asistencias->reporte($postulante, $convocatoria));
     }
 }

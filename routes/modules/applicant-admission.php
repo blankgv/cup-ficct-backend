@@ -4,11 +4,28 @@ use App\Modules\ApplicantAdmission\Controllers\AsignacionCarreraController;
 use App\Modules\ApplicantAdmission\Controllers\AsignacionGrupoController;
 use App\Modules\ApplicantAdmission\Controllers\ConvocatoriaController;
 use App\Modules\ApplicantAdmission\Controllers\PostulacionController;
+use App\Modules\ApplicantAdmission\Controllers\MiPostulanteController;
 use App\Modules\ApplicantAdmission\Controllers\PostulanteController;
+use App\Modules\ApplicantAdmission\Controllers\RegistroController;
 use App\Modules\ApplicantAdmission\Controllers\VerificacionController;
 use Illuminate\Support\Facades\Route;
 
 // Módulo ApplicantAdmission (/api/applicant-admission).
+
+// Pública: auto-registro de postulantes (crea cuenta rol POSTULANTE y autentica).
+Route::post('registro', [RegistroController::class, 'register'])->name('applicant.registro');
+
+// Autogestión del propio postulante (cualquier usuario autenticado dueño).
+Route::middleware(['auth:api', 'password.changed'])->group(function () {
+    Route::get('mi-postulante', [MiPostulanteController::class, 'show']);
+    Route::put('mi-postulante', [MiPostulanteController::class, 'update']);
+    Route::post('mi-postulante/titulo', [MiPostulanteController::class, 'uploadTitulo']);
+    Route::get('mi-postulante/titulo', [MiPostulanteController::class, 'downloadTitulo']);
+    Route::get('mi-postulante/pagos', [MiPostulanteController::class, 'pagos']);
+    Route::get('mi-postulante/boletin', [MiPostulanteController::class, 'boletin']);
+    Route::get('mi-postulante/asistencia', [MiPostulanteController::class, 'asistencia']);
+});
+
 Route::middleware(['auth:api', 'password.changed', 'permission:applicant.manage'])->group(function () {
     // Carga masiva (antes del apiResource para que /lote no choque con /{postulante}).
     Route::post('postulantes/lote', [PostulanteController::class, 'importLote']);

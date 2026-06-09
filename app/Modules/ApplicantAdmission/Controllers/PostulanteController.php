@@ -45,7 +45,10 @@ class PostulanteController extends Controller
     )]
     public function importLote(BatchPostulantesRequest $request): JsonResponse
     {
-        return response()->json($this->batch->import($request->file('archivo')));
+        return response()->json($this->batch->import(
+            $request->file('archivo'),
+            $request->file('titulos'),
+        ));
     }
 
     #[OA\Get(

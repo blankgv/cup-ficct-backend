@@ -5,10 +5,12 @@ namespace App\Modules\Evaluation\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\AcademicManagement\Models\Grupo;
 use App\Modules\AcademicManagement\Models\Materia;
+use App\Modules\ApplicantAdmission\Models\Inscripcion;
 use App\Modules\ApplicantAdmission\Models\Postulante;
 use App\Modules\Evaluation\Requests\BatchNotasRequest;
 use App\Modules\Evaluation\Requests\StoreNotaRequest;
 use App\Modules\Evaluation\Resources\NotaResource;
+use App\Modules\Evaluation\Services\EvaluacionAccessGuard;
 use App\Modules\Evaluation\Services\NotaService;
 use Illuminate\Http\JsonResponse;
 use OpenApi\Attributes as OA;
@@ -16,7 +18,50 @@ use OpenApi\Attributes as OA;
 // Carga y consulta de notas.
 class NotaController extends Controller
 {
-    public function __construct(private readonly NotaService $notas) {}
+    public function __construct(
+        private readonly NotaService $notas,
+        private readonly EvaluacionAccessGuard $guard,
+    ) {}
+
+    #[OA\Get(
+        path: '/api/evaluation/mis-grupos',
+        tags: ['Notas'],
+        summary: 'Grupos y materias del usuario (docente: los asignados; staff: todos)',
+        security: [['bearerAuth' => []]],
+        responses: [new OA\Response(response: 200, description: 'Lista de grupo-materias')]
+    )]
+    public function misGrupos(): JsonResponse
+    {
+        return response()->json($this->guard->misGrupos());
+    }
+
+    #[OA\Get(
+        path: '/api/evaluation/grupos/{grupo}/estudiantes',
+        tags: ['Notas'],
+        summary: 'Roster (inscritos) de un grupo, para las planillas',
+        security: [['bearerAuth' => []]],
+        parameters: [
+            new OA\Parameter(name: 'grupo', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+        ],
+        responses: [new OA\Response(response: 200, description: 'Lista de inscritos {documento, nombre}')]
+    )]
+    public function estudiantes(Grupo $grupo): JsonResponse
+    {
+        $this->guard->assertGrupoDocente($grupo->id);
+
+        $roster = Inscripcion::with('postulante')
+            ->where('grupo_id', $grupo->id)
+            ->get()
+            ->map(fn (Inscripcion $i) => [
+                'documento' => $i->postulante_documento,
+                'nombre' => $i->postulante
+                    ? trim("{$i->postulante->nombres} {$i->postulante->apellidos}")
+                    : '-',
+            ])
+            ->values();
+
+        return response()->json($roster);
+    }
 
     #[OA\Post(
         path: '/api/evaluation/notas',
@@ -40,8 +85,15 @@ class NotaController extends Controller
     )]
     public function store(StoreNotaRequest $request): JsonResponse
     {
+        $data = $request->validated();
+        $this->guard->assertMateriaDeInscripcion(
+            (string) $data['postulante_documento'],
+            (int) $data['convocatoria_id'],
+            (string) $data['materia_sigla'],
+        );
+
         // Upsert idempotente → 200 siempre (no 201 aunque cree el registro).
-        return (new NotaResource($this->notas->upsert($request->validated())))->response()->setStatusCode(200);
+        return (new NotaResource($this->notas->upsert($data)))->response()->setStatusCode(200);
     }
 
     #[OA\Post(
@@ -69,6 +121,7 @@ class NotaController extends Controller
     )]
     public function storeBatch(BatchNotasRequest $request, Grupo $grupo, Materia $materia): JsonResponse
     {
+        $this->guard->assertGrupoMateria($grupo->id, $materia->sigla);
         $data = $request->validated();
 
         return response()->json($this->notas->batch($grupo, $materia, (int) $data['numero'], $data['notas']));
@@ -90,6 +143,8 @@ class NotaController extends Controller
     )]
     public function boletin(Postulante $postulante, int $convocatoria): JsonResponse
     {
+        $this->guard->assertEnGrupoDeInscripcion($postulante->documento, $convocatoria);
+
         return response()->json($this->notas->boletin($postulante, $convocatoria));
     }
 }

@@ -1,0 +1,26 @@
+.git
+.gitignore
+.dockerignore
+Dockerfile
+docker-compose.yml
+
+# Dependencias: se instalan dentro de la imagen, no se copian del host.
+vendor
+node_modules
+
+# Entorno y secretos: se inyectan en runtime (env_file).
+.env
+.env.*
+
+# Caches y logs locales.
+bootstrap/cache/*.php
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+
+# Misc.
+*.log
+.idea
+.vscode
+README.md

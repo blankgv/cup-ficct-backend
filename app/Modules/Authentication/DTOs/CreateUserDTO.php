@@ -10,6 +10,8 @@ final readonly class CreateUserDTO
         public string $password,
         public string $role,
         public ?string $username = null,
+        // El alta administrativa obliga a cambiar la contraseña; el auto-registro no.
+        public bool $mustChangePassword = true,
     ) {}
 
     /**

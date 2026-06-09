@@ -10,6 +10,7 @@ Route::middleware(['auth:api', 'password.changed', 'permission:report.view'])->g
     Route::get('convocatorias/{convocatoria}/recaudacion', [ReportController::class, 'recaudacion']);
     Route::get('convocatorias/{convocatoria}/resultados', [ReportController::class, 'resultados']);
     Route::get('convocatorias/{convocatoria}/asignacion-carreras', [ReportController::class, 'asignacionCarreras']);
+    Route::get('convocatorias/{convocatoria}/admitidos', [ReportController::class, 'admitidos']);
 
     // Reporte por voz (texto transcrito → IA elige reporte + filtros).
     Route::post('voz', [ReportController::class, 'voz']);

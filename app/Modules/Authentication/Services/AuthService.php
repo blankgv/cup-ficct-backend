@@ -3,6 +3,7 @@
 namespace App\Modules\Authentication\Services;
 
 use App\Modules\Authentication\DTOs\LoginDTO;
+use App\Modules\Authentication\Models\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Auth;
 
@@ -47,6 +48,16 @@ class AuthService
     public function currentUser(): mixed
     {
         return Auth::guard('api')->user();
+    }
+
+    /**
+     * Emite un token para un usuario ya existente (auto-login tras registro).
+     *
+     * @return array<string, mixed>
+     */
+    public function issueTokenFor(User $user): array
+    {
+        return $this->buildTokenResponse((string) Auth::guard('api')->login($user));
     }
 
     /**
