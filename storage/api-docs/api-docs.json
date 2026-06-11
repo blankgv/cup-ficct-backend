@@ -3066,6 +3066,245 @@
                 ]
             }
         },
+        "/api/applicant-admission/mi-postulante": {
+            "get": {
+                "tags": [
+                    "ApplicantAdmission"
+                ],
+                "summary": "Mis datos de postulante",
+                "operationId": "e5923f3461939d63ae95c67ddd88dcbf",
+                "responses": {
+                    "200": {
+                        "description": "Postulante",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Postulante"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "El usuario no es postulante"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "ApplicantAdmission"
+                ],
+                "summary": "Completar/editar mis datos de postulante",
+                "operationId": "4a9d2b79eb442fc12723cc1eee77450a",
+                "responses": {
+                    "200": {
+                        "description": "Actualizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Postulante"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/applicant-admission/mi-postulante/titulo": {
+            "get": {
+                "tags": [
+                    "ApplicantAdmission"
+                ],
+                "summary": "Descargar mi título (302 a URL firmada)",
+                "operationId": "e73a6e576df3f94783ea85a686fe4031",
+                "responses": {
+                    "302": {
+                        "description": "Redirige al archivo"
+                    },
+                    "404": {
+                        "description": "Sin título"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "ApplicantAdmission"
+                ],
+                "summary": "Subir mi título de bachiller",
+                "operationId": "a04fd217fcb120f764dc41c87ab4c6cc",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "titulo"
+                                ],
+                                "properties": {
+                                    "titulo": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Título subido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Postulante"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/applicant-admission/mi-postulante/pagos": {
+            "get": {
+                "tags": [
+                    "ApplicantAdmission"
+                ],
+                "summary": "Mis pagos (cobros de inscripción y otros)",
+                "operationId": "55f9b767084f4812cad0dc5b89fca77b",
+                "responses": {
+                    "200": {
+                        "description": "Lista de pagos del postulante"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/applicant-admission/mi-postulante/boletin": {
+            "get": {
+                "tags": [
+                    "ApplicantAdmission"
+                ],
+                "summary": "Mi boletín (notas, promedio y estado) de mi inscripción",
+                "operationId": "4175e78f1b043ea33276eee5285c078e",
+                "responses": {
+                    "200": {
+                        "description": "Boletín del postulante"
+                    },
+                    "404": {
+                        "description": "No inscrito"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/applicant-admission/mi-postulante/asistencia": {
+            "get": {
+                "tags": [
+                    "ApplicantAdmission"
+                ],
+                "summary": "Mi asistencia (% por materia, global y habilitación)",
+                "operationId": "12d1316aa090fb1728efee4b11e1351d",
+                "responses": {
+                    "200": {
+                        "description": "Reporte de asistencia del postulante"
+                    },
+                    "404": {
+                        "description": "No inscrito"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/applicant-admission/mi-postulante/convocatorias": {
+            "get": {
+                "tags": [
+                    "ApplicantAdmission"
+                ],
+                "summary": "Convocatorias abiertas y sus carreras (para postularme)",
+                "operationId": "838e95ead449f96cd77289344a50b060",
+                "responses": {
+                    "200": {
+                        "description": "Convocatorias abiertas"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/applicant-admission/mi-postulante/postulaciones": {
+            "get": {
+                "tags": [
+                    "ApplicantAdmission"
+                ],
+                "summary": "Mis postulaciones (estado, carreras, turno)",
+                "operationId": "77d87beb37b92d0b4c125770df42fd83",
+                "responses": {
+                    "200": {
+                        "description": "Mis postulaciones"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "ApplicantAdmission"
+                ],
+                "summary": "Crear mi postulación (convocatoria, carreras 1ª/2ª, turno) → queda PENDIENTE",
+                "operationId": "6a088723d07a3e9e58e6972d8716e187",
+                "responses": {
+                    "201": {
+                        "description": "Postulación creada (pendiente de verificación)"
+                    },
+                    "422": {
+                        "description": "Datos inválidos o ya postulado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/applicant-admission/postulantes/{postulante}/postulaciones": {
             "get": {
                 "tags": [
@@ -3667,6 +3906,79 @@
                         "bearerAuth": []
                     }
                 ]
+            }
+        },
+        "/api/applicant-admission/registro": {
+            "post": {
+                "tags": [
+                    "ApplicantAdmission"
+                ],
+                "summary": "Registro público de postulante (crea cuenta y autentica)",
+                "operationId": "d71f3fbb8f3073cd3af1744d77d26178",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "documento",
+                                    "nombres",
+                                    "apellidos",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "documento": {
+                                        "type": "string",
+                                        "example": "1234567"
+                                    },
+                                    "nombres": {
+                                        "type": "string",
+                                        "example": "Juan"
+                                    },
+                                    "apellidos": {
+                                        "type": "string",
+                                        "example": "Perez"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "juan@correo.com"
+                                    },
+                                    "telefono": {
+                                        "type": "string",
+                                        "example": "70000000",
+                                        "nullable": true
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "secret123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "example": "secret123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Registrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthToken"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Datos inválidos"
+                    }
+                }
             }
         },
         "/api/applicant-admission/postulantes/{postulante}/postulaciones/{convocatoria}/verificar": {
@@ -4882,6 +5194,54 @@
                 ]
             }
         },
+        "/api/evaluation/mis-grupos": {
+            "get": {
+                "tags": [
+                    "Notas"
+                ],
+                "summary": "Grupos y materias del usuario (docente: los asignados; staff: todos)",
+                "operationId": "e11b86210ef0bd3014ceeb8ffc9d4c5e",
+                "responses": {
+                    "200": {
+                        "description": "Lista de grupo-materias"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/evaluation/grupos/{grupo}/estudiantes": {
+            "get": {
+                "tags": [
+                    "Notas"
+                ],
+                "summary": "Roster (inscritos) de un grupo, para las planillas",
+                "operationId": "30929b38c71e518cfdfcd422f4ada434",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de inscritos {documento, nombre}"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/evaluation/notas": {
             "post": {
                 "tags": [
@@ -5841,6 +6201,54 @@
                 ]
             }
         },
+        "/api/reports/convocatorias/{convocatoria}/admitidos": {
+            "get": {
+                "tags": [
+                    "Reportes"
+                ],
+                "summary": "Admitidos: aprobados con cupo (carrera asignada). format=json|excel|pdf",
+                "operationId": "2095e4811921006e0779ee9307e30565",
+                "parameters": [
+                    {
+                        "name": "convocatoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "carrera",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "format",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "json",
+                                "excel",
+                                "pdf"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Reporte"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/reports/voz": {
             "post": {
                 "tags": [
@@ -6431,6 +6839,10 @@
         {
             "name": "Periodos",
             "description": "Periodos"
+        },
+        {
+            "name": "ApplicantAdmission",
+            "description": "ApplicantAdmission"
         },
         {
             "name": "Asistencia",
